@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hábitos - Leta Build</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #f5f0eb;
+    color: #3a3a3a;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+
+  /* Header */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding: 0 4px;
+  }
+  .header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; text-align: center; flex: 1; }
+  .nav-btn {
+    background: white; border: 1px solid #e0dbd5; border-radius: 10px;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; color: #5a5a5a;
+    transition: background 0.15s, border-color 0.15s; flex-shrink: 0;
+  }
+  .nav-btn:hover { background: #ece7e1; border-color: #d0cbc5; }
+
+  /* View toggle */
+  .view-toggle { display: flex; justify-content: center; margin-bottom: 18px; }
+  .view-btn {
+    padding: 7px 20px; font-size: 13px; font-weight: 600; font-family: inherit;
+    border: 1px solid #e0dbd5; background: white; color: #9a9590;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .view-btn:first-child { border-radius: 8px 0 0 8px; }
+  .view-btn:last-child { border-radius: 0 8px 8px 0; border-left: none; }
+  .view-btn.active { background: #c4956a; border-color: #c4956a; color: white; }
+
+  /* Weekday labels */
+  .weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 6px; margin-bottom: 6px; padding: 0 2px;
+  }
+  .weekday-label {
+    text-align: center; font-size: 12px; font-weight: 600; color: #9a9590;
+    text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 0;
+  }
+
+  /* Calendar grid */
+  .calendar-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 0 2px;
+  }
+  .day-cell {
+    aspect-ratio: 1; background: white; border: 1px solid #e8e3dd; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding-top: 6px; cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+    position: relative; overflow: hidden;
+  }
+  .day-cell:hover { transform: scale(1.04); box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-color: #d0cbc5; }
+  .day-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+  .day-cell.empty:hover { transform: none; box-shadow: none; }
+  .day-cell.today { border-color: #c4956a; border-width: 2px; }
+  .day-cell.has-data { background: #fdf9f5; }
+  .day-number { font-size: 13px; font-weight: 600; color: #5a5a5a; line-height: 1; }
+  .day-cell.today .day-number { color: #c4956a; }
+  .day-icons {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1px;
+    margin-top: 3px; font-size: 10px; line-height: 1; max-width: 100%; padding: 0 2px;
+  }
+  .day-icons span { display: inline-block; }
+
+  /* Score badge */
+  .day-score {
+    position: absolute; bottom: 2px; right: 3px; font-size: 8px; font-weight: 700;
+    color: white; background: #c4956a; border-radius: 6px; padding: 1px 3px; line-height: 1.2;
+  }
+  .day-score.perfect { background: #6aaa7a; }
+
+  /* Week view */
+  .calendar-grid.week-view { grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .calendar-grid.week-view .day-cell {
+    aspect-ratio: auto; min-height: 140px; padding: 10px 6px;
+    align-items: center; justify-content: flex-start; gap: 6px;
+  }
+  .calendar-grid.week-view .day-number { font-size: 16px; margin-bottom: 4px; }
+  .calendar-grid.week-view .day-icons {
+    flex-direction: column; align-items: flex-start; gap: 4px;
+    font-size: 13px; margin-top: 6px; padding: 0 4px; width: 100%;
+  }
+  .calendar-grid.week-view .day-icons span {
+    display: flex; align-items: center; gap: 4px; font-size: 12px; white-space: nowrap;
+  }
+  .calendar-grid.week-view .day-icons .detail-text { font-size: 11px; color: #8a857f; }
+  .calendar-grid.week-view .day-score {
+    position: static; font-size: 11px; padding: 2px 6px; margin-top: 4px;
+    border-radius: 8px;
+  }
+
+  /* Charts section */
+  .charts-section { margin-top: 28px; }
+  .charts-toggle { display: flex; justify-content: center; margin-bottom: 16px; }
+  .charts-toggle-btn {
+    padding: 10px 24px; font-size: 14px; font-weight: 600; font-family: inherit;
+    border: 1px solid #e0dbd5; background: white; color: #5a5a5a;
+    cursor: pointer; border-radius: 10px; transition: background 0.15s, color 0.15s;
+  }
+  .charts-toggle-btn:hover { background: #ece7e1; }
+  .charts-toggle-btn.active { background: #c4956a; border-color: #c4956a; color: white; }
+
+  .charts-panel {
+    display: none; background: white; border-radius: 16px;
+    border: 1px solid #e8e3dd; padding: 20px; margin-bottom: 16px;
+  }
+  .charts-panel.active { display: block; }
+
+  .chart-container { position: relative; width: 100%; margin-bottom: 20px; }
+  .chart-canvas { width: 100%; height: 200px; display: block; }
+  .chart-canvas.tall { height: 160px; }
+  .chart-empty { text-align: center; padding: 30px; color: #b0aaa3; font-size: 14px; }
+
+  /* Stats cards */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px; margin-top: 16px;
+  }
+  .stat-card { background: #faf8f5; border-radius: 12px; padding: 14px; text-align: center; }
+  .stat-value { font-size: 22px; font-weight: 700; color: #c4956a; line-height: 1.2; }
+  .stat-label { font-size: 12px; color: #9a9590; margin-top: 4px; }
+
+  .chart-tabs { display: flex; gap: 0; margin-bottom: 16px; flex-wrap: wrap; }
+  .chart-tab {
+    flex: 1; padding: 8px 4px; font-size: 11px; font-weight: 600; font-family: inherit;
+    background: white; border: 1px solid #e0dbd5; color: #9a9590;
+    cursor: pointer; transition: background 0.15s, color 0.15s; min-width: 0;
+  }
+  .chart-tab:first-child { border-radius: 8px 0 0 8px; }
+  .chart-tab:last-child { border-radius: 0 8px 8px 0; }
+  .chart-tab + .chart-tab { border-left: none; }
+  .chart-tab.active { background: #c4956a; border-color: #c4956a; color: white; }
+
+  /* Weekly comparison */
+  .week-compare { margin-top: 16px; }
+  .week-compare-title {
+    font-size: 14px; font-weight: 600; color: #5a5a5a; margin-bottom: 12px;
+  }
+  .compare-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid #f0ebe5; font-size: 13px;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-emoji { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
+  .compare-label { flex: 1; color: #5a5a5a; font-weight: 500; }
+  .compare-val { font-weight: 700; color: #3a3a3a; min-width: 55px; text-align: right; }
+  .compare-diff {
+    font-size: 12px; font-weight: 600; min-width: 55px; text-align: right; border-radius: 6px;
+    padding: 2px 6px;
+  }
+  .compare-diff.up { color: #6aaa7a; background: #e8f5ec; }
+  .compare-diff.down { color: #d9534f; background: #fce8e6; }
+  .compare-diff.neutral { color: #9a9590; background: #f0ebe5; }
+
+  /* Heatmap */
+  .heatmap-container { margin-top: 16px; }
+  .heatmap-title {
+    font-size: 14px; font-weight: 600; color: #5a5a5a; margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .heatmap-year-nav {
+    display: flex; gap: 6px; align-items: center; font-size: 14px; font-weight: 600;
+  }
+  .heatmap-year-btn {
+    background: none; border: 1px solid #e0dbd5; border-radius: 6px;
+    width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px; color: #9a9590;
+  }
+  .heatmap-year-btn:hover { background: #ece7e1; }
+  .heatmap-grid {
+    display: grid; grid-template-columns: 20px repeat(53, 1fr); gap: 2px;
+  }
+  .heatmap-weekday {
+    font-size: 9px; color: #b0aaa3; display: flex; align-items: center; height: 12px;
+  }
+  .heatmap-cell {
+    width: 100%; aspect-ratio: 1; border-radius: 2px; background: #eee9e3;
+    cursor: pointer; position: relative;
+  }
+  .heatmap-cell.l1 { background: #e8d9c8; }
+  .heatmap-cell.l2 { background: #d4b896; }
+  .heatmap-cell.l3 { background: #c4956a; }
+  .heatmap-cell.l4 { background: #a07548; }
+  .heatmap-cell.empty { background: transparent; cursor: default; }
+  .heatmap-cell[title]:hover { outline: 2px solid #c4956a; z-index: 1; }
+  .heatmap-months {
+    display: flex; padding-left: 22px; margin-bottom: 4px;
+  }
+  .heatmap-month-label {
+    font-size: 9px; color: #b0aaa3; text-align: left;
+  }
+  .heatmap-legend {
+    display: flex; align-items: center; gap: 4px; margin-top: 8px; justify-content: flex-end;
+    font-size: 10px; color: #b0aaa3;
+  }
+  .heatmap-legend-cell {
+    width: 12px; height: 12px; border-radius: 2px;
+  }
+
+  /* Footer */
+  .footer-actions { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+  .export-btn {
+    background: white; border: 1px solid #e0dbd5; border-radius: 10px;
+    padding: 10px 20px; font-size: 14px; color: #5a5a5a;
+    cursor: pointer; transition: background 0.15s; font-family: inherit;
+  }
+  .export-btn:hover { background: #ece7e1; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    animation: fadeIn 0.15s ease;
+  }
+  .modal-overlay.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: white; border-radius: 20px; padding: 28px 24px; width: 100%;
+    max-width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    animation: slideUp 0.2s ease; max-height: 90vh; overflow-y: auto;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .modal-header h2 { font-size: 18px; font-weight: 600; }
+  .modal-close { background: none; border: none; font-size: 22px; color: #9a9590; cursor: pointer; padding: 4px; line-height: 1; }
+  .modal-close:hover { color: #5a5a5a; }
+
+  .habit-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f0ebe5; }
+  .habit-item:last-child { border-bottom: none; }
+  .habit-emoji { font-size: 24px; width: 36px; text-align: center; flex-shrink: 0; }
+  .habit-info { flex: 1; min-width: 0; }
+  .habit-label { font-size: 15px; font-weight: 500; color: #3a3a3a; margin-bottom: 4px; }
+  .habit-input-row { display: flex; align-items: center; gap: 8px; }
+
+  .toggle { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0; background: #ddd8d2; border-radius: 13px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .toggle-slider::after {
+    content: ''; position: absolute; width: 20px; height: 20px; background: white;
+    border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle input:checked + .toggle-slider { background: #c4956a; }
+  .toggle input:checked + .toggle-slider::after { transform: translateX(20px); }
+
+  .num-input {
+    width: 90px; padding: 6px 10px; border: 1px solid #e0dbd5; border-radius: 8px;
+    font-size: 14px; font-family: inherit; color: #3a3a3a; background: #faf8f5; text-align: center;
+  }
+  .num-input:focus { outline: none; border-color: #c4956a; box-shadow: 0 0 0 2px rgba(196,149,106,0.2); }
+  .num-input::placeholder { font-size: 12px; }
+  .num-input::placeholder { color: #bbb5ae; }
+  .input-suffix { font-size: 13px; color: #9a9590; flex-shrink: 0; }
+
+  .save-btn {
+    width: 100%; margin-top: 20px; padding: 14px; background: #c4956a; color: white;
+    border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: background 0.15s;
+  }
+  .save-btn:hover { background: #b5865d; }
+  .clear-btn {
+    width: 100%; margin-top: 8px; padding: 10px; background: none; color: #b0aaa3;
+    border: none; border-radius: 12px; font-size: 13px; font-family: inherit;
+    cursor: pointer; transition: color 0.15s;
+  }
+  .clear-btn:hover { color: #d9534f; }
+
+  /* Auth bar */
+  .auth-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; margin-bottom: 12px; background: white;
+    border: 1px solid #e8e3dd; border-radius: 10px; font-size: 13px;
+  }
+  .auth-bar .user-info { color: #5a5a5a; display: flex; align-items: center; gap: 8px; }
+  .auth-bar .user-info img {
+    width: 24px; height: 24px; border-radius: 50%;
+  }
+  .auth-btn {
+    padding: 6px 14px; font-size: 13px; font-weight: 600; font-family: inherit;
+    border: 1px solid #e0dbd5; background: white; color: #5a5a5a;
+    border-radius: 8px; cursor: pointer; transition: background 0.15s;
+  }
+  .auth-btn:hover { background: #ece7e1; }
+  .auth-btn.google {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sync-status {
+    font-size: 11px; color: #b0aaa3; margin-left: 8px;
+  }
+  .sync-status.syncing { color: #c4956a; }
+  .sync-status.synced { color: #6aaa7a; }
+  .back-link {
+    display: inline-block; margin-bottom: 12px; font-size: 13px;
+    color: #9a9590; text-decoration: none;
+  }
+  .back-link:hover { color: #5a5a5a; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .container { padding: 14px 10px; }
+    .header h1 { font-size: 18px; }
+    .day-cell { border-radius: 10px; padding-top: 4px; }
+    .day-number { font-size: 11px; }
+    .day-icons { font-size: 8px; gap: 0; margin-top: 2px; }
+    .day-score { font-size: 7px; padding: 1px 2px; }
+    .calendar-grid, .weekdays { gap: 4px; }
+    .calendar-grid.week-view .day-cell { min-height: 100px; padding: 8px 4px; }
+    .calendar-grid.week-view .day-number { font-size: 13px; }
+    .calendar-grid.week-view .day-icons { font-size: 11px; gap: 3px; }
+    .calendar-grid.week-view .day-icons .detail-text { display: none; }
+    .modal { padding: 22px 18px; border-radius: 16px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-tab { font-size: 10px; padding: 7px 2px; }
+    .heatmap-grid { gap: 1px; }
+  }
+  @media (max-width: 360px) {
+    .day-icons { font-size: 7px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a class="back-link" href="/">&#8249; letabuild.com</a>
+
+  <div class="auth-bar" id="authBar">
+    <div class="user-info" id="userInfo">
+      <span style="color:#b0aaa3">Dados salvos no navegador</span>
+    </div>
+    <button class="auth-btn google" id="loginBtn" onclick="loginWithGoogle()">
+      <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Entrar com Google
+    </button>
+  </div>
+
+  <div class="header">
+    <button class="nav-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+    <h1 id="headerTitle"></h1>
+    <button class="nav-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
+  </div>
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="viewMonth">Mês</button>
+    <button class="view-btn" id="viewWeek">Semana</button>
+  </div>
+
+  <div class="weekdays">
+    <div class="weekday-label">Dom</div><div class="weekday-label">Seg</div>
+    <div class="weekday-label">Ter</div><div class="weekday-label">Qua</div>
+    <div class="weekday-label">Qui</div><div class="weekday-label">Sex</div>
+    <div class="weekday-label">Sáb</div>
+  </div>
+
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <!-- Charts -->
+  <div class="charts-section">
+    <div class="charts-toggle">
+      <button class="charts-toggle-btn" id="chartsToggle">Estatísticas</button>
+    </div>
+
+    <div class="charts-panel" id="chartsPanel">
+      <div class="chart-tabs" id="chartTabs">
+        <button class="chart-tab active" data-chart="weight">Peso</button>
+        <button class="chart-tab" data-chart="bodyfat">Gordura</button>
+        <button class="chart-tab" data-chart="sleep">Sono</button>
+        <button class="chart-tab" data-chart="steps">Passos</button>
+        <button class="chart-tab" data-chart="bike">Bike</button>
+        <button class="chart-tab" data-chart="stairs">Escada</button>
+        <button class="chart-tab" data-chart="habits">Hábitos</button>
+        <button class="chart-tab" data-chart="weekly">Semana</button>
+        <button class="chart-tab" data-chart="heatmap">Ano</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas class="chart-canvas" id="chartCanvas"></canvas>
+      </div>
+
+      <div id="extraContent"></div>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <button class="export-btn" id="exportBtn">Exportar (JSON)</button>
+    <button class="export-btn" id="importBtn">Importar</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">⚖️</div>
+      <div class="habit-info">
+        <div class="habit-label">Peso</div>
+        <div class="habit-input-row">
+          <input type="number" class="num-input" id="inputWeight" placeholder="0" min="0" step="0.1" inputmode="decimal">
+          <span class="input-suffix">kg</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">📉</div>
+      <div class="habit-info">
+        <div class="habit-label">Gordura corporal</div>
+        <div class="habit-input-row">
+          <input type="number" class="num-input" id="inputBodyFat" placeholder="0" min="0" max="60" step="0.1" inputmode="decimal">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">😴</div>
+      <div class="habit-info">
+        <div class="habit-label">Sono</div>
+        <div class="habit-input-row" style="flex-wrap:wrap;gap:6px">
+          <input type="number" class="num-input" id="inputSleepRem" placeholder="REM" min="0" step="1" inputmode="numeric" style="width:70px">
+          <input type="number" class="num-input" id="inputSleepDeep" placeholder="Prof." min="0" step="1" inputmode="numeric" style="width:70px">
+          <input type="number" class="num-input" id="inputSleepLight" placeholder="Leve" min="0" step="1" inputmode="numeric" style="width:70px">
+          <span class="input-suffix">min</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">👟</div>
+      <div class="habit-info">
+        <div class="habit-label">Passos</div>
+        <div class="habit-input-row">
+          <input type="number" class="num-input" id="inputSteps" placeholder="0" min="0" inputmode="numeric">
+          <span class="input-suffix">passos</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🚴</div>
+      <div class="habit-info">
+        <div class="habit-label">Bike</div>
+        <div class="habit-input-row">
+          <label class="toggle"><input type="checkbox" id="inputBike"><span class="toggle-slider"></span></label>
+          <input type="number" class="num-input" id="inputBikeKm" placeholder="0" min="0" step="0.1" inputmode="decimal">
+          <span class="input-suffix">km</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🏋️</div>
+      <div class="habit-info"><div class="habit-label">Musculação</div></div>
+      <label class="toggle"><input type="checkbox" id="inputGym"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🌬️</div>
+      <div class="habit-info"><div class="habit-label">Respiração</div></div>
+      <label class="toggle"><input type="checkbox" id="inputBreathing"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🪜</div>
+      <div class="habit-info">
+        <div class="habit-label">Escada</div>
+        <div class="habit-input-row">
+          <input type="number" class="num-input" id="inputStairs" placeholder="0" min="0" inputmode="numeric">
+          <span class="input-suffix">andares</span>
+        </div>
+      </div>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🩹</div>
+      <div class="habit-info"><div class="habit-label">Fisioterapia</div></div>
+      <label class="toggle"><input type="checkbox" id="inputPhysio"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">🧘</div>
+      <div class="habit-info"><div class="habit-label">Alongamentos</div></div>
+      <label class="toggle"><input type="checkbox" id="inputStretching"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="habit-item">
+      <div class="habit-emoji">📖</div>
+      <div class="habit-info"><div class="habit-label">Leitura 30 min</div></div>
+      <label class="toggle"><input type="checkbox" id="inputReading"><span class="toggle-slider"></span></label>
+    </div>
+    <button class="save-btn" id="saveBtn">Salvar</button>
+    <button class="clear-btn" id="clearBtn">Limpar dia</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'habit-calendar-data';
+const HABITS_COUNT = 11; // total trackable activities
+const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const shortMonthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+let currentYear, currentMonth, currentWeekStart = null, viewMode = 'month', selectedDate = null, currentChart = 'weight', heatmapYear;
+
+const today = new Date();
+currentYear = today.getFullYear();
+currentMonth = today.getMonth();
+currentWeekStart = getWeekStart(today);
+heatmapYear = today.getFullYear();
+
+function getWeekStart(date) {
+  const d = new Date(date); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay()); return d;
+}
+
+// DOM
+const headerTitle = document.getElementById('headerTitle');
+const calendarGrid = document.getElementById('calendarGrid');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalTitle = document.getElementById('modalTitle');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const viewMonthBtn = document.getElementById('viewMonth');
+const viewWeekBtn = document.getElementById('viewWeek');
+const saveBtn = document.getElementById('saveBtn');
+const clearBtn = document.getElementById('clearBtn');
+const modalClose = document.getElementById('modalClose');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const importFile = document.getElementById('importFile');
+const chartsToggle = document.getElementById('chartsToggle');
+const chartsPanel = document.getElementById('chartsPanel');
+const chartCanvas = document.getElementById('chartCanvas');
+const chartTabs = document.getElementById('chartTabs');
+const statsGrid = document.getElementById('statsGrid');
+const extraContent = document.getElementById('extraContent');
+
+const inputWeight = document.getElementById('inputWeight');
+const inputBodyFat = document.getElementById('inputBodyFat');
+const inputSleepRem = document.getElementById('inputSleepRem');
+const inputSleepDeep = document.getElementById('inputSleepDeep');
+const inputSleepLight = document.getElementById('inputSleepLight');
+const inputSteps = document.getElementById('inputSteps');
+const inputBike = document.getElementById('inputBike');
+const inputBikeKm = document.getElementById('inputBikeKm');
+const inputGym = document.getElementById('inputGym');
+const inputBreathing = document.getElementById('inputBreathing');
+const inputStairs = document.getElementById('inputStairs');
+const inputPhysio = document.getElementById('inputPhysio');
+const inputStretching = document.getElementById('inputStretching');
+const inputReading = document.getElementById('inputReading');
+
+// Data
+function loadData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+function dateKeyFromObj(dt) { return dateKey(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
+
+function getTotalSleep(entry) {
+  if (!entry) return 0;
+  return (entry.sleepRem || 0) + (entry.sleepDeep || 0) + (entry.sleepLight || 0);
+}
+
+function getDayScore(entry) {
+  if (!entry) return 0;
+  let s = 0;
+  if (entry.weight > 0) s++;
+  if (entry.bodyFat > 0) s++;
+  if (getTotalSleep(entry) > 0) s++;
+  if (entry.steps > 0) s++;
+  if (entry.bike) s++;
+  if (entry.gym) s++;
+  if (entry.breathing) s++;
+  if (entry.stairs > 0) s++;
+  if (entry.physio) s++;
+  if (entry.stretching) s++;
+  if (entry.reading) s++;
+  return s;
+}
+
+function getMonthEntries(year, month) {
+  const data = loadData();
+  const dim = new Date(year, month+1, 0).getDate();
+  const entries = [];
+  for (let d = 1; d <= dim; d++) {
+    const key = dateKey(year, month, d);
+    if (data[key]) entries.push({ day: d, key, ...data[key] });
+  }
+  return entries;
+}
+
+function getAllEntries() {
+  const data = loadData();
+  const keys = Object.keys(data).sort();
+  return keys.map(k => {
+    const parts = k.split('-');
+    const dt = new Date(+parts[0], +parts[1]-1, +parts[2]);
+    return { key: k, date: dt, ...data[k] };
+  });
+}
+
+function formatDateLabel(dt) {
+  return `${dt.getDate()}/${dt.getMonth()+1}`;
+}
+
+function getFullRange(filterFn) {
+  const data = loadData();
+  const keys = Object.keys(data).sort();
+  let firstKey = null;
+  for (const k of keys) {
+    if (filterFn(data[k])) { firstKey = k; break; }
+  }
+  if (!firstKey) return [];
+  const parts = firstKey.split('-');
+  const start = new Date(+parts[0], +parts[1]-1, +parts[2]);
+  const end = new Date();
+  const result = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
+    const k = dateKeyFromObj(d);
+    const entry = data[k] || null;
+    result.push({ key: k, date: new Date(d), entry });
+  }
+  return result;
+}
+
+// Icons
+function buildIconsMonth(entry) {
+  let h = '';
+  if (entry.weight > 0) h += '<span>⚖️</span>';
+  if (entry.bodyFat > 0) h += '<span>📉</span>';
+  if (getTotalSleep(entry) > 0) h += '<span>😴</span>';
+  if (entry.steps > 0) h += '<span>👟</span>';
+  if (entry.bike) h += '<span>🚴</span>';
+  if (entry.gym) h += '<span>🏋️</span>';
+  if (entry.breathing) h += '<span>🌬️</span>';
+  if (entry.stairs > 0) h += '<span>🪜</span>';
+  if (entry.physio) h += '<span>🩹</span>';
+  if (entry.stretching) h += '<span>🧘</span>';
+  if (entry.reading) h += '<span>📖</span>';
+  return h;
+}
+
+function buildIconsWeek(entry) {
+  let h = '';
+  if (entry.weight > 0) h += `<span>⚖️ <span class="detail-text">${entry.weight} kg</span></span>`;
+  if (entry.bodyFat > 0) h += `<span>📉 <span class="detail-text">${entry.bodyFat}%</span></span>`;
+  const sleep = getTotalSleep(entry);
+  if (sleep > 0) { const sh = Math.floor(sleep/60), sm = sleep%60; h += `<span>😴 <span class="detail-text">${sh}h${sm>0?sm+'m':''}</span></span>`; }
+  if (entry.steps > 0) h += `<span>👟 <span class="detail-text">${entry.steps.toLocaleString('pt-BR')}</span></span>`;
+  if (entry.bike) { const km = entry.bikeKm ? ` <span class="detail-text">${entry.bikeKm} km</span>` : ''; h += `<span>🚴${km}</span>`; }
+  if (entry.gym) h += '<span>🏋️</span>';
+  if (entry.breathing) h += '<span>🌬️</span>';
+  if (entry.stairs > 0) h += `<span>🪜 <span class="detail-text">${entry.stairs}</span></span>`;
+  if (entry.physio) h += '<span>🩹</span>';
+  if (entry.stretching) h += '<span>🧘</span>';
+  if (entry.reading) h += '<span>📖</span>';
+  return h;
+}
+
+function createDayCell(date, data, isWeekView) {
+  const key = dateKeyFromObj(date);
+  const todayKey = dateKeyFromObj(today);
+  const entry = data[key];
+  const cell = document.createElement('div');
+  cell.classList.add('day-cell');
+  if (key === todayKey) cell.classList.add('today');
+  if (entry) cell.classList.add('has-data');
+
+  const num = document.createElement('div');
+  num.classList.add('day-number');
+  num.textContent = date.getDate();
+  cell.appendChild(num);
+
+  if (entry) {
+    const icons = document.createElement('div');
+    icons.classList.add('day-icons');
+    icons.innerHTML = isWeekView ? buildIconsWeek(entry) : buildIconsMonth(entry);
+    cell.appendChild(icons);
+  }
+
+  cell.addEventListener('click', () => openModalForDate(date));
+  return cell;
+}
+
+// Render
+function renderMonth() {
+  headerTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+  calendarGrid.classList.remove('week-view');
+  const data = loadData();
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const dim = new Date(currentYear, currentMonth+1, 0).getDate();
+  calendarGrid.innerHTML = '';
+  for (let i = 0; i < firstDay; i++) { const e = document.createElement('div'); e.classList.add('day-cell','empty'); calendarGrid.appendChild(e); }
+  for (let d = 1; d <= dim; d++) calendarGrid.appendChild(createDayCell(new Date(currentYear, currentMonth, d), data, false));
+}
+
+function renderWeek() {
+  const we = new Date(currentWeekStart); we.setDate(we.getDate()+6);
+  const sm = currentWeekStart.getMonth(), em = we.getMonth(), sy = currentWeekStart.getFullYear(), ey = we.getFullYear();
+  let title;
+  if (sm === em) title = `${currentWeekStart.getDate()} - ${we.getDate()} ${monthNames[sm]} ${sy}`;
+  else if (sy === ey) title = `${currentWeekStart.getDate()} ${shortMonthNames[sm]} - ${we.getDate()} ${shortMonthNames[em]} ${sy}`;
+  else title = `${currentWeekStart.getDate()} ${shortMonthNames[sm]} ${sy} - ${we.getDate()} ${shortMonthNames[em]} ${ey}`;
+  headerTitle.textContent = title;
+  calendarGrid.classList.add('week-view');
+  calendarGrid.innerHTML = '';
+  const data = loadData();
+  for (let i = 0; i < 7; i++) { const d = new Date(currentWeekStart); d.setDate(d.getDate()+i); calendarGrid.appendChild(createDayCell(d, data, true)); }
+}
+
+function render() {
+  if (viewMode === 'month') renderMonth(); else renderWeek();
+  if (chartsPanel.classList.contains('active')) renderChart();
+}
+
+// Modal
+function openModalForDate(date) {
+  selectedDate = dateKeyFromObj(date);
+  modalTitle.textContent = `${date.getDate()} de ${monthNames[date.getMonth()]}`;
+  const data = loadData(), entry = data[selectedDate] || {};
+  inputWeight.value = entry.weight || '';
+  inputBodyFat.value = entry.bodyFat || '';
+  inputSleepRem.value = entry.sleepRem || '';
+  inputSleepDeep.value = entry.sleepDeep || '';
+  inputSleepLight.value = entry.sleepLight || '';
+  inputSteps.value = entry.steps || '';
+  inputBike.checked = !!entry.bike;
+  inputBikeKm.value = entry.bikeKm || '';
+  inputGym.checked = !!entry.gym;
+  inputBreathing.checked = !!entry.breathing;
+  inputStairs.value = entry.stairs || '';
+  inputPhysio.checked = !!entry.physio;
+  inputStretching.checked = !!entry.stretching;
+  inputReading.checked = !!entry.reading;
+  modalOverlay.classList.add('active');
+  setTimeout(() => inputWeight.focus(), 200);
+}
+
+function closeModal() { modalOverlay.classList.remove('active'); selectedDate = null; }
+
+function saveEntry() {
+  if (!selectedDate) return;
+  const weight = parseFloat(inputWeight.value) || 0;
+  const bodyFat = parseFloat(inputBodyFat.value) || 0;
+  const sleepRem = parseInt(inputSleepRem.value) || 0;
+  const sleepDeep = parseInt(inputSleepDeep.value) || 0;
+  const sleepLight = parseInt(inputSleepLight.value) || 0;
+  const steps = parseInt(inputSteps.value) || 0;
+  const bike = inputBike.checked, bikeKm = parseFloat(inputBikeKm.value) || 0;
+  const gym = inputGym.checked, breathing = inputBreathing.checked;
+  const stairs = parseInt(inputStairs.value) || 0;
+  const physio = inputPhysio.checked, stretching = inputStretching.checked;
+  const reading = inputReading.checked;
+  const data = loadData();
+  if (weight || bodyFat || sleepRem || sleepDeep || sleepLight || steps || bike || gym || breathing || stairs || physio || stretching || reading)
+    data[selectedDate] = { weight, bodyFat, sleepRem, sleepDeep, sleepLight, steps, bike, bikeKm, gym, breathing, stairs, physio, stretching, reading };
+  else delete data[selectedDate];
+  saveData(data); closeModal(); render();
+}
+
+function clearEntry() {
+  if (!selectedDate) return;
+  const data = loadData(); delete data[selectedDate]; saveData(data); closeModal(); render();
+}
+
+// Navigation
+function goPrev() {
+  if (viewMode === 'month') { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } }
+  else currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+  render();
+}
+function goNext() {
+  if (viewMode === 'month') { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } }
+  else currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+  render();
+}
+function setView(mode) {
+  viewMode = mode;
+  viewMonthBtn.classList.toggle('active', mode === 'month');
+  viewWeekBtn.classList.toggle('active', mode === 'week');
+  if (mode === 'week') { currentWeekStart = getWeekStart(new Date(currentYear, currentMonth, 1)); }
+  else { currentYear = currentWeekStart.getFullYear(); currentMonth = currentWeekStart.getMonth(); }
+  render();
+}
+
+// ---- DRAWING HELPERS ----
+function setupCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  return { ctx, W: rect.width, H: rect.height };
+}
+
+function drawEmptyMsg(ctx, W, H, msg) {
+  ctx.fillStyle = '#b0aaa3'; ctx.font = '14px -apple-system, sans-serif';
+  ctx.textAlign = 'center'; ctx.fillText(msg || 'Sem dados neste mês', W/2, H/2);
+}
+
+function drawLineChart(canvas, labels, values, color, extraLine, fixedRange) {
+  const { ctx, W, H } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, W, H);
+  const filtered = values.filter(v => v !== null);
+  if (filtered.length === 0) { drawEmptyMsg(ctx, W, H); return; }
+
+  const pL = 50, pR = 20, pT = 20, pB = 32;
+  const cW = W - pL - pR, cH = H - pT - pB;
+  let minV, maxV;
+  if (fixedRange) { minV = fixedRange.min; maxV = fixedRange.max; }
+  else {
+    minV = Math.min(...filtered); maxV = Math.max(...filtered);
+    if (extraLine) { const ef = extraLine.filter(v => v !== null); if (ef.length) { minV = Math.min(minV, ...ef); maxV = Math.max(maxV, ...ef); } }
+    if (minV === maxV) { minV -= 1; maxV += 1; }
+  }
+  const rV = maxV - minV;
+  const xPos = i => pL + (i / (values.length - 1 || 1)) * cW;
+  const yPos = v => pT + cH - ((v - minV) / rV) * cH;
+
+  // Grid
+  ctx.strokeStyle = '#eee9e3'; ctx.lineWidth = 1;
+  ctx.font = '11px -apple-system, sans-serif'; ctx.fillStyle = '#9a9590'; ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const v = minV + (rV * i) / 4, y = yPos(v);
+    ctx.beginPath(); ctx.moveTo(pL, y); ctx.lineTo(W - pR, y); ctx.stroke();
+    ctx.fillText(v % 1 === 0 ? v.toString() : v.toFixed(1), pL - 8, y + 4);
+  }
+  ctx.textAlign = 'center'; ctx.fillStyle = '#9a9590';
+  const step = Math.max(1, Math.floor(labels.length / 8));
+  for (let i = 0; i < labels.length; i += step) ctx.fillText(labels[i], xPos(i), H - 8);
+
+  // Extra line (moving average)
+  if (extraLine) {
+    ctx.beginPath(); let s = false;
+    for (let i = 0; i < extraLine.length; i++) {
+      if (extraLine[i] !== null) { if (!s) { ctx.moveTo(xPos(i), yPos(extraLine[i])); s = true; } else ctx.lineTo(xPos(i), yPos(extraLine[i])); }
+    }
+    ctx.strokeStyle = '#7a9ec4'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Area
+  ctx.beginPath(); let started = false, firstX = 0, lastX = 0;
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] !== null) {
+      if (!started) { ctx.moveTo(xPos(i), yPos(values[i])); firstX = xPos(i); started = true; }
+      else ctx.lineTo(xPos(i), yPos(values[i]));
+      lastX = xPos(i);
+    }
+  }
+  ctx.lineTo(lastX, pT + cH); ctx.lineTo(firstX, pT + cH); ctx.closePath();
+  ctx.fillStyle = color + '18'; ctx.fill();
+
+  // Line
+  ctx.beginPath(); started = false;
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] !== null) { if (!started) { ctx.moveTo(xPos(i), yPos(values[i])); started = true; } else ctx.lineTo(xPos(i), yPos(values[i])); }
+  }
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+
+  // Dots
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] !== null) {
+      ctx.beginPath(); ctx.arc(xPos(i), yPos(values[i]), 3.5, 0, Math.PI*2);
+      ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = 'white'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+  }
+}
+
+function drawBarChart(canvas, labels, datasets, goalLine) {
+  const { ctx, W, H } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, W, H);
+  if (labels.length === 0) { drawEmptyMsg(ctx, W, H); return; }
+
+  const pL = 40, pR = 20, pT = 20, pB = 32;
+  const cW = W - pL - pR, cH = H - pT - pB;
+  const allVals = datasets.flatMap(ds => ds.values);
+  const maxV = Math.max(...allVals, goalLine ? goalLine.value * 1.2 : 1, 1);
+  const bgW = cW / labels.length;
+  const barW = Math.min(bgW * 0.6 / datasets.length, 20);
+  const tbgW = barW * datasets.length;
+  const yPos = v => pT + cH - (v / maxV) * cH;
+
+  ctx.strokeStyle = '#eee9e3'; ctx.lineWidth = 1;
+  ctx.font = '11px -apple-system, sans-serif'; ctx.fillStyle = '#9a9590'; ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const v = (maxV * i) / 4, y = yPos(v);
+    ctx.beginPath(); ctx.moveTo(pL, y); ctx.lineTo(W - pR, y); ctx.stroke();
+    ctx.fillText(Math.round(v).toString(), pL - 8, y + 4);
+  }
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(labels.length / 10));
+  for (let i = 0; i < labels.length; i += step) ctx.fillText(labels[i], pL + (i + 0.5) * bgW, H - 8);
+
+  for (let di = 0; di < datasets.length; di++) {
+    const dsColors = datasets[di].colors;
+    for (let i = 0; i < labels.length; i++) {
+      const v = datasets[di].values[i]; if (v > 0) {
+        ctx.fillStyle = dsColors ? dsColors[i] : datasets[di].color;
+        const x = pL + (i + 0.5) * bgW - tbgW / 2 + di * barW, y = yPos(v);
+        ctx.beginPath(); ctx.roundRect(x, y, barW - 1, pT + cH - y, 2); ctx.fill();
+      }
+    }
+  }
+
+  if (goalLine) {
+    const gy = yPos(goalLine.value);
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(pL, gy); ctx.lineTo(W - pR, gy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#e74c3c';
+    ctx.font = 'bold 11px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(goalLine.label || goalLine.value.toLocaleString('pt-BR'), W - pR + 4, gy + 4);
+  }
+}
+
+// ---- CHARTS ----
+function calcMovingAvg(values, window) {
+  const result = [];
+  for (let i = 0; i < values.length; i++) {
+    const slice = [];
+    for (let j = Math.max(0, i - window + 1); j <= i; j++) {
+      if (values[j] !== null) slice.push(values[j]);
+    }
+    result.push(slice.length > 0 ? slice.reduce((a, b) => a + b, 0) / slice.length : null);
+  }
+  return result;
+}
+
+function getWeekRange(refDate) {
+  const start = getWeekStart(refDate);
+  const days = [];
+  for (let i = 0; i < 7; i++) { const d = new Date(start); d.setDate(d.getDate() + i); days.push(d); }
+  return days;
+}
+
+function getWeekStats(days) {
+  const data = loadData();
+  let steps = 0, bikeKm = 0, bikeDays = 0, gymDays = 0, breathDays = 0, stairsTotal = 0, physioDays = 0, stretchDays = 0, readDays = 0, totalScore = 0, daysWithData = 0;
+  let totalSleep = 0, sleepDays = 0;
+  const weights = [], bodyFats = [];
+  for (const d of days) {
+    const e = data[dateKeyFromObj(d)];
+    if (e) {
+      daysWithData++;
+      steps += e.steps || 0;
+      if (e.bike) { bikeDays++; bikeKm += e.bikeKm || 0; }
+      if (e.gym) gymDays++;
+      if (e.breathing) breathDays++;
+      stairsTotal += e.stairs || 0;
+      if (e.physio) physioDays++;
+      if (e.stretching) stretchDays++;
+      if (e.reading) readDays++;
+      if (e.weight > 0) weights.push(e.weight);
+      if (e.bodyFat > 0) bodyFats.push(e.bodyFat);
+      const sl = getTotalSleep(e);
+      if (sl > 0) { totalSleep += sl; sleepDays++; }
+      totalScore += getDayScore(e);
+    }
+  }
+  return { steps, bikeKm, bikeDays, gymDays, breathDays, stairsTotal, physioDays, stretchDays, readDays, weights, bodyFats, totalSleep, sleepDays, totalScore, daysWithData };
+}
+
+function renderChart() {
+  chartCanvas.classList.remove('tall');
+  chartCanvas.style.display = 'block';
+  extraContent.innerHTML = '';
+
+  if (currentChart === 'weight') {
+    const range = getFullRange(e => e.weight > 0);
+    if (range.length > 0) {
+      const labels = range.map(r => formatDateLabel(r.date));
+      const values = range.map(r => r.entry && r.entry.weight > 0 ? r.entry.weight : null);
+      const ma7 = calcMovingAvg(values, 7);
+      const filled = values.filter(v => v !== null);
+      const minW = Math.min(...filled), maxW = Math.max(...filled);
+      const span = maxW - minW;
+      drawLineChart(chartCanvas, labels, values, '#c4956a', ma7, { min: minW - span * 0.1 - 1, max: maxW + span * 0.1 + 1 });
+
+      const first = filled[0], last = filled[filled.length-1], diff = last - first;
+      statsGrid.innerHTML = `
+        <div class="stat-card"><div class="stat-value">${last.toFixed(1)}</div><div class="stat-label">Peso atual (kg)</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:${diff<=0?'#6aaa7a':'#d9534f'}">${diff>0?'+':''}${diff.toFixed(1)}</div><div class="stat-label">Variação total</div></div>
+        <div class="stat-card"><div class="stat-value">${minW.toFixed(1)}</div><div class="stat-label">Mínimo</div></div>
+        <div class="stat-card"><div class="stat-value">${maxW.toFixed(1)}</div><div class="stat-label">Máximo</div></div>
+      `;
+      extraContent.innerHTML = '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-top:8px;font-size:12px;color:#9a9590"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:20px;height:3px;background:#c4956a;border-radius:2px;display:inline-block"></span> Peso</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:20px;height:2px;background:#7a9ec4;border-radius:2px;display:inline-block;border-top:2px dashed #7a9ec4"></span> Média 7 dias</span></div>';
+    } else {
+      statsGrid.innerHTML = '<div class="chart-empty">Registre seu peso para ver estatísticas</div>';
+    }
+
+  } else if (currentChart === 'bodyfat') {
+    const range = getFullRange(e => e.bodyFat > 0);
+    if (range.length > 0) {
+      const labels = range.map(r => formatDateLabel(r.date));
+      const values = range.map(r => r.entry && r.entry.bodyFat > 0 ? r.entry.bodyFat : null);
+      const ma7 = calcMovingAvg(values, 7);
+      const filled = values.filter(v => v !== null);
+      const minF = Math.min(...filled), maxF = Math.max(...filled);
+      const span = maxF - minF;
+      drawLineChart(chartCanvas, labels, values, '#d9534f', ma7, { min: minF - span * 0.1 - 0.5, max: maxF + span * 0.1 + 0.5 });
+
+      const first = filled[0], last = filled[filled.length-1], diff = last - first;
+      statsGrid.innerHTML = `
+        <div class="stat-card"><div class="stat-value">${last.toFixed(1)}%</div><div class="stat-label">Gordura atual</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:${diff<=0?'#6aaa7a':'#d9534f'}">${diff>0?'+':''}${diff.toFixed(1)}%</div><div class="stat-label">Variação total</div></div>
+        <div class="stat-card"><div class="stat-value">${minF.toFixed(1)}%</div><div class="stat-label">Mínimo</div></div>
+        <div class="stat-card"><div class="stat-value">${maxF.toFixed(1)}%</div><div class="stat-label">Máximo</div></div>
+      `;
+      extraContent.innerHTML = '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-top:8px;font-size:12px;color:#9a9590"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:20px;height:3px;background:#d9534f;border-radius:2px;display:inline-block"></span> Gordura</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:20px;height:2px;background:#7a9ec4;border-radius:2px;display:inline-block;border-top:2px dashed #7a9ec4"></span> Média 7 dias</span></div>';
+    } else {
+      statsGrid.innerHTML = '<div class="chart-empty">Registre sua % de gordura para ver estatísticas</div>';
+    }
+
+  } else if (currentChart === 'sleep') {
+    const range = getFullRange(e => getTotalSleep(e) > 0);
+    const labels = range.map(r => formatDateLabel(r.date));
+    const remV = range.map(r => r.entry && r.entry.sleepRem > 0 ? r.entry.sleepRem : 0);
+    const deepV = range.map(r => r.entry && r.entry.sleepDeep > 0 ? r.entry.sleepDeep : 0);
+    const lightV = range.map(r => r.entry && r.entry.sleepLight > 0 ? r.entry.sleepLight : 0);
+    drawBarChart(chartCanvas, labels, [
+      { values: deepV, color: '#3d5a80' },
+      { values: remV, color: '#7a9ec4' },
+      { values: lightV, color: '#b8d4e8' }
+    ]);
+
+    const sleepDays = range.filter(r => r.entry && getTotalSleep(r.entry) > 0);
+    const totalSleepMin = sleepDays.reduce((a, r) => a + getTotalSleep(r.entry), 0);
+    const avgSleep = sleepDays.length > 0 ? totalSleepMin / sleepDays.length : 0;
+    const avgRem = sleepDays.length > 0 ? sleepDays.reduce((a,r) => a + (r.entry.sleepRem||0), 0) / sleepDays.length : 0;
+    const avgDeep = sleepDays.length > 0 ? sleepDays.reduce((a,r) => a + (r.entry.sleepDeep||0), 0) / sleepDays.length : 0;
+    const avgLight = sleepDays.length > 0 ? sleepDays.reduce((a,r) => a + (r.entry.sleepLight||0), 0) / sleepDays.length : 0;
+    function fmtMin(m) { const h = Math.floor(m/60), r = Math.round(m%60); return h > 0 ? `${h}h${r>0?r+'m':''}` : `${r}m`; }
+
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${fmtMin(avgSleep)}</div><div class="stat-label">Média total/noite</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtMin(avgDeep)}</div><div class="stat-label">Média profundo</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtMin(avgRem)}</div><div class="stat-label">Média REM</div></div>
+      <div class="stat-card"><div class="stat-value">${fmtMin(avgLight)}</div><div class="stat-label">Média leve</div></div>
+    `;
+    extraContent.innerHTML = '<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-top:8px;font-size:12px;color:#9a9590"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:#3d5a80;border-radius:2px;display:inline-block"></span> Profundo</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:#7a9ec4;border-radius:2px;display:inline-block"></span> REM</span><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:#b8d4e8;border-radius:2px;display:inline-block"></span> Leve</span></div>';
+
+  } else if (currentChart === 'steps') {
+    const range = getFullRange(e => e.steps > 0);
+    const STEP_GOAL = 10000;
+    const labels = range.map(r => formatDateLabel(r.date));
+    const values = range.map(r => r.entry && r.entry.steps > 0 ? r.entry.steps : 0);
+    const colors = values.map(v => v >= STEP_GOAL ? '#2ecc71' : v > 0 ? '#e74c3c' : 'transparent');
+    drawBarChart(chartCanvas, labels, [{ values, colors }], { value: STEP_GOAL, label: '10k' });
+    const filled = values.filter(v => v > 0);
+    const total = filled.reduce((a,v) => a+v, 0);
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${total.toLocaleString('pt-BR')}</div><div class="stat-label">Total geral</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length>0?Math.round(total/filled.length).toLocaleString('pt-BR'):'0'}</div><div class="stat-label">Média diária</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length>0?Math.max(...filled).toLocaleString('pt-BR'):'0'}</div><div class="stat-label">Recorde</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length}</div><div class="stat-label">Dias registrados</div></div>
+    `;
+
+  } else if (currentChart === 'bike') {
+    const range = getFullRange(e => e.bikeKm > 0);
+    const labels = range.map(r => formatDateLabel(r.date));
+    const values = range.map(r => r.entry && r.entry.bikeKm > 0 ? r.entry.bikeKm : 0);
+    drawBarChart(chartCanvas, labels, [{ values, color: '#6aaa7a' }]);
+    const filled = values.filter(v => v > 0);
+    const totalKm = filled.reduce((a,v) => a+v, 0);
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${totalKm.toFixed(1)}</div><div class="stat-label">Total km</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length>0?(totalKm/filled.length).toFixed(1):'0'}</div><div class="stat-label">Média por pedal</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length}</div><div class="stat-label">Dias de bike</div></div>
+    `;
+
+  } else if (currentChart === 'stairs') {
+    const range = getFullRange(e => e.stairs > 0);
+    const STAIRS_GOAL = 10;
+    const labels = range.map(r => formatDateLabel(r.date));
+    const values = range.map(r => r.entry && r.entry.stairs > 0 ? r.entry.stairs : 0);
+    const colors = values.map(v => v >= STAIRS_GOAL ? '#2ecc71' : v > 0 ? '#e74c3c' : 'transparent');
+    drawBarChart(chartCanvas, labels, [{ values, colors }], { value: STAIRS_GOAL, label: '10' });
+    const filled = values.filter(v => v > 0);
+    const total = filled.reduce((a,v) => a+v, 0);
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total andares</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length>0?(total/filled.length).toFixed(1):'0'}</div><div class="stat-label">Média diária</div></div>
+      <div class="stat-card"><div class="stat-value">${filled.length}</div><div class="stat-label">Dias registrados</div></div>
+    `;
+
+  } else if (currentChart === 'habits') {
+    const range = getFullRange(() => true);
+    const labels = range.map(r => formatDateLabel(r.date));
+    const gV = range.map(r => r.entry && r.entry.gym ? 1 : 0);
+    const bV = range.map(r => r.entry && r.entry.breathing ? 1 : 0);
+    const pV = range.map(r => r.entry && r.entry.physio ? 1 : 0);
+    const sV = range.map(r => r.entry && r.entry.stretching ? 1 : 0);
+    const rV = range.map(r => r.entry && r.entry.reading ? 1 : 0);
+    drawBarChart(chartCanvas, labels, [{ values: gV, color: '#c4956a' }, { values: bV, color: '#7a9ec4' }, { values: pV, color: '#d4956a' }, { values: sV, color: '#9b7fc4' }, { values: rV, color: '#6aaa7a' }]);
+    const gc = range.filter(r => r.entry && r.entry.gym).length, bc = range.filter(r => r.entry && r.entry.breathing).length;
+    const pc = range.filter(r => r.entry && r.entry.physio).length, sc = range.filter(r => r.entry && r.entry.stretching).length;
+    const rc = range.filter(r => r.entry && r.entry.reading).length;
+    function calcStreak(field) { let s = 0; const d = new Date(today); const data = loadData();
+      while(true) { const k = dateKeyFromObj(d); if (data[k] && data[k][field]) { s++; d.setDate(d.getDate()-1); } else break; } return s; }
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${gc} <span style="font-size:13px">dias</span></div><div class="stat-label">🏋️ Musculação</div></div>
+      <div class="stat-card"><div class="stat-value">${bc} <span style="font-size:13px">dias</span></div><div class="stat-label">🌬️ Respiração</div></div>
+      <div class="stat-card"><div class="stat-value">${pc} <span style="font-size:13px">dias</span></div><div class="stat-label">🩹 Fisioterapia</div></div>
+      <div class="stat-card"><div class="stat-value">${sc} <span style="font-size:13px">dias</span></div><div class="stat-label">🧘 Alongamentos</div></div>
+      <div class="stat-card"><div class="stat-value">${rc} <span style="font-size:13px">dias</span></div><div class="stat-label">📖 Leitura</div></div>
+      <div class="stat-card"><div class="stat-value">${calcStreak('gym')}/${calcStreak('breathing')}/${calcStreak('physio')}/${calcStreak('stretching')}/${calcStreak('reading')}</div><div class="stat-label">Sequência atual</div></div>
+    `;
+
+  } else if (currentChart === 'weekly') {
+    // Weekly comparison
+    chartCanvas.style.display = 'none';
+    const thisWeekDays = getWeekRange(today);
+    const lastWeekRef = new Date(today); lastWeekRef.setDate(lastWeekRef.getDate() - 7);
+    const lastWeekDays = getWeekRange(lastWeekRef);
+
+    const tw = getWeekStats(thisWeekDays), lw = getWeekStats(lastWeekDays);
+
+    function diffStr(curr, prev, unit, moreIsBetter) {
+      const d = curr - prev;
+      if (prev === 0 && curr === 0) return '<span class="compare-diff neutral">-</span>';
+      const pct = prev > 0 ? Math.round((d / prev) * 100) : (curr > 0 ? 100 : 0);
+      const sign = d > 0 ? '+' : '';
+      let cls = 'neutral';
+      if (d !== 0) cls = (moreIsBetter ? d > 0 : d < 0) ? 'up' : 'down';
+      return `<span class="compare-diff ${cls}">${sign}${pct}%</span>`;
+    }
+
+    function fmtWeekRange(days) {
+      const s = days[0], e = days[6];
+      if (s.getMonth() === e.getMonth()) return `${s.getDate()}-${e.getDate()} ${shortMonthNames[s.getMonth()]}`;
+      return `${s.getDate()} ${shortMonthNames[s.getMonth()]}-${e.getDate()} ${shortMonthNames[e.getMonth()]}`;
+    }
+
+    const twAvgWeight = tw.weights.length > 0 ? (tw.weights.reduce((a,b)=>a+b,0)/tw.weights.length) : 0;
+    const lwAvgWeight = lw.weights.length > 0 ? (lw.weights.reduce((a,b)=>a+b,0)/lw.weights.length) : 0;
+    const twAvgFat = tw.bodyFats.length > 0 ? (tw.bodyFats.reduce((a,b)=>a+b,0)/tw.bodyFats.length) : 0;
+    const lwAvgFat = lw.bodyFats.length > 0 ? (lw.bodyFats.reduce((a,b)=>a+b,0)/lw.bodyFats.length) : 0;
+    const twAvgSleep = tw.sleepDays > 0 ? tw.totalSleep / tw.sleepDays : 0;
+    const lwAvgSleep = lw.sleepDays > 0 ? lw.totalSleep / lw.sleepDays : 0;
+
+    extraContent.innerHTML = `
+      <div class="week-compare">
+        <div class="week-compare-title">Esta semana (${fmtWeekRange(thisWeekDays)}) vs. anterior (${fmtWeekRange(lastWeekDays)})</div>
+        <div class="compare-row"><span class="compare-emoji">⚖️</span><span class="compare-label">Peso médio</span><span class="compare-val">${twAvgWeight>0?twAvgWeight.toFixed(1)+' kg':'-'}</span>${twAvgWeight>0&&lwAvgWeight>0?diffStr(twAvgWeight,lwAvgWeight,'',false):'<span class="compare-diff neutral">-</span>'}</div>
+        <div class="compare-row"><span class="compare-emoji">📉</span><span class="compare-label">Gordura média</span><span class="compare-val">${twAvgFat>0?twAvgFat.toFixed(1)+'%':'-'}</span>${twAvgFat>0&&lwAvgFat>0?diffStr(twAvgFat,lwAvgFat,'',false):'<span class="compare-diff neutral">-</span>'}</div>
+        <div class="compare-row"><span class="compare-emoji">😴</span><span class="compare-label">Sono médio</span><span class="compare-val">${twAvgSleep>0?(Math.floor(twAvgSleep/60)+'h'+(Math.round(twAvgSleep%60)>0?Math.round(twAvgSleep%60)+'m':'')):'-'}</span>${twAvgSleep>0&&lwAvgSleep>0?diffStr(twAvgSleep,lwAvgSleep,'',true):'<span class="compare-diff neutral">-</span>'}</div>
+        <div class="compare-row"><span class="compare-emoji">👟</span><span class="compare-label">Passos</span><span class="compare-val">${tw.steps.toLocaleString('pt-BR')}</span>${diffStr(tw.steps,lw.steps,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🚴</span><span class="compare-label">Bike</span><span class="compare-val">${tw.bikeKm.toFixed(1)} km</span>${diffStr(tw.bikeKm,lw.bikeKm,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🏋️</span><span class="compare-label">Musculação</span><span class="compare-val">${tw.gymDays} dias</span>${diffStr(tw.gymDays,lw.gymDays,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🌬️</span><span class="compare-label">Respiração</span><span class="compare-val">${tw.breathDays} dias</span>${diffStr(tw.breathDays,lw.breathDays,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🪜</span><span class="compare-label">Escada</span><span class="compare-val">${tw.stairsTotal} and.</span>${diffStr(tw.stairsTotal,lw.stairsTotal,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🩹</span><span class="compare-label">Fisioterapia</span><span class="compare-val">${tw.physioDays} dias</span>${diffStr(tw.physioDays,lw.physioDays,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">🧘</span><span class="compare-label">Alongamentos</span><span class="compare-val">${tw.stretchDays} dias</span>${diffStr(tw.stretchDays,lw.stretchDays,'',true)}</div>
+        <div class="compare-row"><span class="compare-emoji">📖</span><span class="compare-label">Leitura</span><span class="compare-val">${tw.readDays} dias</span>${diffStr(tw.readDays,lw.readDays,'',true)}</div>
+        <div class="compare-row" style="border-top:2px solid #f0ebe5;padding-top:12px"><span class="compare-emoji">🎯</span><span class="compare-label" style="font-weight:700">Score total</span><span class="compare-val">${tw.totalScore}/${tw.daysWithData*HABITS_COUNT || HABITS_COUNT*7}</span>${diffStr(tw.totalScore,lw.totalScore,'',true)}</div>
+      </div>
+    `;
+    statsGrid.innerHTML = '';
+
+  } else if (currentChart === 'score') {
+    const range = getFullRange(() => true);
+    const labels = range.map(r => formatDateLabel(r.date));
+    const values = range.map(r => getDayScore(r.entry));
+    drawBarChart(chartCanvas, labels, [{ values, color: '#c4956a' }]);
+
+    const daysWithData = range.filter(r => r.entry).length;
+    const totalScore = values.reduce((a, v) => a + v, 0);
+    const perfectDays = values.filter(v => v === HABITS_COUNT).length;
+    const avgScore = daysWithData > 0 ? (totalScore / daysWithData) : 0;
+    const completionPct = daysWithData > 0 ? Math.round((totalScore / (daysWithData * HABITS_COUNT)) * 100) : 0;
+
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${avgScore.toFixed(1)}/${HABITS_COUNT}</div><div class="stat-label">Score médio</div></div>
+      <div class="stat-card"><div class="stat-value">${completionPct}%</div><div class="stat-label">Completude</div></div>
+      <div class="stat-card"><div class="stat-value">${perfectDays}</div><div class="stat-label">Dias perfeitos (${HABITS_COUNT}/${HABITS_COUNT})</div></div>
+      <div class="stat-card"><div class="stat-value">${daysWithData}</div><div class="stat-label">Dias registrados</div></div>
+    `;
+
+  } else if (currentChart === 'heatmap') {
+    // Annual heatmap
+    chartCanvas.style.display = 'none';
+    const data = loadData();
+
+    const jan1 = new Date(heatmapYear, 0, 1);
+    const dec31 = new Date(heatmapYear, 11, 31);
+    const startOffset = jan1.getDay();
+
+    // Month labels positions
+    let monthLabelsHTML = '';
+    const totalWeeks = 53;
+    for (let m = 0; m < 12; m++) {
+      const firstOfMonth = new Date(heatmapYear, m, 1);
+      const dayOfYear = Math.floor((firstOfMonth - jan1) / 86400000);
+      const weekIndex = Math.floor((dayOfYear + startOffset) / 7);
+      const pct = (weekIndex / totalWeeks) * 100;
+      monthLabelsHTML += `<div class="heatmap-month-label" style="position:absolute;left:${pct}%">${shortMonthNames[m]}</div>`;
+    }
+
+    const weekdayLabels = ['', 'S', '', 'Q', '', 'S', ''];
+
+    let gridHTML = '';
+    for (let row = 0; row < 7; row++) {
+      gridHTML += `<div class="heatmap-weekday">${weekdayLabels[row]}</div>`;
+      for (let col = 0; col < 53; col++) {
+        const dayIndex = col * 7 + row - startOffset;
+        const d = new Date(heatmapYear, 0, 1 + dayIndex);
+        if (d.getFullYear() !== heatmapYear || dayIndex < -startOffset) {
+          gridHTML += '<div class="heatmap-cell empty"></div>';
+          continue;
+        }
+        if (d > dec31) { gridHTML += '<div class="heatmap-cell empty"></div>'; continue; }
+        const k = dateKeyFromObj(d);
+        const entry = data[k];
+        const score = getDayScore(entry);
+        let lvl = '';
+        if (score === 0) lvl = '';
+        else if (score <= 3) lvl = 'l1';
+        else if (score <= 5) lvl = 'l2';
+        else if (score <= 8) lvl = 'l3';
+        else lvl = 'l4';
+        const dateStr = `${d.getDate()}/${d.getMonth()+1}: ${score}/${HABITS_COUNT}`;
+        gridHTML += `<div class="heatmap-cell ${lvl}" title="${dateStr}"></div>`;
+      }
+    }
+
+    extraContent.innerHTML = `
+      <div class="heatmap-container">
+        <div class="heatmap-title">
+          <span>Consistência anual</span>
+          <div class="heatmap-year-nav">
+            <button class="heatmap-year-btn" id="hmPrev">&#8249;</button>
+            <span>${heatmapYear}</span>
+            <button class="heatmap-year-btn" id="hmNext">&#8250;</button>
+          </div>
+        </div>
+        <div style="position:relative;padding-left:22px;margin-bottom:6px;height:14px">${monthLabelsHTML}</div>
+        <div class="heatmap-grid">${gridHTML}</div>
+        <div class="heatmap-legend">
+          <span>Menos</span>
+          <div class="heatmap-legend-cell" style="background:#eee9e3"></div>
+          <div class="heatmap-legend-cell" style="background:#e8d9c8"></div>
+          <div class="heatmap-legend-cell" style="background:#d4b896"></div>
+          <div class="heatmap-legend-cell" style="background:#c4956a"></div>
+          <div class="heatmap-legend-cell" style="background:#a07548"></div>
+          <span>Mais</span>
+        </div>
+      </div>
+    `;
+
+    // Heatmap year nav
+    document.getElementById('hmPrev').addEventListener('click', () => { heatmapYear--; renderChart(); });
+    document.getElementById('hmNext').addEventListener('click', () => { heatmapYear++; renderChart(); });
+
+    // Stats for the year
+    let totalDays = 0, totalScore = 0, perfectDays = 0, longestStreak = 0, currentStreak = 0;
+    for (let m = 0; m < 12; m++) {
+      const dimM = new Date(heatmapYear, m+1, 0).getDate();
+      for (let d = 1; d <= dimM; d++) {
+        const k = dateKey(heatmapYear, m, d);
+        const e = data[k];
+        if (e) {
+          totalDays++;
+          const s = getDayScore(e);
+          totalScore += s;
+          if (s === HABITS_COUNT) perfectDays++;
+          currentStreak++;
+          if (currentStreak > longestStreak) longestStreak = currentStreak;
+        } else {
+          currentStreak = 0;
+        }
+      }
+    }
+
+    statsGrid.innerHTML = `
+      <div class="stat-card"><div class="stat-value">${totalDays}</div><div class="stat-label">Dias registrados em ${heatmapYear}</div></div>
+      <div class="stat-card"><div class="stat-value">${totalDays>0?Math.round((totalScore/(totalDays*HABITS_COUNT))*100):0}%</div><div class="stat-label">Completude média</div></div>
+      <div class="stat-card"><div class="stat-value">${perfectDays}</div><div class="stat-label">Dias perfeitos</div></div>
+      <div class="stat-card"><div class="stat-value">${longestStreak}</div><div class="stat-label">Maior sequência (dias)</div></div>
+    `;
+  }
+}
+
+// Events
+prevBtn.addEventListener('click', goPrev);
+nextBtn.addEventListener('click', goNext);
+viewMonthBtn.addEventListener('click', () => setView('month'));
+viewWeekBtn.addEventListener('click', () => setView('week'));
+
+chartsToggle.addEventListener('click', () => {
+  chartsPanel.classList.toggle('active'); chartsToggle.classList.toggle('active');
+  if (chartsPanel.classList.contains('active')) renderChart();
+});
+
+chartTabs.addEventListener('click', e => {
+  const tab = e.target.closest('.chart-tab'); if (!tab) return;
+  chartTabs.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active'); currentChart = tab.dataset.chart; renderChart();
+});
+
+saveBtn.addEventListener('click', saveEntry);
+clearBtn.addEventListener('click', clearEntry);
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+exportBtn.addEventListener('click', () => {
+  const data = loadData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob); const a = document.createElement('a');
+  a.href = url; a.download = `habitos-${currentYear}-${String(currentMonth+1).padStart(2,'0')}.json`;
+  a.click(); URL.revokeObjectURL(url);
+});
+
+importBtn.addEventListener('click', () => importFile.click());
+importFile.addEventListener('change', e => {
+  if (e.target.files[0]) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imp = JSON.parse(ev.target.result);
+        if (typeof imp !== 'object' || imp === null) { alert('Arquivo inválido.'); return; }
+        const data = loadData(); Object.assign(data, imp); saveData(data); render();
+        alert('Dados importados com sucesso!');
+      } catch { alert('Erro ao ler o arquivo.'); }
+    };
+    reader.readAsText(e.target.files[0]); e.target.value = '';
+  }
+});
+
+inputBike.addEventListener('change', () => { if (!inputBike.checked) inputBikeKm.value = ''; });
+window.addEventListener('resize', () => { if (chartsPanel.classList.contains('active')) renderChart(); });
+
+// ---- SUPABASE AUTH + SYNC ----
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+let supabase = null;
+let currentUser = null;
+let syncTimeout = null;
+
+try {
+  if (window.supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    initAuth();
+  }
+} catch (e) { console.warn('Supabase init failed:', e); }
+
+async function initAuth() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) { currentUser = session.user; updateAuthUI(); await loadFromCloud(); }
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (session) { currentUser = session.user; updateAuthUI(); await loadFromCloud(); render(); }
+    else { currentUser = null; updateAuthUI(); }
+  });
+}
+
+function updateAuthUI() {
+  const userInfo = document.getElementById('userInfo');
+  const loginBtn = document.getElementById('loginBtn');
+  if (currentUser) {
+    const name = currentUser.user_metadata?.full_name || currentUser.email;
+    const avatar = currentUser.user_metadata?.avatar_url;
+    userInfo.innerHTML = (avatar ? `<img src="${avatar}" alt="">` : '') +
+      `<span>${name}</span><span class="sync-status synced" id="syncStatus">sincronizado</span>`;
+    loginBtn.textContent = 'Sair';
+    loginBtn.onclick = logoutUser;
+  } else {
+    userInfo.innerHTML = '<span style="color:#b0aaa3">Dados salvos no navegador</span>';
+    loginBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.01 24.01 0 0 0 0 21.56l7.98-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Entrar com Google';
+    loginBtn.onclick = loginWithGoogle;
+  }
+}
+
+async function loginWithGoogle() {
+  if (!supabase) { alert('Sync com Google ainda nao esta configurado.'); return; }
+  await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/habitos/' } });
+}
+
+async function logoutUser() {
+  if (!supabase) return;
+  await supabase.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+}
+
+async function loadFromCloud() {
+  if (!supabase || !currentUser) return;
+  try {
+    const { data, error } = await supabase.from('habit_data').select('data, updated_at').eq('user_id', currentUser.id).single();
+    if (error && error.code !== 'PGRST116') { console.error('Cloud load error:', error); return; }
+    if (data && data.data) {
+      const local = loadData();
+      const merged = { ...data.data, ...local };
+      saveData(merged);
+      // Also save merged back to cloud
+      await saveToCloud(merged);
+    } else {
+      // First login: push local data to cloud
+      await saveToCloud(loadData());
+    }
+  } catch (e) { console.error('Cloud sync error:', e); }
+}
+
+async function saveToCloud(habitData) {
+  if (!supabase || !currentUser) return;
+  const syncEl = document.getElementById('syncStatus');
+  if (syncEl) { syncEl.textContent = 'sincronizando...'; syncEl.className = 'sync-status syncing'; }
+  try {
+    await supabase.from('habit_data').upsert({
+      user_id: currentUser.id,
+      data: habitData,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+    if (syncEl) { syncEl.textContent = 'sincronizado'; syncEl.className = 'sync-status synced'; }
+  } catch (e) {
+    console.error('Cloud save error:', e);
+    if (syncEl) { syncEl.textContent = 'erro no sync'; syncEl.className = 'sync-status'; }
+  }
+}
+
+// Override saveData to also sync to cloud
+const _originalSaveData = saveData;
+saveData = function(data) {
+  _originalSaveData(data);
+  if (currentUser) {
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(() => saveToCloud(data), 1500);
+  }
+};
+
+render();
+</script>
+</body>
+</html>

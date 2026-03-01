@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leta Build</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px 40px;
+    flex: 1;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+
+  .hero h1 span {
+    color: #f0883e;
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: #8b949e;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card:hover {
+    border-color: #f0883e;
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+
+  .card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: #8b949e;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-tag {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    align-self: flex-start;
+  }
+
+  .tag-green {
+    background: rgba(46, 160, 67, 0.15);
+    color: #3fb950;
+  }
+
+  .tag-blue {
+    background: rgba(56, 139, 253, 0.15);
+    color: #58a6ff;
+  }
+
+  .tag-orange {
+    background: rgba(240, 136, 62, 0.15);
+    color: #f0883e;
+  }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: #484f58;
+    font-size: 13px;
+    border-top: 1px solid #21262d;
+  }
+
+  footer a {
+    color: #8b949e;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    color: #f0883e;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 40px 16px 24px; }
+    .hero h1 { font-size: 30px; }
+    .hero p { font-size: 15px; }
+    .projects { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="hero">
+    <h1>leta<span>build</span></h1>
+    <p>Projetos open-source para uso pessoal. Todos gratuitos, sem cadastro obrigatorio.</p>
+  </div>
+
+  <div class="projects">
+    <a class="card" href="/habitos/">
+      <div class="card-icon">📅</div>
+      <h2>Habitos</h2>
+      <p>Calendario de habitos e fitness. Acompanhe peso, sono, passos, treinos e mais. Visualize com graficos e heatmap anual.</p>
+      <span class="card-tag tag-green">Usar agora</span>
+    </a>
+
+    <a class="card" href="https://podcast.letabuild.com">
+      <div class="card-icon">🎙️</div>
+      <h2>Podcast Digest</h2>
+      <p>Cole o link de um video do YouTube e receba um resumo inteligente com os pontos mais relevantes, feito por IA.</p>
+      <span class="card-tag tag-blue">Usar agora</span>
+    </a>
+
+    <a class="card" href="https://btc.letabuild.com">
+      <div class="card-icon">₿</div>
+      <h2>Termometro Bitcoin</h2>
+      <p>Dashboard com 8 indicadores on-chain e tecnicos para avaliar se e hora de comprar ou vender Bitcoin.</p>
+      <span class="card-tag tag-orange">Usar agora</span>
+    </a>
+  </div>
+</div>
+
+<footer>
+  feito por <a href="https://caioleta.com">leta</a>
+</footer>
+
+</body>
+</html>
