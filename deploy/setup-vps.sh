@@ -14,7 +14,7 @@ echo "=== Criando usuario appuser ==="
 useradd -m -s /bin/bash appuser 2>/dev/null || echo "User appuser already exists"
 
 echo "=== Criando diretorios ==="
-mkdir -p /opt/apps/{podcast,btc,scripts,backups}
+mkdir -p /opt/apps/{podcast,btc,ativos,scripts,backups}
 chown -R appuser:appuser /opt/apps
 
 echo "=== Configurando firewall (somente IPs do Cloudflare) ==="
