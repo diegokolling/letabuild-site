@@ -54,6 +54,9 @@
     // Wizard
     $('wizardTitle').textContent = ui.wizardTitle;
 
+    // PDF button
+    $('btnDownloadPDFText').textContent = ui.downloadPDF;
+
     // Footer
     $('footerCredits').textContent = ui.credits + ' ';
     $('footerAnd').textContent = ' ' + ui.and + ' ';
@@ -529,6 +532,89 @@
 
     $('btnRetakeText').textContent = ui.completionRetake;
     $('btnBackHomeText').textContent = ui.completionHome;
+    $('btnDownloadPDFText').textContent = ui.downloadPDF;
+  }
+
+  // ── PDF Generation ────────────────────────────────────
+  function generatePDF() {
+    var ui = UI_STRINGS[lang];
+    var wallet = Tutorial.getWallet();
+    var meta = Tutorial.getMeta();
+    var steps = Tutorial.getSteps();
+    var levelLabel = ui.levels[meta.level];
+
+    var btn = $('btnDownloadPDF');
+    var btnText = $('btnDownloadPDFText');
+    var originalText = btnText.textContent;
+    btnText.textContent = ui.generatingPDF;
+    btn.disabled = true;
+
+    var html = '';
+    html += '<div style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, system-ui, sans-serif; color: #1a1a1a; padding: 40px 32px; max-width: 700px; margin: 0 auto;">';
+
+    // Header
+    html += '<div style="text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #f7931a;">';
+    html += '<div style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">' + wallet.name + '</div>';
+    html += '<div style="font-size: 14px; color: #f7931a; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">' + levelLabel + '</div>';
+    html += '</div>';
+
+    // Steps
+    steps.forEach(function (step, i) {
+      html += '<div style="margin-bottom: 28px; page-break-inside: avoid;">';
+      html += '<div style="font-size: 11px; font-weight: 600; color: #f7931a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">' + ui.step + ' ' + (i + 1) + '</div>';
+      html += '<div style="font-size: 18px; font-weight: 700; margin-bottom: 12px;">' + step.title + '</div>';
+      html += '<div style="font-size: 14px; color: #444; line-height: 1.8;">' + step.content + '</div>';
+
+      if (step.warning) {
+        html += '<div style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 13px; color: #b91c1c; line-height: 1.6;">';
+        html += '<strong>&#9888; ' + ui.warning + ':</strong> ' + step.warning;
+        html += '</div>';
+      }
+
+      if (step.tip) {
+        html += '<div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 13px; color: #166534; line-height: 1.6;">';
+        html += '<strong>&#9889; ' + ui.tip + ':</strong> ' + step.tip;
+        html += '</div>';
+      }
+
+      html += '</div>';
+    });
+
+    // Footer
+    var today = new Date();
+    var dateStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    html += '<div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #888;">';
+    html += 'letabuild.com/custodia &middot; ' + dateStr;
+    html += '</div>';
+
+    html += '</div>';
+
+    var container = $('pdfContent');
+    container.innerHTML = html;
+    container.style.display = 'block';
+
+    var filename = 'Tutorial-' + wallet.name.replace(/\s+/g, '-') + '-' + levelLabel.replace(/\s+/g, '-') + '.pdf';
+
+    var opt = {
+      margin: [10, 0, 10, 0],
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(container).save().then(function () {
+      container.style.display = 'none';
+      container.innerHTML = '';
+      btnText.textContent = originalText;
+      btn.disabled = false;
+    }).catch(function () {
+      container.style.display = 'none';
+      container.innerHTML = '';
+      btnText.textContent = originalText;
+      btn.disabled = false;
+    });
   }
 
   // ── Event Handlers ─────────────────────────────────────
@@ -610,6 +696,10 @@
 
     $('btnBackHome').addEventListener('click', function () {
       showScreen('landing');
+    });
+
+    $('btnDownloadPDF').addEventListener('click', function () {
+      generatePDF();
     });
 
     // Keyboard

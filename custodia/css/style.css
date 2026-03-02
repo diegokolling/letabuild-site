@@ -928,6 +928,32 @@ a:hover { color: var(--accent-hover); }
   display: flex;
   gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* PDF download button */
+.btn-wizard-pdf {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn-wizard-pdf:hover {
+  background: rgba(247, 147, 26, 0.1);
+  color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.btn-wizard-pdf:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Hidden PDF template */
+#pdfContent {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 700px;
+  background: #fff;
 }
 
 /* ── Footer ──────────────────────────────────────────────── */

@@ -83,6 +83,8 @@ const UI_STRINGS = {
     completionNext: 'Próximos passos recomendados:',
     completionRetake: 'Refazer tutorial',
     completionHome: 'Voltar ao início',
+    downloadPDF: 'Baixar PDF',
+    generatingPDF: 'Gerando PDF...',
 
     // Levels
     levels: {
@@ -177,6 +179,8 @@ const UI_STRINGS = {
     completionNext: 'Recommended next steps:',
     completionRetake: 'Redo tutorial',
     completionHome: 'Back to start',
+    downloadPDF: 'Download PDF',
+    generatingPDF: 'Generating PDF...',
 
     levels: {
       simple: 'Simple Custody',

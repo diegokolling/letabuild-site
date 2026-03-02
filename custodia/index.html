@@ -205,6 +205,9 @@
         <button class="btn-wizard btn-wizard-secondary" id="btnRetake">
           <span id="btnRetakeText">Refazer tutorial</span>
         </button>
+        <button class="btn-wizard btn-wizard-pdf" id="btnDownloadPDF">
+          <span id="btnDownloadPDFText">Baixar PDF</span>
+        </button>
         <button class="btn-wizard btn-wizard-primary" id="btnBackHome">
           <span id="btnBackHomeText">Voltar ao início</span>
         </button>
@@ -224,7 +227,11 @@
   feito por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">leta</a>
 </footer>
 
+<!-- Hidden PDF template -->
+<div id="pdfContent" style="display:none"></div>
+
 <!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 <script src="js/content/ui.js"></script>
 <script src="js/content/wallets.js"></script>
 <script src="js/content/fundamentals.js"></script>
