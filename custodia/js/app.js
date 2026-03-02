@@ -550,7 +550,7 @@
     btn.disabled = true;
 
     var html = '';
-    html += '<div style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, system-ui, sans-serif; color: #1a1a1a; padding: 40px 32px;">';
+    html += '<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', system-ui, sans-serif; color: #1a1a1a; padding: 40px 32px;">';
 
     // Header
     html += '<div style="text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #f7931a;">';
