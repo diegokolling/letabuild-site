@@ -18,4 +18,5 @@ check_app() {
 }
 
 check_app "podcast-digest" "http://127.0.0.1:8501/_stcore/health"
+check_app "paper-digest" "http://127.0.0.1:8503/_stcore/health"
 check_app "btc-signal" "http://127.0.0.1:8050/"
