@@ -7,15 +7,40 @@ const QuizEngine = (function () {
   let currentQuestion = 0;
   let answers = {};  // { questionId: optionIndex }
   let lang = 'pt';
+  let shuffledQuestions = null;
+
+  // Fisher-Yates shuffle for option order randomization
+  function shuffleOptions(questions) {
+    return questions.map(function (q) {
+      var indices = q.options.map(function (_, i) { return i; });
+      for (var i = indices.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = indices[i];
+        indices[i] = indices[j];
+        indices[j] = tmp;
+      }
+      var newOptions = indices.map(function (idx) { return q.options[idx]; });
+      var newCorrect = indices.indexOf(q.correct);
+      return {
+        id: q.id,
+        category: q.category,
+        difficulty: q.difficulty,
+        question: q.question,
+        options: newOptions,
+        correct: newCorrect
+      };
+    });
+  }
 
   function init(language) {
     lang = language;
     currentQuestion = 0;
     answers = {};
+    shuffledQuestions = shuffleOptions(QUESTIONS[lang]);
   }
 
   function getQuestions() {
-    return QUESTIONS[lang];
+    return shuffledQuestions || QUESTIONS[lang];
   }
 
   function getCurrentIndex() {

@@ -269,7 +269,7 @@
   // ── Review: mostra cada pergunta com correto/errado ───────
   function renderReview(details) {
     const ui = UI[lang];
-    const qs = QUESTIONS[lang];
+    const qs = QuizEngine.getQuestions();
 
     els.reviewTitle.textContent = lang === 'pt' ? 'Revisão das respostas' : 'Answer review';
     els.reviewSection.style.display = '';
