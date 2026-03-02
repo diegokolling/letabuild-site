@@ -1347,8 +1347,8 @@ inputBike.addEventListener('change', () => { if (!inputBike.checked) inputBikeKm
 window.addEventListener('resize', () => { if (chartsPanel.classList.contains('active')) renderChart(); });
 
 // ---- SUPABASE AUTH + SYNC ----
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://garuzauvloowpfxirnfk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhcnV6YXV2bG9vd3BmeGlybmZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NzU0NDEsImV4cCI6MjA4ODA1MTQ0MX0.CAa2JiudFUKqVBeEoHe0A91g1bU-zR4a5NGNRaSsi1I';
 
 let supabase = null;
 let currentUser = null;
