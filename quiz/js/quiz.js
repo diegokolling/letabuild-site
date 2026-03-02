@@ -160,6 +160,7 @@ const QuizEngine = (function () {
 
   return {
     init,
+    getQuestions,
     getCurrentIndex,
     getTotalQuestions,
     getCurrentQuestion,
