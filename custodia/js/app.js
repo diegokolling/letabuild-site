@@ -589,30 +589,23 @@
 
     html += '</div>';
 
-    // Create temporary on-screen container (behind everything, for html2canvas)
-    var container = document.createElement('div');
-    container.style.cssText = 'position:fixed;left:0;top:0;width:700px;background:#fff;z-index:-1;';
-    container.innerHTML = html;
-    document.body.appendChild(container);
-
     var filename = 'Tutorial-' + wallet.name.replace(/\s+/g, '-') + '-' + levelLabel.replace(/\s+/g, '-') + '.pdf';
 
     var opt = {
-      margin: [10, 0, 10, 0],
+      margin: [10, 5, 10, 5],
       filename: filename,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { scale: 2, backgroundColor: '#ffffff', useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     function cleanup() {
-      if (container.parentNode) container.parentNode.removeChild(container);
       btnText.textContent = originalText;
       btn.disabled = false;
     }
 
-    html2pdf().set(opt).from(container).save().then(cleanup).catch(cleanup);
+    html2pdf().set(opt).from(html, 'string').save().then(cleanup).catch(cleanup);
   }
 
   // ── Event Handlers ─────────────────────────────────────
