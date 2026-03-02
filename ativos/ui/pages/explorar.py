@@ -63,7 +63,6 @@ def _render_individual():
     selected = st.text_input(
         "Digite o ticker do ativo",
         key="explore_ticker",
-        placeholder="Ex: AAPL, PETR4.SA, BTC-USD, VALE3, ^GSPC",
     )
 
     selected = selected.strip().upper() if selected and selected.strip() else None
