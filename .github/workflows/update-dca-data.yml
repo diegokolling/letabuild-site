@@ -2,8 +2,8 @@ name: Atualizar dados DCA
 
 on:
   schedule:
-    # Dia 2 de cada mês às 9h UTC (evita feriados do dia 1)
-    - cron: '0 9 2 * *'
+    # Toda segunda-feira às 9h UTC
+    - cron: '0 9 * * 1'
   workflow_dispatch:
     # Permite trigger manual pelo GitHub Actions UI
 
