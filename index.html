@@ -4,62 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leta Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: #0d1117;
-    color: #e6edf3;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(224, 138, 58, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(224, 138, 58, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .nav-logo span {
+    color: #e08a3a;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    font-weight: 400;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: #e08a3a;
   }
 
   .container {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 24px 40px;
+    padding: 40px 48px 60px;
     flex: 1;
+    position: relative;
+    z-index: 1;
   }
 
   .hero {
     text-align: center;
-    margin-bottom: 56px;
+    margin-bottom: 64px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e08a3a;
+    background: rgba(224, 138, 58, 0.1);
+    border: 1px solid rgba(224, 138, 58, 0.2);
+    border-radius: 50px;
+    margin-bottom: 24px;
   }
 
   .hero h1 {
-    font-size: 42px;
+    font-size: 48px;
     font-weight: 700;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+    color: #ffffff;
   }
 
   .hero h1 span {
-    color: #f0883e;
+    color: #e08a3a;
+    text-decoration: underline;
+    text-decoration-color: rgba(224, 138, 58, 0.4);
+    text-underline-offset: 6px;
+    text-decoration-thickness: 3px;
   }
 
   .hero p {
-    font-size: 18px;
-    color: #8b949e;
+    font-size: 17px;
+    color: #ffffff;
     max-width: 520px;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hero p a {
+    color: #e08a3a;
+    text-decoration: none;
+  }
+
+  .hero p a:hover {
+    text-decoration: underline;
   }
 
   .projects {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     margin-bottom: 48px;
   }
 
   .card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    padding: 28px 24px;
-    transition: border-color 0.2s, transform 0.2s;
+    background: linear-gradient(135deg, rgba(30, 24, 18, 0.8), rgba(22, 18, 14, 0.6));
+    border: 1px solid rgba(224, 138, 58, 0.08);
+    border-radius: 20px;
+    padding: 28px 24px 0;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
     text-decoration: none;
@@ -67,148 +157,500 @@
   }
 
   .card:hover {
-    border-color: #f0883e;
-    transform: translateY(-2px);
+    border-color: rgba(224, 138, 58, 0.25);
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+  }
+
+  .card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
   }
 
   .card-icon {
-    font-size: 36px;
-    margin-bottom: 16px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(224, 138, 58, 0.06);
+    border: 1px solid rgba(224, 138, 58, 0.08);
+    border-radius: 12px;
+    flex-shrink: 0;
   }
 
-  .card h2 {
-    font-size: 20px;
+  .card-header h2 {
+    font-size: 18px;
     font-weight: 600;
-    margin-bottom: 8px;
+    color: #ffffff;
   }
 
-  .card p {
-    font-size: 14px;
-    color: #8b949e;
-    line-height: 1.6;
+  .card-body {
     flex: 1;
   }
 
+  .card-body p {
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-top: 18px;
+    border-top: 1px solid rgba(224, 138, 58, 0.06);
+  }
+
   .card-tag {
-    display: inline-block;
-    margin-top: 16px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 20px;
-    align-self: flex-start;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e08a3a;
   }
 
-  .tag-green {
-    background: rgba(46, 160, 67, 0.15);
-    color: #3fb950;
+  .card-arrow {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(224, 138, 58, 0.08);
+    color: #e08a3a;
+    font-size: 16px;
+    transition: background 0.2s;
   }
 
-  .tag-blue {
-    background: rgba(56, 139, 253, 0.15);
-    color: #58a6ff;
-  }
-
-  .tag-orange {
-    background: rgba(240, 136, 62, 0.15);
-    color: #f0883e;
+  .card:hover .card-arrow {
+    background: rgba(224, 138, 58, 0.18);
   }
 
   footer {
     text-align: center;
-    padding: 24px;
-    color: #484f58;
+    padding: 28px;
+    color: #ffffff;
     font-size: 13px;
-    border-top: 1px solid #21262d;
+    border-top: 1px solid rgba(224, 138, 58, 0.06);
+    position: relative;
+    z-index: 1;
   }
 
   footer a {
-    color: #8b949e;
+    color: #ffffff;
     text-decoration: none;
   }
 
   footer a:hover {
-    color: #f0883e;
+    color: #e08a3a;
+  }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
+    body {
+      background: #f6f9fb;
+      color: #1a2b3c;
+    }
+
+    body::before,
+    body::after {
+      display: none;
+    }
+
+    nav {
+      background: rgba(246, 249, 251, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(224, 138, 58, 0.08);
+      position: sticky;
+      top: 0;
+    }
+
+    .nav-logo {
+      color: #1a2b3c;
+    }
+
+    .nav-link {
+      color: #7a8a98;
+    }
+
+    .hero h1 {
+      color: #1a2b3c;
+    }
+
+    .hero p {
+      color: #7a8a98;
+    }
+
+    .hero-badge {
+      background: rgba(224, 138, 58, 0.08);
+      border-color: rgba(224, 138, 58, 0.15);
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(224, 138, 58, 0.08);
+      box-shadow: 0 1px 3px rgba(0, 40, 60, 0.04);
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 32px rgba(0, 40, 60, 0.08);
+      border-color: rgba(224, 138, 58, 0.25);
+    }
+
+    .card-icon {
+      background: linear-gradient(135deg, rgba(224, 138, 58, 0.06), rgba(224, 138, 58, 0.04));
+      border-color: rgba(224, 138, 58, 0.08);
+    }
+
+    .card-header h2 {
+      color: #1a2b3c;
+    }
+
+    .card-body p {
+      color: #7a8a98;
+    }
+
+    footer {
+      background: #ffffff;
+      border-top: 1px solid rgba(224, 138, 58, 0.06);
+      color: #a0b0b8;
+    }
+
+    footer a {
+      color: #7a8a98;
+    }
+
+    footer a:hover {
+      color: #e08a3a;
+    }
+  }
+
+  /* Manual light theme override */
+  html[data-theme="light"] body {
+    background: #f6f9fb;
+    color: #1a2b3c;
+  }
+
+  html[data-theme="light"] body::before,
+  html[data-theme="light"] body::after {
+    display: none;
+  }
+
+  html[data-theme="light"] nav {
+    background: rgba(246, 249, 251, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(224, 138, 58, 0.08);
+    position: sticky;
+    top: 0;
+  }
+
+  html[data-theme="light"] .nav-logo {
+    color: #1a2b3c;
+  }
+
+  html[data-theme="light"] .nav-link {
+    color: #7a8a98;
+  }
+
+  html[data-theme="light"] .hero h1 {
+    color: #1a2b3c;
+  }
+
+  html[data-theme="light"] .hero p {
+    color: #7a8a98;
+  }
+
+  html[data-theme="light"] .hero-badge {
+    background: rgba(224, 138, 58, 0.08);
+    border-color: rgba(224, 138, 58, 0.15);
+  }
+
+  html[data-theme="light"] .card {
+    background: #ffffff;
+    border: 1px solid rgba(224, 138, 58, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 40, 60, 0.04);
+  }
+
+  html[data-theme="light"] .card:hover {
+    box-shadow: 0 12px 32px rgba(0, 40, 60, 0.08);
+    border-color: rgba(224, 138, 58, 0.25);
+  }
+
+  html[data-theme="light"] .card-icon {
+    background: linear-gradient(135deg, rgba(224, 138, 58, 0.06), rgba(224, 138, 58, 0.04));
+    border-color: rgba(224, 138, 58, 0.08);
+  }
+
+  html[data-theme="light"] .card-header h2 {
+    color: #1a2b3c;
+  }
+
+  html[data-theme="light"] .card-body p {
+    color: #7a8a98;
+  }
+
+  html[data-theme="light"] footer {
+    background: #ffffff;
+    border-top: 1px solid rgba(224, 138, 58, 0.06);
+    color: #a0b0b8;
+  }
+
+  html[data-theme="light"] footer a {
+    color: #7a8a98;
+  }
+
+  html[data-theme="light"] footer a:hover {
+    color: #e08a3a;
+  }
+
+  /* Manual dark theme override */
+  html[data-theme="dark"] body {
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] body::before {
+    display: block;
+  }
+
+  html[data-theme="dark"] body::after {
+    display: block;
+  }
+
+  html[data-theme="dark"] nav {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+    position: relative;
+  }
+
+  html[data-theme="dark"] .nav-logo {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .nav-link {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .hero h1 {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .hero p {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .hero-badge {
+    background: rgba(224, 138, 58, 0.1);
+    border-color: rgba(224, 138, 58, 0.2);
+  }
+
+  html[data-theme="dark"] .card {
+    background: linear-gradient(135deg, rgba(30, 24, 18, 0.8), rgba(22, 18, 14, 0.6));
+    border: 1px solid rgba(224, 138, 58, 0.08);
+    box-shadow: none;
+  }
+
+  html[data-theme="dark"] .card:hover {
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+    border-color: rgba(224, 138, 58, 0.25);
+  }
+
+  html[data-theme="dark"] .card-icon {
+    background: rgba(224, 138, 58, 0.06);
+    border-color: rgba(224, 138, 58, 0.08);
+  }
+
+  html[data-theme="dark"] .card-header h2 {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] .card-body p {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] footer {
+    background: transparent;
+    border-top: 1px solid rgba(224, 138, 58, 0.06);
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] footer a {
+    color: #ffffff;
+  }
+
+  html[data-theme="dark"] footer a:hover {
+    color: #e08a3a;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .container { padding: 32px 24px 48px; }
+    .projects { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 38px; }
   }
 
   @media (max-width: 480px) {
-    .container { padding: 40px 16px 24px; }
+    nav { padding: 16px 20px; }
+    .container { padding: 24px 16px 32px; }
     .hero h1 { font-size: 30px; }
     .hero p { font-size: 15px; }
     .projects { grid-template-columns: 1fr; }
   }
 </style>
+<script src="/theme-toggle.js"></script>
 </head>
 <body>
 
+<nav>
+  <a href="/" class="nav-logo">leta<span>build</span></a>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer" class="nav-link">caioleta.com</a>
+    <button id="themeToggle" style="background:none;border:1px solid rgba(224,138,58,0.15);color:var(--text-muted,#ffffff);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,color 0.2s;" title="Alternar tema"></button>
+  </div>
+</nav>
+
 <div class="container">
   <div class="hero">
+    <div class="hero-badge">Open Source Tools</div>
     <h1>leta<span>build</span></h1>
-    <p>Programas para uso pessoal construídos por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer" style="color:#f0883e;text-decoration:none;">Caio Leta</a>.<br>Todos gratuitos, sem cadastro obrigatório.</p>
+    <p>Programas para uso pessoal construídos por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">Caio Leta</a>.<br>Todos gratuitos, sem cadastro obrigatório.</p>
   </div>
 
   <div class="projects">
-    <a class="card" href="/habitos/">
-      <div class="card-icon">📅</div>
-      <h2>Hábitos</h2>
-      <p>Calendário de habitos e fitness. Acompanhe peso, sono, passos, treinos e mais. Visualize com graficos e heatmap anual.</p>
-      <span class="card-tag tag-green">Usar agora</span>
-    </a>
-
-    <a class="card" href="https://podcast.letabuild.com">
-      <div class="card-icon">🎙️</div>
-      <h2>Podcast Digest</h2>
-      <p>Cole o link de um video do YouTube e receba um resumo inteligente com os pontos mais relevantes, feito por IA.</p>
-      <span class="card-tag tag-blue">Usar agora</span>
-    </a>
-
     <a class="card" href="/btc/">
-      <div class="card-icon">₿</div>
-      <h2>Termômetro Bitcoin</h2>
-      <p>Dashboard com 8 indicadores on-chain e técnicos para avaliar se e hora de comprar ou vender Bitcoin.</p>
-      <span class="card-tag tag-orange">Usar agora</span>
-    </a>
-
-    <a class="card" href="https://ativos.letabuild.com">
-      <div class="card-icon">📊</div>
-      <h2>Análise de Ativos</h2>
-      <p>Explore e compare ações, commodities, cripto e indices. Métricas de performance, risco e fundamentos.</p>
-      <span class="card-tag tag-green">Usar agora</span>
-    </a>
-
-    <a class="card" href="https://paper.letabuild.com">
-      <div class="card-icon">📄</div>
-      <h2>Paper Digest</h2>
-      <p>Cole um link, suba um PDF ou cole texto. Receba análise crítica ou resumo completo de qualquer artigo, feito por IA.</p>
-      <span class="card-tag tag-blue">Usar agora</span>
-    </a>
-
-    <a class="card" href="/conversor/">
-      <div class="card-icon">⚡</div>
-      <h2>SAT Converter</h2>
-      <p>Converta Satoshis para Reais e Dólares em tempo real. Cotação ao vivo do Bitcoin e poder de compra em sats.</p>
-      <span class="card-tag tag-orange">Usar agora</span>
-    </a>
-
-    <a class="card" href="/quiz/">
-      <div class="card-icon">₿</div>
-      <h2>Quiz Bitcoin</h2>
-      <p>Teste seus conhecimentos sobre Bitcoin com 20 perguntas. De conceitos básicos a análise on-chain. Descubra seu nível.</p>
-      <span class="card-tag tag-green">Fazer quiz</span>
+      <div class="card-header">
+        <div class="card-icon">₿</div>
+        <h2>Termômetro Bitcoin</h2>
+      </div>
+      <div class="card-body">
+        <p>Dashboard com 8 indicadores on-chain e técnicos para avaliar se e hora de comprar ou vender Bitcoin.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
     </a>
 
     <a class="card" href="/custodia/">
-      <div class="card-icon">🔐</div>
-      <h2>Auto-Custódia</h2>
-      <p>Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo.</p>
-      <span class="card-tag tag-blue">Começar</span>
+      <div class="card-header">
+        <div class="card-icon">🔐</div>
+        <h2>Auto-Custódia</h2>
+      </div>
+      <div class="card-body">
+        <p>Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Começar</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
     </a>
 
     <a class="card" href="/dca/">
-      <div class="card-icon">📈</div>
-      <h2>Simulador DCA</h2>
-      <p>Se eu tivesse investido R$X por mês desde [data], quanto teria hoje? Compare Bitcoin, S&P 500, QQQ, Ouro, Ibovespa e CDI.</p>
-      <span class="card-tag tag-orange">Simular</span>
+      <div class="card-header">
+        <div class="card-icon">📈</div>
+        <h2>Simulador DCA</h2>
+      </div>
+      <div class="card-body">
+        <p>Se eu tivesse investido R$X por mês desde [data], quanto teria hoje? Compare Bitcoin, S&P 500, QQQ, Ouro, Ibovespa e CDI.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Simular</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/conversor/">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <h2>SAT Converter</h2>
+      </div>
+      <div class="card-body">
+        <p>Converta Satoshis para Reais e Dólares em tempo real. Cotação ao vivo do Bitcoin e poder de compra em sats.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://ativos.letabuild.com">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <h2>Análise de Ativos</h2>
+      </div>
+      <div class="card-body">
+        <p>Explore e compare ações, commodities, cripto e indices. Métricas de performance, risco e fundamentos.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://podcast.letabuild.com">
+      <div class="card-header">
+        <div class="card-icon">🎙️</div>
+        <h2>Podcast Digest</h2>
+      </div>
+      <div class="card-body">
+        <p>Cole o link de um video do YouTube e receba um resumo inteligente com os pontos mais relevantes, feito por IA.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://paper.letabuild.com">
+      <div class="card-header">
+        <div class="card-icon">📄</div>
+        <h2>Paper Digest</h2>
+      </div>
+      <div class="card-body">
+        <p>Cole um link, suba um PDF ou cole texto. Receba análise crítica ou resumo completo de qualquer artigo, feito por IA.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/habitos/">
+      <div class="card-header">
+        <div class="card-icon">📅</div>
+        <h2>Hábitos</h2>
+      </div>
+      <div class="card-body">
+        <p>Calendário de habitos e fitness. Acompanhe peso, sono, passos, treinos e mais. Visualize com graficos e heatmap anual.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Usar agora</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/quiz/">
+      <div class="card-header">
+        <div class="card-icon">₿</div>
+        <h2>Quiz Bitcoin</h2>
+      </div>
+      <div class="card-body">
+        <p>Teste seus conhecimentos sobre Bitcoin com 20 perguntas. De conceitos básicos a análise on-chain. Descubra seu nível.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Fazer quiz</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
     </a>
   </div>
 </div>
