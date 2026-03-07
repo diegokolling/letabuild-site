@@ -6,7 +6,7 @@
   }
 
   function getTheme() {
-    return localStorage.getItem(STORAGE_KEY) || getSystemTheme();
+    return localStorage.getItem(STORAGE_KEY) || 'dark';
   }
 
   function applyTheme(theme) {
