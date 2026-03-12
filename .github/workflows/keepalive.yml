@@ -14,9 +14,23 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          curl -s -o /dev/null -w "%{http_code}" \
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "ERROR: SUPABASE_URL or SUPABASE_ANON_KEY secrets are not configured."
+            echo "Go to repo Settings > Secrets and variables > Actions and add them."
+            exit 1
+          fi
+
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
             "${SUPABASE_URL}/rest/v1/habit_data?select=count&limit=1" \
             -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}"
-          echo ""
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+
+          echo "HTTP status: ${HTTP_CODE}"
           echo "Supabase pinged at $(date -u)"
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 400 ]; then
+            echo "Success!"
+          else
+            echo "Warning: Supabase returned HTTP ${HTTP_CODE}"
+            exit 1
+          fi
