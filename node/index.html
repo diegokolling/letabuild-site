@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rode seu Node Bitcoin | letabuild.com</title>
+  <meta name="description" content="Tutorial completo para rodar seu próprio node Bitcoin. Notebook dedicado, node prunado ou Umbrel. Seja seu próprio banco.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Rode seu Node Bitcoin | letabuild.com">
+  <meta property="og:description" content="Tutorial completo para rodar seu próprio node Bitcoin. Seja seu próprio banco.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://letabuild.com/node/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rode seu Node Bitcoin | letabuild.com">
+  <meta name="twitter:description" content="Tutorial completo para rodar seu próprio node Bitcoin. Seja seu próprio banco.">
+
+  <script src="/theme-toggle.js"></script>
+  <script src="/lang-toggle.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --surface2: #1c1c1c;
+      --border: #2a2a2a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --orange: #f7931a;
+      --orange-dim: rgba(247,147,26,0.12);
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 24px;
+    }
+    .topbar-back {
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .topbar-back:hover { color: var(--text); text-decoration: none; }
+    .topbar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+    }
+
+    /* ── NAV PILLS ── */
+    .nav-pills {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-pills::-webkit-scrollbar { display: none; }
+    .nav-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .nav-pill:hover { color: var(--text); }
+    .nav-pill.active {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+    }
+    .nav-pill .pill-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .nav-pill.active .pill-num {
+      background: var(--orange);
+      color: #000;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      height: 2px;
+      background: var(--border);
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+
+    /* ── SECTIONS ── */
+    .section { display: none; }
+    .section.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    .hero { margin-bottom: 40px; }
+    .hero-tag {
+      display: inline-block;
+      background: var(--orange-dim);
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 38px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      margin-top: 28px;
+    }
+    p { margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 8px; font-size: 15px; color: var(--muted); }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card-orange {
+      background: var(--orange-dim);
+      border-color: rgba(247,147,26,0.25);
+    }
+    .card-green {
+      background: rgba(34,197,94,0.08);
+      border-color: rgba(34,197,94,0.25);
+    }
+    .card-red {
+      background: rgba(239,68,68,0.08);
+      border-color: rgba(239,68,68,0.25);
+    }
+
+    /* ── NOTICE BOXES ── */
+    .notice {
+      display: flex;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    .notice-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .notice-warn { background: rgba(239,68,68,0.09); border: 1px solid rgba(239,68,68,0.3); }
+    .notice-info { background: rgba(59,130,246,0.09); border: 1px solid rgba(59,130,246,0.3); }
+    .notice-tip  { background: rgba(34,197,94,0.09);  border: 1px solid rgba(34,197,94,0.3); }
+    .notice-key  { background: var(--orange-dim); border: 1px solid rgba(247,147,26,0.3); }
+
+    /* ── STEPS ── */
+    .steps { margin: 20px 0; }
+    .step {
+      display: flex;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ── CODE BLOCKS ── */
+    .code {
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 12px 0 16px;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #69f0ae;
+    }
+    .code .cmt { color: #555; }
+    code {
+      background: #222;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.85em;
+      color: var(--orange);
+    }
+
+    /* ── TABLES ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      background: var(--surface);
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--orange);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+
+    /* ── ANALOGY ── */
+    .analogy {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      position: relative;
+      font-style: italic;
+      color: var(--text);
+    }
+    .analogy::before {
+      content: '💡';
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      font-size: 18px;
+      background: var(--bg);
+      padding: 0 4px;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .nav-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+    }
+    .nav-btn:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .nav-btn.primary {
+      background: var(--orange);
+      color: #000;
+      border-color: var(--orange);
+      font-weight: 600;
+    }
+    .nav-btn.primary:hover { background: #e8850f; }
+    .nav-btn:disabled { opacity: 0.3; pointer-events: none; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .disclaimer-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 540px;
+      width: 100%;
+      padding: 32px;
+    }
+    .disclaimer-box h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--orange);
+      margin-top: 0;
+    }
+    .disclaimer-box p, .disclaimer-box li {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .disclaimer-box ul { margin-bottom: 24px; }
+    .btn-disclaimer {
+      width: 100%;
+      padding: 12px;
+      background: var(--orange);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-disclaimer:hover { background: #e8850f; }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer a { color: var(--muted); font-size: 13px; }
+    .footer a:hover { color: var(--text); }
+    .footer .footer-text { font-size: 13px; color: var(--muted); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <a href="/" class="topbar-back">← letabuild.com</a>
+  <span class="topbar-title">Rode seu Node Bitcoin</span>
+</div>
+
+<!-- Nav Pills -->
+<div class="nav-pills" id="navPills">
+  <button class="nav-pill active" data-s="0"><span class="pill-num">1</span> Por que rodar</button>
+  <button class="nav-pill" data-s="1"><span class="pill-num">2</span> O que faz um Node</button>
+  <button class="nav-pill" data-s="2"><span class="pill-num">3</span> Notebook dedicado</button>
+  <button class="nav-pill" data-s="3"><span class="pill-num">4</span> Node prunado</button>
+  <button class="nav-pill" data-s="4"><span class="pill-num">5</span> Umbrel</button>
+  <button class="nav-pill" data-s="5"><span class="pill-num">6</span> Conectar carteira</button>
+  <button class="nav-pill" data-s="6"><span class="pill-num">7</span> Comparação</button>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Disclaimer -->
+<div class="disclaimer-overlay" id="disclaimer">
+  <div class="disclaimer-box">
+    <h3>Antes de começar</h3>
+    <p>Este tutorial ensina a rodar um node completo de Bitcoin. Algumas coisas importantes:</p>
+    <ul>
+      <li>Rodar um node não é mineração. Você não vai "ganhar" bitcoins por rodar um node.</li>
+      <li>Um node serve para verificar suas próprias transações sem depender de terceiros.</li>
+      <li>O processo exige paciência: a sincronização inicial pode levar de 1 a 7 dias.</li>
+      <li>Você precisa de espaço em disco (pelo menos 15 GB no modo prunado, ou 600+ GB para o blockchain completo).</li>
+    </ul>
+    <button class="btn-disclaimer" id="btnDisclaimer">Entendi, continuar</button>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="page">
+
+  <!-- ═══ SEÇÃO 1: POR QUE RODAR ═══ -->
+  <div class="section active" data-i="0">
+    <div class="hero">
+      <span class="hero-tag">Fundamentos</span>
+      <h1>Por que rodar seu próprio node Bitcoin</h1>
+      <p>A resposta curta: para não precisar confiar em ninguém.</p>
+    </div>
+
+    <p>Quando você usa uma carteira comum (Nubank, Binance, ou até carteiras como BlueWallet no modo padrão), você está confiando que outra pessoa está verificando suas transações. Você está confiando que o saldo que aparece na tela é real. Você está confiando que ninguém está observando quais endereços são seus.</p>
+    <p>Um node Bitcoin elimina essa confiança. Ele baixa e verifica cada transação desde o bloco zero (3 de janeiro de 2009) até hoje. Quando seu node confirma que você recebeu bitcoin, não é porque alguém te disse. É porque você verificou.</p>
+
+    <h2>Motivações individuais (não coletivas)</h2>
+    <p>Existe um mito de que rodar um node "ajuda a rede Bitcoin". Na prática, a rede está muito bem. Ela roda com milhares de nodes espalhados pelo mundo, operados por empresas, mineradores e entusiastas. Ela não depende de você.</p>
+    <p>Você roda um node por motivos egoístas, e isso é perfeitamente válido:</p>
+    <ul>
+      <li>Ser seu próprio banco: verificar diretamente que seus bitcoins existem e estão sob seu controle, sem depender do servidor de ninguém.</li>
+      <li>Privacidade total: quando você consulta seu saldo em um block explorer (como blockchain.info), o servidor registra seu IP e pode associá-lo aos endereços que você consultou. Com seu próprio node, ninguém sabe o que você está verificando.</li>
+      <li>Verificar o supply: você pode rodar o comando <code>gettxoutsetinfo</code> e confirmar com seus próprios olhos que só existem os 21 milhões de bitcoins. Nenhum banco central, nenhuma exchange, ninguém pode falsificar isso no seu node.</li>
+      <li>Proteção contra forks: em 2017, grandes empresas tentaram mudar as regras do Bitcoin (SegWit2X). Quem rodava seu próprio node podia verificar independentemente que estava na cadeia correta, sem depender do que a Coinbase ou a blockchain.info diziam.</li>
+      <li>Usar Lightning de verdade: para rodar um node Lightning (pagamentos instantâneos e baratos), você precisa de um node Bitcoin por baixo.</li>
+    </ul>
+
+    <div class="analogy">
+      <p>Pense assim: você pode confiar no extrato que o banco te mostra, ou pode ser o próprio banco e verificar tudo sozinho. Um node te dá a segunda opção.</p>
+    </div>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠️</span>
+      <div>
+        <strong>O que um node NÃO faz</strong><br>
+        Não minera bitcoin. Não gera renda. Não aumenta o preço. Um node é uma ferramenta de verificação e privacidade, não um investimento.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" disabled>← Anterior</button>
+      <button class="nav-btn primary" onclick="go(1)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 2: O QUE FAZ UM NODE ═══ -->
+  <div class="section" data-i="1">
+    <div class="hero">
+      <span class="hero-tag">Conceitos</span>
+      <h1>O que faz um node Bitcoin</h1>
+      <p>Um node Bitcoin é um computador que roda o software Bitcoin Core (ou equivalente) e mantém uma cópia completa de todas as transações já feitas na rede, desde o primeiro bloco.</p>
+    </div>
+
+    <h2>A analogia do cartório</h2>
+    <div class="analogy">
+      <p>Imagine que cada transação de Bitcoin é como a transferência de um imóvel. Em um cartório, você pode verificar toda a cadeia de proprietários de um terreno, desde a matrícula original. Um node Bitcoin é seu cartório particular: ele tem todos os registros e pode verificar qualquer transação de forma independente, sem precisar ligar para outro cartório e perguntar.</p>
+    </div>
+
+    <h2>O que ele faz na prática</h2>
+    <ol>
+      <li>Baixa o blockchain completo (todas as transações desde 2009)</li>
+      <li>Verifica cada transação individualmente, aplicando todas as regras do protocolo</li>
+      <li>Rejeita qualquer bloco ou transação inválida, independentemente de quem mandou</li>
+      <li>Propaga transações e blocos válidos para outros nodes</li>
+      <li>Responde consultas da sua carteira sobre seus saldos e transações</li>
+    </ol>
+
+    <h2>Node completo vs. node prunado vs. carteira leve</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tipo</th><th>Verifica tudo?</th><th>Armazena tudo?</th><th>Espaço em disco</th><th>Privacidade</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Node completo</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>~600 GB</td><td style="color:var(--green)">Máxima</td></tr>
+          <tr><td>Node prunado</td><td style="color:var(--green)">Sim</td><td style="color:#ffd600">Parcial</td><td>~15 GB</td><td style="color:var(--green)">Máxima</td></tr>
+          <tr><td>Carteira leve (SPV)</td><td style="color:var(--red)">Não</td><td style="color:var(--red)">Não</td><td>~100 MB</td><td style="color:var(--red)">Baixa</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notice notice-key">
+      <span class="notice-icon">🔑</span>
+      <div>
+        <strong>Node prunado ainda é node completo</strong><br>
+        Um node prunado verifica absolutamente tudo, desde o bloco zero. Ele apenas descarta os dados antigos depois de validá-los. Você tem a mesma segurança de um node completo, mas com muito menos espaço em disco.
+      </div>
+    </div>
+
+    <h2>Hardware mínimo</h2>
+    <p>Rodar um node não exige um supercomputador. Requisitos mínimos:</p>
+    <ul>
+      <li>Processador: qualquer dual-core moderno (até um Raspberry Pi 4 funciona)</li>
+      <li>RAM: 2 GB mínimo (4 GB recomendado)</li>
+      <li>Armazenamento: 1 TB SSD para node completo, ou 30 GB para node prunado</li>
+      <li>Internet: conexão banda larga (a sincronização inicial baixa centenas de GB)</li>
+      <li>Eletricidade: um Raspberry Pi consome ~5W, custa R$5-10/mês na conta de luz</li>
+    </ul>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(0)">← Anterior</button>
+      <button class="nav-btn primary" onclick="go(2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 3: NOTEBOOK DEDICADO ═══ -->
+  <div class="section" data-i="2">
+    <div class="hero">
+      <span class="hero-tag">Opção 1</span>
+      <h1>Node em notebook velho dedicado</h1>
+      <p>Tem um notebook antigo parado em casa? Ele pode virar seu node Bitcoin. Essa opção é ideal para quem quer um node rodando 24/7 sem comprometer o computador do dia a dia.</p>
+    </div>
+
+    <h2>O que você precisa</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Requisito</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Notebook</td><td>Qualquer com 4 GB+ de RAM</td><td>De 2012 pra cá, provavelmente funciona</td></tr>
+          <tr><td>SSD</td><td>1 TB (interno ou USB 3.0)</td><td>HD mecânico funciona mas é muito mais lento</td></tr>
+          <tr><td>Sistema operacional</td><td>Ubuntu 22.04 LTS</td><td>Gratuito, leve, ideal pra hardware antigo</td></tr>
+          <tr><td>Conexão</td><td>Cabo ethernet (preferível) ou Wi-Fi</td><td>Ethernet é mais estável pro sync inicial</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Passo a passo</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Instale o Ubuntu no notebook</h4>
+          <p>Baixe o Ubuntu 22.04 LTS em ubuntu.com. Grave num pendrive com o Balena Etcher. Ligue o notebook com o pendrive conectado, entre no menu de boot (geralmente F12 ou F2 ao ligar) e instale o Ubuntu no disco. Esse processo apaga tudo que tinha no notebook.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Atualize o sistema</h4>
+          <p>Abra o Terminal e rode:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">sudo apt update && sudo apt upgrade -y</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Baixe o Bitcoin Core</h4>
+          <p>Acesse bitcoincore.org e baixe a versão mais recente para Linux (64-bit). Ou use o terminal:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code"><span class="cmt"># Verifique a versão mais recente em bitcoincore.org</span>
+cd ~/Downloads
+wget https://bitcoincore.org/bin/bitcoin-core-28.0/bitcoin-28.0-x86_64-linux-gnu.tar.gz</div>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠️</span>
+      <div>
+        <strong>Sempre verifique a assinatura</strong><br>
+        Antes de instalar qualquer software de Bitcoin, verifique as assinaturas GPG. Isso garante que o arquivo não foi adulterado. As instruções estão no site bitcoincore.org na seção "Verify release signatures".
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Extraia e instale</h4>
+          <p>Extraia o arquivo e mova os binários para uma pasta do sistema:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">tar -xzf bitcoin-28.0-x86_64-linux-gnu.tar.gz
+sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-28.0/bin/*</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Configure o Bitcoin Core</h4>
+          <p>Crie o arquivo de configuração:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">mkdir -p ~/.bitcoin
+nano ~/.bitcoin/bitcoin.conf</div>
+    <p>Adicione estas linhas ao arquivo:</p>
+    <div class="code"><span class="cmt"># Roda como servidor (necessário para carteiras se conectarem)</span>
+server=1
+
+<span class="cmt"># Aceita conexões RPC locais</span>
+rpcuser=seunodeBTC
+rpcpassword=escolha_uma_senha_forte_aqui
+
+<span class="cmt"># Limita uso de memória (ajuste conforme sua RAM)</span>
+dbcache=1024
+
+<span class="cmt"># Rede Tor para privacidade (opcional, recomendado)</span>
+<span class="cmt"># proxy=127.0.0.1:9050</span>
+<span class="cmt"># listen=1</span>
+<span class="cmt"># bind=127.0.0.1</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Inicie o Bitcoin Core</h4>
+          <p>Rode o daemon (processo em background):</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">bitcoind -daemon</div>
+    <p>Para acompanhar o progresso da sincronização:</p>
+    <div class="code">bitcoin-cli getblockchaininfo</div>
+    <p>O campo <code>verificationprogress</code> mostra a porcentagem. Quando chegar a 0.999999, seu node está sincronizado. Esse processo pode levar de 1 a 7 dias na primeira vez.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4>Configure para iniciar automaticamente</h4>
+          <p>Crie um serviço systemd para que o node inicie junto com o sistema:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">sudo nano /etc/systemd/system/bitcoind.service</div>
+    <p>Cole o conteúdo:</p>
+    <div class="code">[Unit]
+Description=Bitcoin Core
+After=network.target
+
+[Service]
+User=seu_usuario
+ExecStart=/usr/local/bin/bitcoind -daemon -conf=/home/seu_usuario/.bitcoin/bitcoin.conf
+ExecStop=/usr/local/bin/bitcoin-cli stop
+Restart=on-failure
+Type=forking
+
+[Install]
+WantedBy=multi-user.target</div>
+    <div class="code">sudo systemctl enable bitcoind
+sudo systemctl start bitcoind</div>
+
+    <div class="notice notice-tip">
+      <span class="notice-icon">✅</span>
+      <div>
+        <strong>Dica: verifique o supply</strong><br>
+        Depois de sincronizado, rode <code>bitcoin-cli gettxoutsetinfo</code> e veja com seus próprios olhos quantos bitcoins existem. É um momento poderoso.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(1)">← Anterior</button>
+      <button class="nav-btn primary" onclick="go(3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 4: NODE PRUNADO ═══ -->
+  <div class="section" data-i="3">
+    <div class="hero">
+      <span class="hero-tag">Opção 2</span>
+      <h1>Node prunado no seu computador pessoal</h1>
+      <p>Não tem um notebook sobrando? Sem problema. Você pode rodar um node Bitcoin no seu próprio computador do dia a dia, usando o modo prunado. Isso exige apenas ~15-30 GB de espaço em vez dos 600+ GB do blockchain completo.</p>
+    </div>
+
+    <h2>Como funciona o modo prunado</h2>
+    <p>O node prunado faz exatamente a mesma verificação que um node completo. Ele baixa e valida cada bloco desde o genesis (bloco zero). A diferença é que, depois de verificar um bloco antigo, ele descarta os dados brutos para liberar espaço.</p>
+    <p>Resultado: você tem a mesma segurança, mas ocupa uma fração do disco.</p>
+
+    <div class="notice notice-info">
+      <span class="notice-icon">ℹ️</span>
+      <div>
+        <strong>Limitação do modo prunado</strong><br>
+        Um node prunado não consegue servir blocos históricos para outros nodes. Mas isso não afeta em nada a sua segurança ou a verificação das suas transações. A rede tem nodes completos de sobra para isso.
+      </div>
+    </div>
+
+    <h2>Passo a passo (macOS, Windows ou Linux)</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Baixe o Bitcoin Core</h4>
+          <p>Acesse bitcoincore.org e baixe a versão para seu sistema operacional. No Mac, será um arquivo .dmg. No Windows, um .exe. No Linux, siga os mesmos passos da seção anterior.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Instale normalmente</h4>
+          <p>No Mac, arraste para a pasta Aplicativos. No Windows, rode o instalador. Ao abrir pela primeira vez, o Bitcoin Core pergunta onde salvar os dados.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Ative o modo prunado</h4>
+          <p>Abra o arquivo de configuração do Bitcoin Core e adicione a linha:</p>
+        </div>
+      </div>
+    </div>
+    <div class="code">prune=1024</div>
+    <p>Isso limita o armazenamento a 1024 MB (~1 GB) de blocos recentes. O mínimo aceito é 550 MB. Você pode usar valores maiores se quiser manter mais histórico recente.</p>
+    <p>Onde fica o arquivo de configuração:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sistema</th><th>Caminho do bitcoin.conf</th></tr></thead>
+        <tbody>
+          <tr><td>macOS</td><td>~/Library/Application Support/Bitcoin/bitcoin.conf</td></tr>
+          <tr><td>Windows</td><td>C:\Users\SeuUsuario\AppData\Roaming\Bitcoin\bitcoin.conf</td></tr>
+          <tr><td>Linux</td><td>~/.bitcoin/bitcoin.conf</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Inicie a sincronização</h4>
+          <p>Abra o Bitcoin Core. Ele vai começar a baixar e verificar o blockchain inteiro. Sim, ele baixa tudo (centenas de GB passam pelo seu computador), mas só mantém os blocos mais recentes em disco.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Aguarde a sincronização</h4>
+          <p>No modo prunado com um computador moderno (SSD + 8 GB RAM + banda larga), a sincronização inicial leva 1-3 dias. Você pode usar o computador normalmente enquanto sincroniza, mas ficará um pouco mais lento.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice notice-tip">
+      <span class="notice-icon">✅</span>
+      <div>
+        <strong>Dica: não precisa ficar ligado 24/7</strong><br>
+        Diferente de um node dedicado, você pode desligar o computador e religar depois. O node retoma de onde parou. Só vai ficar "atrasado" pelo tempo que ficou desligado, e recupera rapidamente.
+      </div>
+    </div>
+
+    <h2>Configuração completa recomendada</h2>
+    <div class="code"><span class="cmt"># bitcoin.conf para uso pessoal no dia a dia</span>
+prune=1024
+server=1
+rpcuser=meunodeBTC
+rpcpassword=senha_forte_aqui
+
+<span class="cmt"># Limita banda para não prejudicar seu uso de internet</span>
+maxuploadtarget=500
+
+<span class="cmt"># Limita conexões (menos impacto na performance)</span>
+maxconnections=20
+
+<span class="cmt"># Cache menor para dividir RAM com seus outros programas</span>
+dbcache=512</div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(2)">← Anterior</button>
+      <button class="nav-btn primary" onclick="go(4)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 5: UMBREL ═══ -->
+  <div class="section" data-i="4">
+    <div class="hero">
+      <span class="hero-tag">Opção 3</span>
+      <h1>Node no Umbrel</h1>
+      <p>O Umbrel é um sistema operacional que transforma qualquer computador pequeno (como um Raspberry Pi ou mini PC) num servidor pessoal com interface visual. Ele torna rodar um node Bitcoin tão simples quanto instalar um app no celular.</p>
+    </div>
+
+    <h2>Por que o Umbrel</h2>
+    <ul>
+      <li>Interface web bonita e intuitiva, acessível de qualquer dispositivo na sua rede</li>
+      <li>Instalação de apps com um clique (Bitcoin Core, Lightning, Electrum Server, block explorer)</li>
+      <li>Mais de 300 apps disponíveis além de Bitcoin</li>
+      <li>Comunidade ativa e suporte</li>
+      <li>Funciona em Raspberry Pi 4/5, mini PCs e computadores antigos</li>
+    </ul>
+
+    <div class="notice notice-info">
+      <span class="notice-icon">ℹ️</span>
+      <div>
+        <strong>Alternativas ao Umbrel</strong><br>
+        Existem outras opções com propostas similares: RaspiBlitz (mais técnico, totalmente open source), Start9 (foco em privacidade), Citadel (fork open source do Umbrel). Todos são válidos. O Umbrel é recomendado aqui por ser o mais acessível para iniciantes.
+      </div>
+    </div>
+
+    <h2>O que você precisa</h2>
+    <h3>Opção A: Raspberry Pi (mais popular)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Especificação</th><th>Preço estimado</th></tr></thead>
+        <tbody>
+          <tr><td>Raspberry Pi 4 ou 5</td><td>4 GB ou 8 GB de RAM</td><td>R$ 400-650</td></tr>
+          <tr><td>SSD externo</td><td>1 TB, conectado via USB 3.0</td><td>R$ 300-500</td></tr>
+          <tr><td>Cartão microSD</td><td>16 GB+ (para o sistema)</td><td>R$ 40-60</td></tr>
+          <tr><td>Fonte de alimentação</td><td>Oficial do Raspberry Pi</td><td>R$ 80-120</td></tr>
+          <tr><td>Cabo ethernet</td><td>Cat5e ou superior</td><td>R$ 15-30</td></tr>
+          <tr><td>Case com ventilação</td><td>Qualquer case para Pi</td><td>R$ 30-80</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Total estimado: R$ 900-1.500</p>
+
+    <h3>Opção B: Mini PC ou notebook velho</h3>
+    <p>Qualquer computador com processador 64-bit, 4 GB+ de RAM e 1 TB de armazenamento roda o Umbrel. Um mini PC com processador Intel N100 é uma excelente opção, custando R$ 600-1.000.</p>
+
+    <h2>Passo a passo</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Baixe o umbrelOS</h4><p>Acesse umbrel.com e baixe a imagem para seu hardware (Raspberry Pi ou x86). Você também vai precisar do Balena Etcher para gravar a imagem.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Grave a imagem</h4><p>Para Raspberry Pi: grave a imagem no cartão microSD usando o Balena Etcher. Para mini PC/notebook: grave num pendrive USB.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Monte o hardware</h4><p>Coloque o microSD no Raspberry Pi (ou o pendrive no mini PC). Conecte o SSD na porta USB 3.0 (a porta azul). Conecte o cabo ethernet no roteador. Ligue a fonte de alimentação.</p></div></div>
+    </div>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠️</span>
+      <div>
+        <strong>USB 3.0 é obrigatório</strong><br>
+        No Raspberry Pi, sempre conecte o SSD na porta USB 3.0 (azul). A porta USB 2.0 é lenta demais e vai causar problemas de sincronização. Também use sempre a fonte oficial. Fontes genéricas causam instabilidade e corrompem dados.
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Acesse o Umbrel</h4><p>Espere uns 5 minutos após ligar. Depois, em qualquer navegador da sua rede, acesse:</p></div></div>
+    </div>
+    <div class="code">http://umbrel.local</div>
+    <p>Se não funcionar, tente descobrir o IP do dispositivo no painel do seu roteador e acesse diretamente (ex: http://192.168.1.100).</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">5</div><div class="step-content"><h4>Configure sua conta</h4><p>Na primeira vez, o Umbrel pede para criar um nome e senha. Essa senha protege o acesso ao painel. Guarde-a bem.</p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-content"><h4>Instale o Bitcoin Node</h4><p>Vá na App Store do Umbrel e instale "Bitcoin Node". Ele começa a sincronizar automaticamente. Isso leva de 2 a 7 dias dependendo do hardware e da internet.</p></div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-content"><h4>Instale apps complementares (opcional)</h4><p>Depois de sincronizado, instale:</p></div></div>
+    </div>
+    <ul>
+      <li>Electrs: servidor Electrum para conectar carteiras como Sparrow</li>
+      <li>Mempool: seu próprio block explorer privado</li>
+      <li>Lightning (LND ou Core Lightning): para pagamentos via Lightning Network</li>
+      <li>Tailscale: acesso remoto seguro ao seu node de qualquer lugar</li>
+    </ul>
+
+    <div class="notice notice-tip">
+      <span class="notice-icon">✅</span>
+      <div>
+        <strong>Custo de operação</strong><br>
+        Um Raspberry Pi consome cerca de 5-10 watts. Na conta de luz, isso é R$ 5-15 por mês. Seu node roda 24/7 gastando menos que uma lâmpada de LED.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(3)">← Anterior</button>
+      <button class="nav-btn primary" onclick="go(5)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 6: CONECTAR CARTEIRA ═══ -->
+  <div class="section" data-i="5">
+    <div class="hero">
+      <span class="hero-tag">Prática</span>
+      <h1>Conectando sua carteira ao seu node</h1>
+      <p>Rodar um node só tem sentido se você usa ele. A maneira mais prática é conectar uma carteira desktop ao seu node, para que todas as consultas de saldo e transações passem pelo seu próprio servidor.</p>
+    </div>
+
+    <h2>Sparrow Wallet</h2>
+    <p>A Sparrow Wallet é a melhor opção para conectar ao seu node. É gratuita, open source, e funciona em Mac, Windows e Linux. Ela suporta carteiras simples (singlesig) e avançadas (multisig), e se conecta tanto ao Bitcoin Core diretamente quanto a um servidor Electrum.</p>
+
+    <h3>Conectando via Electrum Server (Umbrel)</h3>
+    <p>Se você está usando o Umbrel com o Electrs instalado:</p>
+    <ol>
+      <li>No Umbrel, abra o app Electrs e copie o endereço de conexão (algo como umbrel.local:50001)</li>
+      <li>Abra a Sparrow Wallet</li>
+      <li>Vá em File &gt; Preferences &gt; Server</li>
+      <li>Selecione "Private Electrum Server"</li>
+      <li>Cole o endereço e a porta</li>
+      <li>Clique em "Test Connection" para confirmar</li>
+      <li>Se aparecer um cadeado verde, está conectado ao seu node</li>
+    </ol>
+
+    <h3>Conectando via Bitcoin Core diretamente (notebook/PC)</h3>
+    <p>Se você está rodando o Bitcoin Core no seu computador:</p>
+    <ol>
+      <li>Abra a Sparrow Wallet</li>
+      <li>Vá em File &gt; Preferences &gt; Server</li>
+      <li>Selecione "Bitcoin Core"</li>
+      <li>Preencha: Host 127.0.0.1, porta 8332, usuário e senha que você definiu no bitcoin.conf</li>
+      <li>Clique em "Test Connection"</li>
+    </ol>
+
+    <div class="notice notice-info">
+      <span class="notice-icon">ℹ️</span>
+      <div>
+        <strong>Outras carteiras compatíveis</strong><br>
+        Além da Sparrow, você pode conectar ao seu node: Specter Desktop (ideal com hardware wallets), BlueWallet (celular, via Electrum Server), Zeus (celular, para Lightning). Todas funcionam com o Umbrel ou com Bitcoin Core + Electrs.
+      </div>
+    </div>
+
+    <h2>Verificando o supply de Bitcoin</h2>
+    <p>Um dos momentos mais satisfatórios de ter seu próprio node: verificar com seus próprios olhos quantos bitcoins existem.</p>
+    <p>Se você roda o Bitcoin Core (direto ou pelo Umbrel), abra o terminal e rode:</p>
+    <div class="code">bitcoin-cli gettxoutsetinfo</div>
+    <p>Procure o campo <code>total_amount</code>. Ele mostra a quantidade exata de bitcoins em circulação. Nenhum banco, governo ou exchange pode falsificar esse número no seu node.</p>
+
+    <h2>Privacidade com Tor</h2>
+    <p>Para máximo de privacidade, configure seu node para se comunicar pela rede Tor. Isso impede que seu provedor de internet saiba que você está rodando um node Bitcoin, e impede que outros nodes saibam seu IP real.</p>
+    <p>No Umbrel, o Tor já vem integrado. No Bitcoin Core manual, adicione ao bitcoin.conf:</p>
+    <div class="code"><span class="cmt"># Instale o Tor primeiro: sudo apt install tor</span>
+proxy=127.0.0.1:9050
+listen=1
+bind=127.0.0.1
+onlynet=onion</div>
+
+    <div class="notice notice-warn">
+      <span class="notice-icon">⚠️</span>
+      <div>
+        <strong>Tor deixa a sincronização mais lenta</strong><br>
+        Se você ainda está sincronizando o blockchain, é melhor fazer a sincronização inicial sem Tor (muito mais rápido) e ativar o Tor depois.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(4)">← Anterior</button>
+      <button class="nav-btn primary" onclick="go(6)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- ═══ SEÇÃO 7: COMPARAÇÃO ═══ -->
+  <div class="section" data-i="6">
+    <div class="hero">
+      <span class="hero-tag">Resumo</span>
+      <h1>Comparação e próximos passos</h1>
+    </div>
+
+    <h2>As três opções lado a lado</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Critério</th><th>Notebook dedicado</th><th>Node prunado (PC pessoal)</th><th>Umbrel</th></tr></thead>
+        <tbody>
+          <tr><td>Custo inicial</td><td>R$ 0 (se já tem) + SSD</td><td>R$ 0 (seu próprio PC)</td><td>R$ 900-1.500</td></tr>
+          <tr><td>Espaço em disco</td><td>~600 GB (completo)</td><td>~15-30 GB (prunado)</td><td>~600 GB (completo)</td></tr>
+          <tr><td>Dificuldade</td><td>Média (terminal)</td><td>Fácil (interface gráfica)</td><td>Fácil (interface web)</td></tr>
+          <tr><td>Roda 24/7</td><td style="color:var(--green)">Sim</td><td style="color:#ffd600">Só quando o PC está ligado</td><td style="color:var(--green)">Sim</td></tr>
+          <tr><td>Lightning Network</td><td style="color:#ffd600">Possível (config manual)</td><td style="color:var(--red)">Não recomendado</td><td style="color:var(--green)">Sim (1 clique)</td></tr>
+          <tr><td>Privacidade</td><td style="color:var(--green)">Máxima (Tor manual)</td><td style="color:var(--green)">Máxima (Tor manual)</td><td style="color:var(--green)">Máxima (Tor integrado)</td></tr>
+          <tr><td>Ideal para</td><td>Hardware sobrando + gosta de aprender</td><td>Começar rápido sem gastar</td><td>Solução completa e simples</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Prós e contras de rodar um node</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="color:var(--green)">Prós (todos individuais)</th><th style="color:var(--red)">Contras</th></tr></thead>
+        <tbody>
+          <tr><td>Você verifica suas próprias transações sem confiar em ninguém</td><td>Sincronização inicial leva dias</td></tr>
+          <tr><td>Privacidade total: ninguém sabe quais endereços você consulta</td><td>Exige espaço em disco (ou modo prunado)</td></tr>
+          <tr><td>Você pode auditar o supply de 21 milhões de bitcoins</td><td>Precisa manter o computador ligado (exceto prunado)</td></tr>
+          <tr><td>Proteção contra forks e mudanças de regras não autorizadas</td><td>Atualizações ocasionais de software</td></tr>
+          <tr><td>Requisito para rodar Lightning Network</td><td>Consome banda de internet continuamente</td></tr>
+          <tr><td>Independência total: funciona mesmo se exchanges caem</td><td>Curva de aprendizado para quem nunca usou terminal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="analogy">
+      <p>A rede Bitcoin não precisa de você. Ela roda com milhares de nodes mantidos por empresas, mineradores e entusiastas pelo mundo. Mas VOCÊ precisa de um node se quer soberania de verdade sobre seu dinheiro. É uma escolha individual, como trancar a porta de casa: a rua não depende da sua tranca, mas você sim.</p>
+    </div>
+
+    <h2>Próximos passos</h2>
+    <ol>
+      <li>Se ainda não fez, configure sua auto-custódia: <a href="/custodia/">letabuild.com/custodia</a></li>
+      <li>Aprenda a gerar sua seed phrase offline: <a href="/seed/">letabuild.com/seed</a></li>
+      <li>Conecte sua carteira ao seu node (seção 6 deste tutorial)</li>
+      <li>Verifique o supply de Bitcoin com <code>gettxoutsetinfo</code></li>
+      <li>Considere ativar o Tor para privacidade máxima</li>
+      <li>Explore a Lightning Network para pagamentos instantâneos</li>
+    </ol>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="go(5)">← Anterior</button>
+      <button class="nav-btn primary" disabled>Tutorial concluído ✓</button>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- Footer (visible on all sections) -->
+<footer class="footer">
+  <p class="footer-text">Conteúdo baseado nos tutoriais dos canais <a href="https://www.youtube.com/@bitcoinheiros" target="_blank" rel="noopener">Bitcoinheiros</a> e <a href="https://www.youtube.com/@BTCSessions" target="_blank" rel="noopener">BTC Sessions</a>, e nas documentações oficiais do <a href="https://umbrel.com" target="_blank" rel="noopener">Umbrel</a>, <a href="https://bitcoincore.org" target="_blank" rel="noopener">Bitcoin Core</a> e <a href="https://sparrowwallet.com" target="_blank" rel="noopener">Sparrow Wallet</a>.</p>
+  <p class="footer-text">Feito por <a href="https://letabuild.com">letabuild.com</a> &middot; Sem cookies, sem rastreamento.</p>
+</footer>
+
+<script>
+  // Disclaimer
+  var overlay = document.getElementById('disclaimer');
+  if (localStorage.getItem('node-disclaimer') === 'ok') overlay.remove();
+  document.getElementById('btnDisclaimer').onclick = function() {
+    localStorage.setItem('node-disclaimer', 'ok');
+    overlay.remove();
+  };
+
+  // Navigation
+  var pills = document.querySelectorAll('.nav-pill');
+  var sections = document.querySelectorAll('.section');
+  var progressFill = document.getElementById('progressFill');
+  var total = sections.length;
+
+  function go(i) {
+    sections.forEach(function(s) { s.classList.remove('active'); });
+    pills.forEach(function(p) { p.classList.remove('active'); });
+    sections[i].classList.add('active');
+    pills[i].classList.add('active');
+    pills[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    progressFill.style.width = ((i + 1) / total * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  pills.forEach(function(pill) {
+    pill.onclick = function() { go(parseInt(this.dataset.s)); };
+  });
+
+  go(0);
+</script>
+</body>
+</html>
