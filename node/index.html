@@ -1069,11 +1069,15 @@ onlynet=onion</div>
 <script>
   // Disclaimer
   var overlay = document.getElementById('disclaimer');
-  if (localStorage.getItem('node-disclaimer') === 'ok') overlay.remove();
-  document.getElementById('btnDisclaimer').onclick = function() {
-    localStorage.setItem('node-disclaimer', 'ok');
-    overlay.remove();
-  };
+  var btnD = document.getElementById('btnDisclaimer');
+  if (localStorage.getItem('node-disclaimer') === 'ok') {
+    if (overlay) overlay.remove();
+  } else if (btnD) {
+    btnD.onclick = function() {
+      localStorage.setItem('node-disclaimer', 'ok');
+      overlay.remove();
+    };
+  }
 
   // Navigation
   var pills = document.querySelectorAll('.nav-pill');
