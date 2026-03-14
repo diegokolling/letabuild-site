@@ -39,6 +39,7 @@ const UI_STRINGS = {
       { label: 'Trezor', desc: 'Qualquer modelo Trezor', value: 'trezor' },
       { label: 'Ledger', desc: 'Qualquer modelo Ledger', value: 'ledger' },
       { label: 'Jade', desc: 'Blockstream Jade', value: 'jade' },
+      { label: 'Krux', desc: 'Signing device open-source em hardware genérico', value: 'krux' },
       { label: 'Outra', desc: 'Tenho outra hardware wallet', value: 'other' }
     ],
     wizardResult: 'Recomendação para você:',
@@ -138,6 +139,7 @@ const UI_STRINGS = {
       { label: 'Trezor', desc: 'Any Trezor model', value: 'trezor' },
       { label: 'Ledger', desc: 'Any Ledger model', value: 'ledger' },
       { label: 'Jade', desc: 'Blockstream Jade', value: 'jade' },
+      { label: 'Krux', desc: 'Open-source signing device on generic hardware', value: 'krux' },
       { label: 'Other', desc: 'I have another hardware wallet', value: 'other' }
     ],
     wizardResult: 'Recommendation for you:',

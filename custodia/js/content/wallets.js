@@ -27,7 +27,7 @@ const WALLETS = [
       en: 'Complete desktop wallet. Supports all custody types. The most versatile.'
     },
     website: 'https://sparrowwallet.com',
-    tutorials: ['sparrow-simple', 'coldcard-passphrase', 'jade-passphrase', 'nunchuk-multisig', 'sparrow-multisig']
+    tutorials: ['sparrow-simple', 'coldcard-passphrase', 'jade-passphrase', 'krux-passphrase', 'nunchuk-multisig', 'sparrow-multisig', 'krux-multisig']
   },
   {
     id: 'coldcard',
@@ -82,6 +82,19 @@ const WALLETS = [
     tutorials: ['jade-passphrase', 'nunchuk-multisig', 'sparrow-multisig']
   },
   {
+    id: 'krux',
+    name: 'Krux',
+    icon: 'assets/wallets/krux.png',
+    type: 'hardware',
+    supports: ['simple', 'passphrase', 'multisig'],
+    description: {
+      pt: 'Signing device open-source e air-gapped. Firmware livre rodando em hardware genérico. Comunicação 100% via QR code.',
+      en: 'Open-source air-gapped signing device. Free firmware running on generic hardware. Communication 100% via QR code.'
+    },
+    website: 'https://selfcustody.github.io/krux/',
+    tutorials: ['krux-simple', 'krux-passphrase', 'krux-multisig']
+  },
+  {
     id: 'nunchuk',
     name: 'Nunchuk',
     icon: 'assets/wallets/nunchuk.png',
@@ -107,6 +120,9 @@ const TUTORIALS = {
   'jade-passphrase':        { wallet: 'jade',       level: 'passphrase', contentKey: 'jadePassphrase' },
   'trezor-passphrase':      { wallet: 'trezor',     level: 'passphrase', contentKey: 'trezorPassphrase' },
   'ledger-passphrase':      { wallet: 'ledger',     level: 'passphrase', contentKey: 'ledgerPassphrase' },
+  'krux-simple':            { wallet: 'krux',       level: 'simple',     contentKey: 'kruxSingle' },
+  'krux-passphrase':        { wallet: 'krux',       level: 'passphrase', contentKey: 'kruxPassphrase' },
+  'krux-multisig':          { wallet: 'krux',       level: 'multisig',   contentKey: 'kruxMultisig' },
   'nunchuk-multisig':       { wallet: 'nunchuk',    level: 'multisig',   contentKey: 'nunchukMultisig' },
   'sparrow-multisig':       { wallet: 'sparrow',    level: 'multisig',   contentKey: 'sparrowMultisig' }
 };

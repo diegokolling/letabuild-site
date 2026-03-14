@@ -178,7 +178,7 @@ const Wizard = (function () {
 
     // Simple custody + has hardware wallet: nudge toward passphrase
     if (answers.level === 'simple' && hw !== 'none' && hw !== 'other') {
-      var hwName = { coldcard: 'Coldcard', trezor: 'Trezor', ledger: 'Ledger', jade: 'Jade' }[hw] || hw;
+      var hwName = { coldcard: 'Coldcard', trezor: 'Trezor', ledger: 'Ledger', jade: 'Jade', krux: 'Krux' }[hw] || hw;
       warnings.push(lang === 'pt'
         ? {
             title: 'Você já tem uma ' + hwName + '!',
@@ -220,12 +220,14 @@ const Wizard = (function () {
     if (level === 'passphrase') {
       if (hw === 'coldcard') return 'coldcard-passphrase';
       if (hw === 'jade') return 'jade-passphrase';
+      if (hw === 'krux') return 'krux-passphrase';
       if (hw === 'trezor') return 'trezor-passphrase';
       if (hw === 'ledger') return 'ledger-passphrase';
       return 'coldcard-passphrase';
     }
 
     if (hw === 'coldcard') return 'coldcard-simple';
+    if (hw === 'krux') return 'krux-simple';
     if (hw === 'trezor') return 'trezor-simple';
     if (hw === 'ledger') return 'ledger-simple';
     if (hw === 'jade') return 'jade-passphrase';
