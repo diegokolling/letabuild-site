@@ -582,8 +582,8 @@
   <div class="section" data-i="2">
     <div class="hero">
       <span class="hero-tag">Opção 1</span>
-      <h1>Node em notebook velho dedicado</h1>
-      <p>Tem um notebook antigo parado em casa? Ele pode virar seu node Bitcoin. Essa opção é ideal para quem quer um node rodando 24/7 sem comprometer o computador do dia a dia.</p>
+      <h1>Node em computador velho dedicado</h1>
+      <p>Tem um notebook ou desktop antigo parado em casa? Ele pode virar seu node Bitcoin. Essa opção é ideal para quem quer um node rodando 24/7 sem comprometer o computador do dia a dia. Funciona em Windows, macOS e Linux.</p>
     </div>
 
     <h2>O que você precisa</h2>
@@ -591,21 +591,90 @@
       <table>
         <thead><tr><th>Item</th><th>Requisito</th><th>Observação</th></tr></thead>
         <tbody>
-          <tr><td>Notebook</td><td>Qualquer com 4 GB+ de RAM</td><td>De 2012 pra cá, provavelmente funciona</td></tr>
+          <tr><td>Computador</td><td>Qualquer com 4 GB+ de RAM</td><td>De 2012 pra cá, provavelmente funciona</td></tr>
           <tr><td>SSD</td><td>1 TB (interno ou USB 3.0)</td><td>HD mecânico funciona mas é muito mais lento</td></tr>
-          <tr><td>Sistema operacional</td><td>Ubuntu 22.04 LTS</td><td>Gratuito, leve, ideal pra hardware antigo</td></tr>
+          <tr><td>Sistema operacional</td><td>Windows 10+, macOS 11+ ou Ubuntu 22.04</td><td>Bitcoin Core roda nos três</td></tr>
           <tr><td>Conexão</td><td>Cabo ethernet (preferível) ou Wi-Fi</td><td>Ethernet é mais estável pro sync inicial</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h2>Passo a passo</h2>
+    <h2>Passo a passo: Windows</h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h4>Instale o Ubuntu no notebook</h4>
-          <p>Baixe o Ubuntu 22.04 LTS em ubuntu.com. Grave num pendrive com o Balena Etcher. Ligue o notebook com o pendrive conectado, entre no menu de boot (geralmente F12 ou F2 ao ligar) e instale o Ubuntu no disco. Esse processo apaga tudo que tinha no notebook.</p>
+          <h4>Baixe o Bitcoin Core</h4>
+          <p>Acesse bitcoincore.org e baixe o instalador para Windows (.exe). Verifique as assinaturas GPG antes de instalar (instruções no site, seção "Verify release signatures").</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Instale e abra</h4>
+          <p>Rode o instalador normalmente. Na primeira abertura, o Bitcoin Core pergunta onde salvar os dados. Se o SSD dedicado for uma unidade diferente (D:, E:, etc.), aponte para ela.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Aguarde a sincronização</h4>
+          <p>O Bitcoin Core abre com uma interface gráfica e começa a sincronizar automaticamente. Uma barra de progresso mostra o avanço. Pode levar de 1 a 7 dias. Você pode usar o computador normalmente enquanto isso.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Configure para iniciar com o Windows</h4>
+          <p>No Bitcoin Core, vá em Configurações &gt; Opções &gt; marque "Iniciar Bitcoin Core ao fazer login no sistema". Assim ele liga automaticamente quando o computador ligar.</p>
+        </div>
+      </div>
+    </div>
+    <p>O arquivo de configuração fica em:</p>
+    <div class="code">C:\Users\SeuUsuario\AppData\Roaming\Bitcoin\bitcoin.conf</div>
+
+    <h2>Passo a passo: macOS</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Baixe o Bitcoin Core</h4>
+          <p>Acesse bitcoincore.org e baixe o arquivo .dmg para macOS. Verifique as assinaturas GPG antes de instalar.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Instale e abra</h4>
+          <p>Abra o .dmg e arraste o Bitcoin Core para a pasta Aplicativos. Na primeira abertura, o macOS pode bloquear por ser de "desenvolvedor não identificado". Nesse caso, vá em Ajustes do Sistema &gt; Privacidade e Segurança e clique em "Abrir mesmo assim".</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Aguarde a sincronização</h4>
+          <p>Funciona igual ao Windows: interface gráfica com barra de progresso. Deixe sincronizando.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Configure para iniciar automaticamente</h4>
+          <p>Vá em Ajustes do Sistema &gt; Geral &gt; Itens de Início e adicione o Bitcoin Core à lista.</p>
+        </div>
+      </div>
+    </div>
+    <p>O arquivo de configuração fica em:</p>
+    <div class="code">~/Library/Application Support/Bitcoin/bitcoin.conf</div>
+
+    <h2>Passo a passo: Linux (Ubuntu)</h2>
+    <p>A opção mais leve para hardware antigo. Se o notebook é muito velho, instalar Ubuntu no lugar do Windows vai dar uma sobrevida significativa.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Instale o Ubuntu (opcional)</h4>
+          <p>Se quiser trocar o sistema operacional: baixe o Ubuntu 22.04 LTS em ubuntu.com, grave num pendrive com o Balena Etcher, entre no menu de boot (F12 ou F2 ao ligar) e instale. Esse processo apaga tudo que tinha no computador.</p>
         </div>
       </div>
       <div class="step">
@@ -622,14 +691,16 @@
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-content">
-          <h4>Baixe o Bitcoin Core</h4>
-          <p>Acesse bitcoincore.org e baixe a versão mais recente para Linux (64-bit). Ou use o terminal:</p>
+          <h4>Baixe e instale o Bitcoin Core</h4>
+          <p>Acesse bitcoincore.org ou use o terminal:</p>
         </div>
       </div>
     </div>
     <div class="code"><span class="cmt"># Verifique a versão mais recente em bitcoincore.org</span>
 cd ~/Downloads
-wget https://bitcoincore.org/bin/bitcoin-core-28.0/bitcoin-28.0-x86_64-linux-gnu.tar.gz</div>
+wget https://bitcoincore.org/bin/bitcoin-core-28.0/bitcoin-28.0-x86_64-linux-gnu.tar.gz
+tar -xzf bitcoin-28.0-x86_64-linux-gnu.tar.gz
+sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-28.0/bin/*</div>
 
     <div class="notice notice-warn">
       <span class="notice-icon">⚠️</span>
@@ -643,45 +714,6 @@ wget https://bitcoincore.org/bin/bitcoin-core-28.0/bitcoin-28.0-x86_64-linux-gnu
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-content">
-          <h4>Extraia e instale</h4>
-          <p>Extraia o arquivo e mova os binários para uma pasta do sistema:</p>
-        </div>
-      </div>
-    </div>
-    <div class="code">tar -xzf bitcoin-28.0-x86_64-linux-gnu.tar.gz
-sudo install -m 0755 -o root -g root -t /usr/local/bin bitcoin-28.0/bin/*</div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h4>Configure o Bitcoin Core</h4>
-          <p>Crie o arquivo de configuração:</p>
-        </div>
-      </div>
-    </div>
-    <div class="code">mkdir -p ~/.bitcoin
-nano ~/.bitcoin/bitcoin.conf</div>
-    <p>Adicione estas linhas ao arquivo:</p>
-    <div class="code"><span class="cmt"># Roda como servidor (necessário para carteiras se conectarem)</span>
-server=1
-
-<span class="cmt"># Aceita conexões RPC locais</span>
-rpcuser=seunodeBTC
-rpcpassword=escolha_uma_senha_forte_aqui
-
-<span class="cmt"># Limita uso de memória (ajuste conforme sua RAM)</span>
-dbcache=1024
-
-<span class="cmt"># Rede Tor para privacidade (opcional, recomendado)</span>
-<span class="cmt"># proxy=127.0.0.1:9050</span>
-<span class="cmt"># listen=1</span>
-<span class="cmt"># bind=127.0.0.1</span></div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-content">
           <h4>Inicie o Bitcoin Core</h4>
           <p>Rode o daemon (processo em background):</p>
         </div>
@@ -690,11 +722,11 @@ dbcache=1024
     <div class="code">bitcoind -daemon</div>
     <p>Para acompanhar o progresso da sincronização:</p>
     <div class="code">bitcoin-cli getblockchaininfo</div>
-    <p>O campo <code>verificationprogress</code> mostra a porcentagem. Quando chegar a 0.999999, seu node está sincronizado. Esse processo pode levar de 1 a 7 dias na primeira vez.</p>
+    <p>O campo <code>verificationprogress</code> mostra a porcentagem. Quando chegar a 0.999999, seu node está sincronizado.</p>
 
     <div class="steps">
       <div class="step">
-        <div class="step-num">7</div>
+        <div class="step-num">5</div>
         <div class="step-content">
           <h4>Configure para iniciar automaticamente</h4>
           <p>Crie um serviço systemd para que o node inicie junto com o sistema:</p>
@@ -719,11 +751,28 @@ WantedBy=multi-user.target</div>
     <div class="code">sudo systemctl enable bitcoind
 sudo systemctl start bitcoind</div>
 
+    <h2>Configuração recomendada (todos os sistemas)</h2>
+    <p>Independente do sistema operacional, adicione estas linhas ao seu bitcoin.conf para habilitar conexão com carteiras:</p>
+    <div class="code"><span class="cmt"># Roda como servidor (necessário para carteiras se conectarem)</span>
+server=1
+
+<span class="cmt"># Aceita conexões RPC locais</span>
+rpcuser=seunodeBTC
+rpcpassword=escolha_uma_senha_forte_aqui
+
+<span class="cmt"># Limita uso de memória (ajuste conforme sua RAM)</span>
+dbcache=1024
+
+<span class="cmt"># Rede Tor para privacidade (opcional, recomendado)</span>
+<span class="cmt"># proxy=127.0.0.1:9050</span>
+<span class="cmt"># listen=1</span>
+<span class="cmt"># bind=127.0.0.1</span></div>
+
     <div class="notice notice-tip">
       <span class="notice-icon">✅</span>
       <div>
         <strong>Dica: verifique o supply</strong><br>
-        Depois de sincronizado, rode <code>bitcoin-cli gettxoutsetinfo</code> e veja com seus próprios olhos quantos bitcoins existem. É um momento poderoso.
+        Depois de sincronizado, rode <code>bitcoin-cli gettxoutsetinfo</code> (no terminal ou no console do Bitcoin Core em Janela &gt; Console) e veja com seus próprios olhos quantos bitcoins existem. É um momento poderoso.
       </div>
     </div>
 
@@ -842,8 +891,24 @@ dbcache=512</div>
   <div class="section" data-i="4">
     <div class="hero">
       <span class="hero-tag">Opção 3</span>
-      <h1>Node no Umbrel</h1>
-      <p>O Umbrel é um sistema operacional que transforma qualquer computador pequeno (como um Raspberry Pi ou mini PC) num servidor pessoal com interface visual. Ele torna rodar um node Bitcoin tão simples quanto instalar um app no celular.</p>
+      <h1>Node com Umbrel</h1>
+      <p>O Umbrel é duas coisas: um sistema operacional gratuito (umbrelOS) que você instala em qualquer hardware, e uma linha de mini computadores prontos para uso (Umbrel Home e Umbrel Pro). Nos dois casos, o resultado é o mesmo: uma interface visual linda que torna rodar um node tão simples quanto instalar um app no celular.</p>
+    </div>
+
+    <h2>O que exatamente é o Umbrel?</h2>
+    <p>Muita gente confunde, então vale esclarecer:</p>
+
+    <div class="card card-orange" style="margin-bottom:12px">
+      <h3 style="color:var(--orange);margin-top:0;margin-bottom:8px">umbrelOS (o software, gratuito)</h3>
+      <p style="margin:0;font-size:15px;color:var(--muted)">É um sistema operacional que você baixa de graça no site umbrel.com e instala em qualquer computador: um Raspberry Pi, um mini PC, um notebook velho, ou até um desktop que não usa mais. Ele substitui o sistema operacional existente (Windows, Linux) e transforma o hardware num servidor pessoal com interface web.</p>
+    </div>
+    <div class="card card-orange">
+      <h3 style="color:var(--orange);margin-top:0;margin-bottom:8px">Umbrel Home e Umbrel Pro (o hardware, pago)</h3>
+      <p style="margin:0;font-size:15px;color:var(--muted)">São mini computadores vendidos pela Umbrel no site umbrel.com, que já vêm com o umbrelOS pré-instalado e com hardware otimizado para rodar um node. Você liga na tomada, conecta no roteador, e em minutos está configurando pelo navegador. O Umbrel Home custa em torno de US$ 459 e o Umbrel Pro (mais potente) em torno de US$ 899.</p>
+    </div>
+
+    <div class="analogy">
+      <p>Pense no Umbrel como o Android: o Android é o sistema operacional gratuito que qualquer fabricante pode usar, mas a Samsung e a Google também vendem celulares com Android pré-instalado. O umbrelOS é o "Android" e o Umbrel Home é o "Pixel".</p>
     </div>
 
     <h2>Por que o Umbrel</h2>
@@ -852,7 +917,7 @@ dbcache=512</div>
       <li>Instalação de apps com um clique (Bitcoin Core, Lightning, Electrum Server, block explorer)</li>
       <li>Mais de 300 apps disponíveis além de Bitcoin</li>
       <li>Comunidade ativa e suporte</li>
-      <li>Funciona em Raspberry Pi 4/5, mini PCs e computadores antigos</li>
+      <li>Funciona em Raspberry Pi 4/5, mini PCs, notebooks velhos e nos dispositivos oficiais Umbrel</li>
     </ul>
 
     <div class="notice notice-info">
@@ -863,52 +928,56 @@ dbcache=512</div>
       </div>
     </div>
 
-    <h2>O que você precisa</h2>
-    <h3>Opção A: Raspberry Pi (mais popular)</h3>
+    <h2>Caminho A: Comprar um Umbrel Home (mais fácil)</h2>
+    <p>Se você não quer montar nada e prefere algo que funcione "out of the box":</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Compre no site oficial</h4><p>Acesse umbrel.com e escolha entre o Umbrel Home (suficiente para node Bitcoin + Lightning) ou o Umbrel Pro (mais potente, ideal se quiser rodar muitos apps). Eles enviam para o mundo todo.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Conecte e ligue</h4><p>Quando chegar, conecte o cabo ethernet no roteador e a fonte de alimentação na tomada. Pronto, é só isso de hardware.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Acesse pelo navegador</h4><p>Em qualquer dispositivo na mesma rede (celular, notebook, desktop), abra o navegador e acesse:</p></div></div>
+    </div>
+    <div class="code">http://umbrel.local</div>
+    <p>Se não funcionar, tente descobrir o IP do dispositivo no painel do seu roteador e acesse diretamente (ex: http://192.168.1.100).</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Configure e instale o Bitcoin Node</h4><p>Crie um nome e senha, depois vá na App Store do Umbrel e instale "Bitcoin Node". Ele começa a sincronizar automaticamente. Leva de 2 a 7 dias.</p></div></div>
+    </div>
+
+    <h2>Caminho B: Instalar o umbrelOS no seu próprio hardware (gratuito)</h2>
+    <p>Se você já tem um Raspberry Pi, mini PC ou notebook velho, pode instalar o umbrelOS sem gastar nada.</p>
+
+    <h3>Hardware compatível</h3>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Item</th><th>Especificação</th><th>Preço estimado</th></tr></thead>
+        <thead><tr><th>Hardware</th><th>Requisito mínimo</th><th>Custo estimado</th></tr></thead>
         <tbody>
-          <tr><td>Raspberry Pi 4 ou 5</td><td>4 GB ou 8 GB de RAM</td><td>R$ 400-650</td></tr>
-          <tr><td>SSD externo</td><td>1 TB, conectado via USB 3.0</td><td>R$ 300-500</td></tr>
-          <tr><td>Cartão microSD</td><td>16 GB+ (para o sistema)</td><td>R$ 40-60</td></tr>
-          <tr><td>Fonte de alimentação</td><td>Oficial do Raspberry Pi</td><td>R$ 80-120</td></tr>
-          <tr><td>Cabo ethernet</td><td>Cat5e ou superior</td><td>R$ 15-30</td></tr>
-          <tr><td>Case com ventilação</td><td>Qualquer case para Pi</td><td>R$ 30-80</td></tr>
+          <tr><td>Raspberry Pi 4 ou 5</td><td>4 GB+ RAM + SSD 1 TB via USB 3.0</td><td>R$ 900-1.500 (Pi + SSD + acessórios)</td></tr>
+          <tr><td>Mini PC (ex: Intel N100)</td><td>4 GB+ RAM + SSD 1 TB interno</td><td>R$ 600-1.000</td></tr>
+          <tr><td>Notebook ou desktop velho</td><td>Processador 64-bit, 4 GB+ RAM, SSD 1 TB</td><td>R$ 0 (se já tem) + SSD se precisar</td></tr>
         </tbody>
       </table>
     </div>
-    <p>Total estimado: R$ 900-1.500</p>
 
-    <h3>Opção B: Mini PC ou notebook velho</h3>
-    <p>Qualquer computador com processador 64-bit, 4 GB+ de RAM e 1 TB de armazenamento roda o Umbrel. Um mini PC com processador Intel N100 é uma excelente opção, custando R$ 600-1.000.</p>
-
-    <h2>Passo a passo</h2>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Baixe o umbrelOS</h4><p>Acesse umbrel.com e baixe a imagem para seu hardware (Raspberry Pi ou x86). Você também vai precisar do Balena Etcher para gravar a imagem.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Grave a imagem</h4><p>Para Raspberry Pi: grave a imagem no cartão microSD usando o Balena Etcher. Para mini PC/notebook: grave num pendrive USB.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Monte o hardware</h4><p>Coloque o microSD no Raspberry Pi (ou o pendrive no mini PC). Conecte o SSD na porta USB 3.0 (a porta azul). Conecte o cabo ethernet no roteador. Ligue a fonte de alimentação.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Baixe o umbrelOS</h4><p>Acesse umbrel.com e baixe a imagem para seu hardware (Raspberry Pi ou x86/x64). Você também vai precisar do Balena Etcher para gravar a imagem.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Grave a imagem</h4><p>Para Raspberry Pi: grave a imagem no cartão microSD usando o Balena Etcher. Para mini PC/notebook: grave num pendrive USB com o Balena Etcher.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Monte o hardware e inicie</h4><p>Coloque o microSD no Raspberry Pi (ou o pendrive no mini PC/notebook e entre no menu de boot com F12 ou F2). Conecte o SSD. Conecte o cabo ethernet no roteador. Ligue.</p></div></div>
     </div>
 
     <div class="notice notice-warn">
       <span class="notice-icon">⚠️</span>
       <div>
-        <strong>USB 3.0 é obrigatório</strong><br>
-        No Raspberry Pi, sempre conecte o SSD na porta USB 3.0 (azul). A porta USB 2.0 é lenta demais e vai causar problemas de sincronização. Também use sempre a fonte oficial. Fontes genéricas causam instabilidade e corrompem dados.
+        <strong>USB 3.0 é obrigatório no Raspberry Pi</strong><br>
+        Sempre conecte o SSD na porta USB 3.0 (azul). A porta USB 2.0 é lenta demais e vai causar problemas de sincronização. Também use sempre a fonte oficial. Fontes genéricas causam instabilidade e corrompem dados.
       </div>
     </div>
 
     <div class="steps">
-      <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Acesse o Umbrel</h4><p>Espere uns 5 minutos após ligar. Depois, em qualquer navegador da sua rede, acesse:</p></div></div>
-    </div>
-    <div class="code">http://umbrel.local</div>
-    <p>Se não funcionar, tente descobrir o IP do dispositivo no painel do seu roteador e acesse diretamente (ex: http://192.168.1.100).</p>
-
-    <div class="steps">
+      <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Acesse o Umbrel</h4><p>Espere uns 5 minutos após ligar. Depois, em qualquer navegador da sua rede, acesse <code>http://umbrel.local</code>. Se não funcionar, descubra o IP no painel do roteador.</p></div></div>
       <div class="step"><div class="step-num">5</div><div class="step-content"><h4>Configure sua conta</h4><p>Na primeira vez, o Umbrel pede para criar um nome e senha. Essa senha protege o acesso ao painel. Guarde-a bem.</p></div></div>
       <div class="step"><div class="step-num">6</div><div class="step-content"><h4>Instale o Bitcoin Node</h4><p>Vá na App Store do Umbrel e instale "Bitcoin Node". Ele começa a sincronizar automaticamente. Isso leva de 2 a 7 dias dependendo do hardware e da internet.</p></div></div>
-      <div class="step"><div class="step-num">7</div><div class="step-content"><h4>Instale apps complementares (opcional)</h4><p>Depois de sincronizado, instale:</p></div></div>
     </div>
+
+    <h2>Apps complementares (opcional)</h2>
+    <p>Depois que o node sincronizar, você pode instalar com um clique:</p>
     <ul>
       <li>Electrs: servidor Electrum para conectar carteiras como Sparrow</li>
       <li>Mempool: seu próprio block explorer privado</li>
@@ -920,7 +989,7 @@ dbcache=512</div>
       <span class="notice-icon">✅</span>
       <div>
         <strong>Custo de operação</strong><br>
-        Um Raspberry Pi consome cerca de 5-10 watts. Na conta de luz, isso é R$ 5-15 por mês. Seu node roda 24/7 gastando menos que uma lâmpada de LED.
+        Um Raspberry Pi consome cerca de 5-10 watts. Um Umbrel Home consome cerca de 12 watts. Na conta de luz, isso é R$ 5-15 por mês. Seu node roda 24/7 gastando menos que uma lâmpada de LED.
       </div>
     </div>
 
