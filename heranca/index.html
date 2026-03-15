@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herança Bitcoin — Passo a Passo</title>
+<meta name="description" content="Aprenda a criar um plano de sucessão para seus bitcoins. 6 métodos, do básico ao avançado. Proteja o patrimônio da sua família.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Herança Bitcoin — Passo a Passo">
+<meta property="og:description" content="Aprenda a criar um plano de sucessão para seus bitcoins. 6 métodos de herança, do básico ao avançado.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://letabuild.com/heranca/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Herança Bitcoin — Passo a Passo">
+<meta name="twitter:description" content="Aprenda a criar um plano de sucessão para seus bitcoins. 6 métodos de herança.">
+
+<link rel="stylesheet" href="css/style.css">
+<script src="/theme-toggle.js"></script>
+<script src="/lang-toggle.js"></script>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="/" class="back-home" title="letabuild.com">&larr; letabuild.com</a>
+  <button class="lang-toggle" id="langToggle" title="Switch language">EN</button>
+  <button id="themeToggle" style="background:none;border:1px solid rgba(224,138,58,0.15);color:var(--text-muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" title="Alternar tema"></button>
+</div>
+
+<!-- Disclaimer Overlay -->
+<div class="disclaimer-overlay" id="disclaimerOverlay">
+  <div class="disclaimer-box">
+    <h3 id="disclaimerTitle">Aviso Importante</h3>
+    <p id="disclaimerText"></p>
+    <button class="btn-disclaimer" id="btnDisclaimer">Eu entendo a responsabilidade</button>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+
+  <!-- LANDING SCREEN -->
+  <div class="screen active" id="screenLanding">
+    <div class="landing">
+      <span class="landing-icon">🏛️</span>
+      <h1 id="landingTitle">Herança <span class="highlight">Bitcoin</span></h1>
+      <p class="subtitle" id="landingSubtitle">Aprenda a criar um plano de sucessão para seus bitcoins. Proteja o patrimônio da sua família sem comprometer a segurança das chaves.</p>
+      <p class="meta" id="landingMeta">6 métodos · 2 níveis · Progresso salvo</p>
+
+      <!-- Prerequisites banner -->
+      <div class="prerequisite-banner" id="prerequisiteBanner">
+        <span class="prerequisite-icon">⚠️</span>
+        <div class="prerequisite-content">
+          <strong id="prereqTitle">Pré-requisitos</strong>
+          <p id="prereqText">Este tutorial assume que você já completou os tutoriais de <strong>geração de seed offline</strong> e <strong>auto-custódia</strong>.</p>
+          <a href="/custodia/" class="prereq-link" id="prereqLink">Ir para o tutorial de auto-custódia &rarr;</a>
+        </div>
+      </div>
+
+      <div class="landing-buttons">
+        <button class="btn-landing" id="btnGuide">
+          <span class="btn-label" id="btnGuideLabel">Me guie</span>
+          <span class="btn-desc" id="btnGuideDesc">Responda 4 perguntas e descubra o melhor método para você</span>
+        </button>
+        <button class="btn-landing" id="btnBrowse">
+          <span class="btn-label" id="btnBrowseLabel">Escolher método</span>
+          <span class="btn-desc" id="btnBrowseDesc">Já sabe o que quer? Vá direto ao tutorial</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIZARD SCREEN -->
+  <div class="screen" id="screenWizard">
+    <div class="wizard">
+      <h2 id="wizardTitle">Vamos encontrar o melhor método para você</h2>
+
+      <!-- Question 1: Hardware wallet -->
+      <div class="wizard-question active" id="wizQ1">
+        <h3 id="wizQ1Title"></h3>
+        <div class="wizard-options" id="wizQ1Options"></div>
+      </div>
+
+      <!-- Inline warning after Q1 -->
+      <div class="wizard-question" id="wizInlineWarning1">
+        <div id="wizInlineWarning1Content"></div>
+        <button class="btn-wizard btn-wizard-primary btn-inline-warning" id="btnInlineWarning1Continue">
+          Entendi, continuar &rarr;
+        </button>
+      </div>
+
+      <!-- Question 2: Heirs -->
+      <div class="wizard-question" id="wizQ2">
+        <h3 id="wizQ2Title"></h3>
+        <div class="wizard-options" id="wizQ2Options"></div>
+      </div>
+
+      <!-- Question 3: Concern -->
+      <div class="wizard-question" id="wizQ3">
+        <h3 id="wizQ3Title"></h3>
+        <div class="wizard-options" id="wizQ3Options"></div>
+      </div>
+
+      <!-- Inline warning after Q3 -->
+      <div class="wizard-question" id="wizInlineWarning3">
+        <div id="wizInlineWarning3Content"></div>
+        <button class="btn-wizard btn-wizard-primary btn-inline-warning" id="btnInlineWarning3Continue">
+          Entendi, continuar &rarr;
+        </button>
+      </div>
+
+      <!-- Question 4: Technical level -->
+      <div class="wizard-question" id="wizQ4">
+        <h3 id="wizQ4Title"></h3>
+        <div class="wizard-options" id="wizQ4Options"></div>
+      </div>
+
+      <!-- Inline warning after Q4 -->
+      <div class="wizard-question" id="wizInlineWarning4">
+        <div id="wizInlineWarning4Content"></div>
+        <button class="btn-wizard btn-wizard-primary btn-inline-warning" id="btnInlineWarning4Continue">
+          Entendi, continuar &rarr;
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div class="wizard-question" id="wizResult">
+        <div class="wizard-result">
+          <div class="wizard-result-label" id="wizResultLabel"></div>
+          <div class="wizard-result-card">
+            <div class="wizard-result-icon" id="wizResultIcon"></div>
+            <div class="wizard-result-name" id="wizResultName"></div>
+            <div class="wizard-result-level" id="wizResultLevel"></div>
+            <div class="wizard-result-desc" id="wizResultDesc"></div>
+          </div>
+          <div class="wizard-buttons">
+            <button class="btn-wizard btn-wizard-secondary" id="btnWizardBack">
+              <span id="btnWizardBackText">Mudar respostas</span>
+            </button>
+            <button class="btn-wizard btn-wizard-primary" id="btnWizardStart">
+              <span id="btnWizardStartText">Começar tutorial</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BROWSE SCREEN -->
+  <div class="screen" id="screenBrowse">
+    <div class="browse">
+      <h2 id="browseTitle">Escolha um método de herança</h2>
+      <div id="browseContent"></div>
+    </div>
+  </div>
+
+  <!-- BEST PRACTICES / FUNDAMENTALS SCREEN -->
+  <div class="screen" id="screenPractices">
+    <div class="fundamentals">
+      <h2 id="practicesTitle">Fundamentos</h2>
+      <p class="fundamentals-subtitle" id="practicesSubtitle">Conceitos essenciais antes de começar</p>
+      <div class="practices-progress-label" id="practicesProgress"></div>
+      <div id="practicesContent"></div>
+      <button class="btn-fund-continue" id="btnPracticesContinue">Li tudo. Começar tutorial &rarr;</button>
+    </div>
+  </div>
+
+  <!-- TUTORIAL SCREEN -->
+  <div class="screen" id="screenTutorial">
+    <div class="tutorial">
+      <!-- Header -->
+      <div class="tutorial-header">
+        <button class="btn-tutorial-back" id="btnTutorialBack" title="Voltar">&larr;</button>
+        <span class="tutorial-method-icon" id="tutorialIcon"></span>
+        <span class="tutorial-method-name" id="tutorialName"></span>
+        <span class="tutorial-level-badge" id="tutorialBadge"></span>
+      </div>
+
+      <!-- Progress -->
+      <div class="tutorial-progress">
+        <div class="tutorial-progress-info">
+          <span class="tutorial-progress-count" id="tutorialProgressCount"></span>
+          <span class="tutorial-progress-saved" id="tutorialSaved">Progresso salvo</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="tutorialProgressFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Step dots -->
+      <div class="step-dots" id="stepDots"></div>
+
+      <!-- Step content -->
+      <div class="step-card" id="stepCard">
+        <div class="step-number" id="stepNumber"></div>
+        <h2 class="step-title" id="stepTitle"></h2>
+        <div class="step-content" id="stepContent"></div>
+        <div id="stepWarning"></div>
+        <div id="stepTip"></div>
+        <div id="stepVideo"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="step-nav">
+        <button class="btn-step btn-step-prev" id="btnStepPrev">
+          <span>&larr;</span>
+          <span id="btnStepPrevText">Anterior</span>
+        </button>
+        <button class="btn-step btn-step-next" id="btnStepNext">
+          <span id="btnStepNextText">Próximo</span>
+          <span>&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLETION SCREEN -->
+  <div class="screen" id="screenCompletion">
+    <div class="completion">
+      <div class="completion-icon">&#10003;</div>
+      <h2 id="completionTitle">Tutorial concluído!</h2>
+      <p class="completion-desc" id="completionDesc"></p>
+
+      <div class="completion-checklist" id="completionChecklist">
+        <h3 id="completionChecklistTitle"></h3>
+        <div id="completionChecklistContent"></div>
+      </div>
+
+      <div class="completion-next" id="completionNext">
+        <h3 id="completionNextTitle"></h3>
+        <div id="completionNextContent"></div>
+      </div>
+
+      <div class="completion-buttons">
+        <button class="btn-wizard btn-wizard-secondary" id="btnRetake">
+          <span id="btnRetakeText">Refazer tutorial</span>
+        </button>
+        <button class="btn-wizard btn-wizard-pdf" id="btnDownloadPDF">
+          <span id="btnDownloadPDFText">Baixar PDF</span>
+        </button>
+        <button class="btn-wizard btn-wizard-primary" id="btnBackHome">
+          <span id="btnBackHomeText">Voltar ao início</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  <span id="footerCredits" data-pt='Conteúdo baseado nos tutoriais de' data-en='Content based on tutorials by'>Conteúdo baseado nos tutoriais de</span>
+  <a href="https://www.youtube.com/@Bitcoinheiros" target="_blank" rel="noopener noreferrer">Bitcoinheiros</a>,
+  <a href="https://www.youtube.com/@BTCSessions" target="_blank" rel="noopener noreferrer">BTC Sessions</a>
+  <span id="footerAnd" data-pt="e" data-en="and">e</span>
+  <a href="https://www.youtube.com/@lianabitcoin" target="_blank" rel="noopener noreferrer">Liana</a>
+  <br>
+  <span data-pt='feito por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">leta</a>' data-en='made by <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">leta</a>'>feito por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">leta</a></span>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+<script src="js/content/ui.js"></script>
+<script src="js/content/methods.js"></script>
+<script src="js/content/fundamentals.js"></script>
+<script src="js/content/tutorials-part1.js"></script>
+<script src="js/content/tutorials-part2.js"></script>
+<script src="js/content/tutorials-part3.js"></script>
+<script src="js/content/tutorials.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/wizard.js"></script>
+<script src="js/tutorial.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
