@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dicionário Bitcoin — Glossário</title>
+<meta name="description" content="Glossário Bitcoin com explicações em três níveis de profundidade. 78 termos essenciais para entender Bitcoin, mineração, Lightning Network e macroeconomia.">
+<meta property="og:title" content="Dicionário Bitcoin — Glossário">
+<meta property="og:description" content="78 termos essenciais sobre Bitcoin explicados em três níveis de profundidade.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://letabuild.com/glossario/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="/theme-toggle.js"></script>
+<script src="/lang-toggle.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--card-bg:linear-gradient(135deg,rgba(30,24,18,0.8),rgba(22,18,14,0.6));--card-border:rgba(224,138,58,0.08);--text:#ffffff;--text-muted:#d0b898;--text-dim:#a08a70;--orange:#e08a3a;--orange-hover:#f09a4a;--radius:20px;--radius-sm:12px;--radius-xs:8px}
+html[data-theme="light"]{--bg:#f6f9fb;--card-bg:linear-gradient(135deg,#ffffff,#ffffff);--card-border:rgba(224,138,58,0.08);--text:#1a2b3c;--text-muted:#7a8a98;--text-dim:#9aabb8}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(224,138,58,0.06),transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 60% 60% at 100% 100%,rgba(224,138,58,0.03),transparent 70%);pointer-events:none;z-index:0}
+html[data-theme="light"] body::before{background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(224,138,58,0.04),transparent 70%)}
+html[data-theme="light"] body::after{background:radial-gradient(ellipse 60% 60% at 100% 100%,rgba(224,138,58,0.02),transparent 70%)}
+a{color:var(--orange);text-decoration:none}
+a:hover{color:var(--orange-hover)}
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(42,34,24,0.5)}
+html[data-theme="light"] .top-bar{background:rgba(246,249,251,0.9);border-bottom:1px solid rgba(0,0,0,0.06)}
+.back-home{font-size:14px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.back-home:hover{color:var(--orange)}
+.top-bar-right{display:flex;align-items:center;gap:8px}
+.lang-toggle,.theme-btn{background:none;border:1px solid rgba(224,138,58,0.15);color:var(--text-muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+html[data-theme="light"] .lang-toggle,html[data-theme="light"] .theme-btn{color:#5a5a5a;border-color:rgba(90,90,90,0.3)}
+.container{max-width:800px;margin:0 auto;padding:88px 20px 60px;position:relative;z-index:1}
+.hero{text-align:center;margin-bottom:40px}
+.hero-icon{font-size:48px;margin-bottom:16px;display:block}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:12px}
+.hero h1 .highlight{color:var(--orange)}
+.hero .subtitle{color:var(--text-muted);font-size:1rem;max-width:520px;margin:0 auto 12px}
+.hero .counter{color:var(--text-dim);font-size:0.875rem;font-weight:500}
+.controls{margin-bottom:32px}
+.search-wrap{margin-bottom:16px}
+.search-input{width:100%;padding:12px 16px 12px 44px;background:rgba(30,24,18,0.6);border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--text);font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:rgba(224,138,58,0.3)}
+html[data-theme="light"] .search-input{background:#ffffff;border-color:rgba(0,0,0,0.08)}
+.search-wrap{position:relative}
+.search-wrap::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:0.5}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.pill{padding:6px 16px;border-radius:20px;font-size:0.8rem;font-weight:600;border:1px solid rgba(224,138,58,0.12);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.pill:hover{border-color:rgba(224,138,58,0.3)}
+.pill.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+html[data-theme="light"] .pill{border-color:rgba(0,0,0,0.08);color:var(--text-dim)}
+html[data-theme="light"] .pill.active{background:var(--orange);color:#fff}
+.cat-pills{display:flex;flex-wrap:wrap;gap:6px}
+.cat-pill{padding:5px 12px;border-radius:16px;font-size:0.75rem;font-weight:500;border:1px solid rgba(224,138,58,0.08);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.cat-pill:hover{border-color:rgba(224,138,58,0.2)}
+.cat-pill.active{border-color:currentColor}
+html[data-theme="light"] .cat-pill{border-color:rgba(0,0,0,0.06)}
+.letter-group{margin-bottom:32px}
+.letter-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.letter-char{font-size:1.5rem;font-weight:800;color:var(--orange);min-width:32px}
+.letter-line{flex:1;height:1px;background:rgba(224,138,58,0.15)}
+html[data-theme="light"] .letter-line{background:rgba(224,138,58,0.12)}
+.term-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color 0.2s}
+.term-card:hover{border-color:rgba(224,138,58,0.2)}
+html[data-theme="light"] .term-card{background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.term-name{font-size:1.1rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cat-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.65rem;font-weight:600;letter-spacing:0.02em;white-space:nowrap}
+.term-def{color:var(--text-muted);font-size:0.92rem;line-height:1.7}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:0.95rem}
+.hidden{display:none!important}
+@media(max-width:600px){
+  .hero h1{font-size:1.5rem}
+  .container{padding:80px 16px 40px}
+  .term-card{padding:16px}
+  .pills{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="/" class="back-home" title="letabuild.com">&larr; letabuild.com</a>
+  <div class="top-bar-right">
+    <button class="lang-toggle" id="langToggle" title="Switch language">EN</button>
+    <button class="theme-btn" id="themeToggle" title="Alternar tema"></button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <span class="hero-icon">📖</span>
+    <h1><span data-pt="Dicionário" data-en="Dictionary">Dicionário</span> <span class="highlight">Bitcoin</span></h1>
+    <p class="subtitle" data-pt="Glossário com explicações em três níveis de profundidade. Escolha seu nível e explore." data-en="Glossary with explanations at three depth levels. Choose your level and explore.">Glossário com explicações em três níveis de profundidade. Escolha seu nível e explore.</p>
+    <p class="counter" id="termCounter">78 termos</p>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" data-pt="Buscar termo..." data-en="Search term..." placeholder="Buscar termo...">
+    </div>
+    <div class="pills" id="levelPills">
+      <button class="pill active" data-level="beginner" data-pt="Iniciante" data-en="Beginner">Iniciante</button>
+      <button class="pill" data-level="intermediate" data-pt="Intermediário" data-en="Intermediate">Intermediário</button>
+      <button class="pill" data-level="advanced" data-pt="Avançado" data-en="Advanced">Avançado</button>
+    </div>
+    <div class="cat-pills" id="catPills"></div>
+  </div>
+
+  <div id="glossaryList"></div>
+  <div class="empty-state hidden" id="emptyState" data-pt="Nenhum termo encontrado." data-en="No terms found.">Nenhum termo encontrado.</div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  var level='beginner';
+  var activeCat='all';
+  var searchTerm='';
+
+  function getLang(){
+    return (window.letabuildLang && window.letabuildLang.get) ? window.letabuildLang.get() : 'pt';
+  }
+
+  function getCatInfo(catId){
+    for(var i=0;i<categoryData.length;i++){
+      if(categoryData[i].id===catId) return categoryData[i];
+    }
+    return {id:catId,name:{pt:catId,en:catId},color:'rgba(224,138,58,0.15)',textColor:'#e08a3a'};
+  }
+
+  function updateCounter(count){
+    var el=document.getElementById('termCounter');
+    var l=getLang();
+    el.textContent=count+(l==='pt'?' termos':' terms');
+  }
+
+  function renderCatPills(){
+    var container=document.getElementById('catPills');
+    var l=getLang();
+    var html='<button class="cat-pill'+(activeCat==='all'?' active':'')+'" data-cat="all">'+(l==='pt'?'Todos':'All')+'</button>';
+    for(var i=0;i<categoryData.length;i++){
+      var c=categoryData[i];
+      html+='<button class="cat-pill'+(activeCat===c.id?' active':'')+'" data-cat="'+c.id+'" style="'+(activeCat===c.id?'color:'+c.textColor+';border-color:'+c.textColor:'')+'">'+c.name[l]+'</button>';
+    }
+    container.innerHTML=html;
+    var btns=container.querySelectorAll('.cat-pill');
+    for(var j=0;j<btns.length;j++){
+      btns[j].addEventListener('click',function(){
+        activeCat=this.getAttribute('data-cat');
+        renderCatPills();
+        renderTerms();
+      });
+    }
+  }
+
+  function getFilteredTerms(){
+    var l=getLang();
+    var filtered=[];
+    for(var i=0;i<glossaryData.length;i++){
+      var t=glossaryData[i];
+      if(activeCat!=='all' && t.category!==activeCat) continue;
+      if(searchTerm){
+        var name=t.term[l].toLowerCase();
+        var q=searchTerm.toLowerCase();
+        if(name.indexOf(q)===-1) continue;
+      }
+      filtered.push(t);
+    }
+    filtered.sort(function(a,b){
+      var na=a.term[l].toLowerCase(), nb=b.term[l].toLowerCase();
+      return na.localeCompare(nb,l);
+    });
+    return filtered;
+  }
+
+  function renderTerms(){
+    var l=getLang();
+    var terms=getFilteredTerms();
+    updateCounter(terms.length);
+    var container=document.getElementById('glossaryList');
+    var empty=document.getElementById('emptyState');
+
+    if(terms.length===0){
+      container.innerHTML='';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    var groups={};
+    for(var i=0;i<terms.length;i++){
+      var letter=terms[i].term[l].charAt(0).toUpperCase();
+      if(!groups[letter])groups[letter]=[];
+      groups[letter].push(terms[i]);
+    }
+
+    var letters=Object.keys(groups).sort();
+    var html='';
+    for(var j=0;j<letters.length;j++){
+      var lt=letters[j];
+      html+='<div class="letter-group"><div class="letter-header"><span class="letter-char">'+lt+'</span><span class="letter-line"></span></div>';
+      for(var k=0;k<groups[lt].length;k++){
+        var t=groups[lt][k];
+        var cat=getCatInfo(t.category);
+        var def=t[level]?t[level][l]:'';
+        html+='<a href="termo.html?id='+t.id+'" class="term-card" style="display:block;text-decoration:none;color:inherit"><div class="term-name">'+t.term[l]+' <span class="cat-badge" style="background:'+cat.color+';color:'+cat.textColor+'">'+cat.name[l]+'</span></div><div class="term-def">'+def+'</div></a>';
+      }
+      html+='</div>';
+    }
+    container.innerHTML=html;
+  }
+
+  function initLevelPills(){
+    var pills=document.querySelectorAll('#levelPills .pill');
+    for(var i=0;i<pills.length;i++){
+      pills[i].addEventListener('click',function(){
+        for(var j=0;j<pills.length;j++)pills[j].classList.remove('active');
+        this.classList.add('active');
+        level=this.getAttribute('data-level');
+        renderTerms();
+      });
+    }
+  }
+
+  function initSearch(){
+    var input=document.getElementById('searchInput');
+    input.addEventListener('input',function(){
+      searchTerm=this.value;
+      renderTerms();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    initLevelPills();
+    initSearch();
+    renderCatPills();
+    renderTerms();
+  });
+
+  window.addEventListener('langchange',function(){
+    renderCatPills();
+    renderTerms();
+    var input=document.getElementById('searchInput');
+    var l=getLang();
+    input.placeholder=l==='pt'?'Buscar termo...':'Search term...';
+    var els=document.querySelectorAll('[data-pt][data-en]');
+    for(var i=0;i<els.length;i++){
+      els[i].innerHTML=els[i].getAttribute('data-'+l);
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termo — Dicionario Bitcoin</title>
+<meta name="description" content="Definicao detalhada de termo Bitcoin em tres niveis de profundidade: iniciante, intermediario e avancado.">
+<meta property="og:title" content="Termo — Dicionario Bitcoin">
+<meta property="og:description" content="Definicao detalhada em tres niveis de profundidade.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="/theme-toggle.js"></script>
+<script src="/lang-toggle.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--card-bg:linear-gradient(135deg,rgba(30,24,18,0.8),rgba(22,18,14,0.6));--card-border:rgba(224,138,58,0.08);--text:#ffffff;--text-muted:#d0b898;--text-dim:#a08a70;--orange:#e08a3a;--orange-hover:#f09a4a;--radius:20px;--radius-sm:12px;--radius-xs:8px}
+html[data-theme="light"]{--bg:#f6f9fb;--card-bg:linear-gradient(135deg,#ffffff,#ffffff);--card-border:rgba(224,138,58,0.08);--text:#1a2b3c;--text-muted:#7a8a98;--text-dim:#9aabb8}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(224,138,58,0.06),transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 60% 60% at 100% 100%,rgba(224,138,58,0.03),transparent 70%);pointer-events:none;z-index:0}
+html[data-theme="light"] body::before{background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(224,138,58,0.04),transparent 70%)}
+html[data-theme="light"] body::after{background:radial-gradient(ellipse 60% 60% at 100% 100%,rgba(224,138,58,0.02),transparent 70%)}
+a{color:var(--orange);text-decoration:none}
+a:hover{color:var(--orange-hover)}
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(42,34,24,0.5)}
+html[data-theme="light"] .top-bar{background:rgba(246,249,251,0.9);border-bottom:1px solid rgba(0,0,0,0.06)}
+.back-home{font-size:14px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.back-home:hover{color:var(--orange)}
+.top-bar-right{display:flex;align-items:center;gap:8px}
+.lang-toggle,.theme-btn{background:none;border:1px solid rgba(224,138,58,0.15);color:var(--text-muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+html[data-theme="light"] .lang-toggle,html[data-theme="light"] .theme-btn{color:#5a5a5a;border-color:rgba(90,90,90,0.3)}
+.container{max-width:800px;margin:0 auto;padding:88px 20px 60px;position:relative;z-index:1}
+.term-header{margin-bottom:32px}
+.term-title{font-size:2rem;font-weight:800;margin-bottom:12px}
+.cat-badge{display:inline-block;padding:4px 14px;border-radius:12px;font-size:0.75rem;font-weight:600;letter-spacing:0.02em;white-space:nowrap}
+.level-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 28px;margin-bottom:16px;transition:border-color 0.2s}
+.level-card:hover{border-color:rgba(224,138,58,0.2)}
+html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.level-label{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.level-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.level-dot.beginner{background:#22c55e}
+.level-dot.intermediate{background:#f59e0b}
+.level-dot.advanced{background:#ef4444}
+.level-name{font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim)}
+.level-def{color:var(--text-muted);font-size:0.95rem;line-height:1.8}
+.nav-section{margin-top:40px;display:flex;flex-direction:column;gap:16px}
+.back-link{font-size:0.9rem;font-weight:500;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;transition:color 0.2s}
+.back-link:hover{color:var(--orange)}
+.prev-next{display:flex;justify-content:space-between;gap:16px}
+.prev-next a{font-size:0.85rem;font-weight:500;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px;transition:color 0.2s;max-width:45%}
+.prev-next a:hover{color:var(--orange)}
+.prev-next .next{margin-left:auto;text-align:right}
+.not-found{text-align:center;padding:80px 20px}
+.not-found h2{font-size:1.5rem;font-weight:700;margin-bottom:12px}
+.not-found p{color:var(--text-muted);font-size:0.95rem;margin-bottom:24px}
+.hidden{display:none!important}
+@media(max-width:600px){
+  .term-title{font-size:1.5rem}
+  .container{padding:80px 16px 40px}
+  .level-card{padding:18px 20px}
+  .prev-next{flex-direction:column;gap:12px}
+  .prev-next a{max-width:100%}
+  .prev-next .next{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="/glossario/" class="back-home"><span data-pt="&larr; Dicionario Bitcoin" data-en="&larr; Bitcoin Dictionary">&larr; Dicionario Bitcoin</span></a>
+  <div class="top-bar-right">
+    <button class="lang-toggle" id="langToggle" title="Switch language">EN</button>
+    <button class="theme-btn" id="themeToggle" title="Alternar tema"></button>
+  </div>
+</div>
+
+<div class="container">
+  <div id="termContent"></div>
+  <div id="notFound" class="not-found hidden">
+    <h2 data-pt="Termo nao encontrado" data-en="Term not found">Termo nao encontrado</h2>
+    <p data-pt="O termo que voce procura nao existe no glossario." data-en="The term you are looking for does not exist in the glossary.">O termo que voce procura nao existe no glossario.</p>
+    <a href="/glossario/" data-pt="&larr; Voltar ao glossario" data-en="&larr; Back to glossary">&larr; Voltar ao glossario</a>
+  </div>
+</div>
+
+<script src="/glossario/data.js"></script>
+<script>
+(function(){
+  function getLang(){
+    return window.letabuildLang ? window.letabuildLang.get() : 'pt';
+  }
+
+  function getCatInfo(catId){
+    for(var i=0;i<categoryData.length;i++){
+      if(categoryData[i].id===catId) return categoryData[i];
+    }
+    return {id:catId,name:{pt:catId,en:catId},color:'rgba(224,138,58,0.15)',textColor:'#e08a3a'};
+  }
+
+  function getSortedTerms(lang){
+    return glossaryData.slice().sort(function(a,b){
+      return a.term[lang].localeCompare(b.term[lang],lang);
+    });
+  }
+
+  function render(){
+    var params=new URLSearchParams(window.location.search);
+    var termId=params.get('id');
+    var lang=getLang();
+    var contentEl=document.getElementById('termContent');
+    var notFoundEl=document.getElementById('notFound');
+
+    if(!termId){
+      contentEl.classList.add('hidden');
+      notFoundEl.classList.remove('hidden');
+      return;
+    }
+
+    var term=null;
+    for(var i=0;i<glossaryData.length;i++){
+      if(glossaryData[i].id===termId){term=glossaryData[i];break;}
+    }
+
+    if(!term){
+      contentEl.classList.add('hidden');
+      notFoundEl.classList.remove('hidden');
+      document.title=(lang==='pt'?'Termo nao encontrado':'Term not found')+' — '+(lang==='pt'?'Dicionario Bitcoin':'Bitcoin Dictionary');
+      return;
+    }
+
+    contentEl.classList.remove('hidden');
+    notFoundEl.classList.add('hidden');
+
+    var cat=getCatInfo(term.category);
+    var termName=term.term[lang];
+
+    document.title=termName+' — '+(lang==='pt'?'Dicionario Bitcoin':'Bitcoin Dictionary');
+
+    var levelLabels={
+      beginner:{pt:'Iniciante',en:'Beginner'},
+      intermediate:{pt:'Intermediario',en:'Intermediate'},
+      advanced:{pt:'Avancado',en:'Advanced'}
+    };
+    var levelClasses=['beginner','intermediate','advanced'];
+
+    var html='';
+
+    html+='<div class="term-header">';
+    html+='<h1 class="term-title">'+termName+'</h1>';
+    html+='<span class="cat-badge" style="background:'+cat.color+';color:'+cat.textColor+'">'+cat.name[lang]+'</span>';
+    html+='</div>';
+
+    for(var l=0;l<levelClasses.length;l++){
+      var lvl=levelClasses[l];
+      var def=term[lvl]?term[lvl][lang]:'';
+      html+='<div class="level-card">';
+      html+='<div class="level-label">';
+      html+='<span class="level-dot '+lvl+'"></span>';
+      html+='<span class="level-name">'+levelLabels[lvl][lang]+'</span>';
+      html+='</div>';
+      html+='<div class="level-def">'+def+'</div>';
+      html+='</div>';
+    }
+
+    html+='<div class="nav-section">';
+    html+='<a href="/glossario/" class="back-link">'+(lang==='pt'?'&larr; Voltar ao glossario':'&larr; Back to glossary')+'</a>';
+
+    var sorted=getSortedTerms(lang);
+    var idx=-1;
+    for(var s=0;s<sorted.length;s++){
+      if(sorted[s].id===termId){idx=s;break;}
+    }
+
+    if(idx>=0){
+      html+='<div class="prev-next">';
+      if(idx>0){
+        html+='<a href="/glossario/termo.html?id='+sorted[idx-1].id+'" class="prev">&larr; '+sorted[idx-1].term[lang]+'</a>';
+      } else {
+        html+='<span></span>';
+      }
+      if(idx<sorted.length-1){
+        html+='<a href="/glossario/termo.html?id='+sorted[idx+1].id+'" class="next">'+sorted[idx+1].term[lang]+' &rarr;</a>';
+      }
+      html+='</div>';
+    }
+
+    html+='</div>';
+
+    contentEl.innerHTML=html;
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    render();
+  });
+
+  window.addEventListener('langchange',function(){
+    render();
+    var lang=getLang();
+    var els=document.querySelectorAll('[data-pt][data-en]');
+    for(var i=0;i<els.length;i++){
+      els[i].innerHTML=els[i].getAttribute('data-'+lang);
+    }
+  });
+})();
+</script>
+</body>
+</html>
