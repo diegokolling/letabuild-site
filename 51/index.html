@@ -77,6 +77,31 @@
 
   <hr class="section-divider">
 
+  <!-- Scenario Selector -->
+  <h2 class="section-title">
+    <span class="title-icon">🎯</span>
+    <span data-pt="Cenário de Ataque" data-en="Attack Scenario">Cenário de Ataque</span>
+  </h2>
+  <div class="scenario-toggle">
+    <label class="scenario-option active" id="label-external">
+      <input type="radio" name="scenario" value="external" checked>
+      <div class="scenario-content">
+        <div class="scenario-title" data-pt="Atacante Externo" data-en="External Attacker">Atacante Externo</div>
+        <div class="scenario-desc" data-pt="Precisa comprar todas as ASICs do zero" data-en="Must buy all ASICs from scratch">Precisa comprar todas as ASICs do zero</div>
+      </div>
+    </label>
+    <label class="scenario-option" id="label-collusion">
+      <input type="radio" name="scenario" value="collusion">
+      <div class="scenario-content">
+        <div class="scenario-title" data-pt="Mineradores em Conluio" data-en="Colluding Miners">Mineradores em Conluio</div>
+        <div class="scenario-desc" data-pt="51%+ do hashrate existente decide atacar" data-en="51%+ of existing hashrate decides to attack">51%+ do hashrate existente decide atacar</div>
+      </div>
+    </label>
+  </div>
+  <p class="scenario-detail" id="scenario-description" data-pt="Um atacante externo precisa comprar todas as ASICs do zero e pagar pela energia. O cenário mais caro e mais frequentemente citado." data-en="An external attacker must buy all ASICs from scratch and pay for energy. The most expensive and most commonly cited scenario.">Um atacante externo precisa comprar todas as ASICs do zero e pagar pela energia. O cenário mais caro e mais frequentemente citado.</p>
+
+  <hr class="section-divider">
+
   <!-- Simulation Controls -->
   <h2 class="section-title">
     <span class="title-icon">🎛️</span>
@@ -130,17 +155,24 @@
     <span data-pt="Resultado da Simulação" data-en="Simulation Results">Resultado da Simulação</span>
   </h2>
   <div class="results-grid">
+    <!-- Common to both scenarios -->
     <div class="result-card">
       <div class="label" data-pt="ASICs Necessários" data-en="ASICs Needed">ASICs Necessários</div>
       <div class="value" id="result-asics">—</div>
     </div>
     <div class="result-card">
-      <div class="label" data-pt="Custo dos ASICs" data-en="ASIC Cost">Custo dos ASICs</div>
-      <div class="value" id="result-asic-cost">—</div>
-    </div>
-    <div class="result-card">
       <div class="label" data-pt="Potência Necessária" data-en="Power Required">Potência Necessária</div>
       <div class="value" id="result-power">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Peso dos ASICs" data-en="ASIC Weight">Peso dos ASICs</div>
+      <div class="value" id="result-weight">—</div>
+    </div>
+
+    <!-- External attacker only -->
+    <div class="result-card external-only">
+      <div class="label" data-pt="Custo dos ASICs" data-en="ASIC Cost">Custo dos ASICs</div>
+      <div class="value" id="result-asic-cost">—</div>
     </div>
     <div class="result-card">
       <div class="label" data-pt="Energia Consumida" data-en="Energy Consumed">Energia Consumida</div>
@@ -150,14 +182,25 @@
       <div class="label" data-pt="Custo da Energia" data-en="Energy Cost">Custo da Energia</div>
       <div class="value" id="result-energy-cost">—</div>
     </div>
-    <div class="result-card">
-      <div class="label" data-pt="Peso dos ASICs" data-en="ASIC Weight">Peso dos ASICs</div>
-      <div class="value" id="result-weight">—</div>
+
+    <!-- Colluding miners only -->
+    <div class="result-card collusion-only" style="display:none;">
+      <div class="label" data-pt="Recompensas Perdidas" data-en="Foregone Rewards">Recompensas Perdidas</div>
+      <div class="value" id="result-btc-foregone">—</div>
+    </div>
+    <div class="result-card collusion-only" style="display:none;">
+      <div class="label" data-pt="Custo de Oportunidade" data-en="Opportunity Cost">Custo de Oportunidade</div>
+      <div class="value" id="result-opportunity">—</div>
+    </div>
+    <div class="result-card collusion-only" style="display:none;">
+      <div class="label" data-pt="Destruição de Valor (BTC)" data-en="Value Destruction (BTC)">Destruição de Valor (BTC)</div>
+      <div class="value" id="result-value-destruction">—</div>
     </div>
   </div>
   <div class="results-grid total-row" style="grid-template-columns:1fr;">
     <div class="result-card total">
-      <div class="label" data-pt="Custo Total do Ataque" data-en="Total Attack Cost">Custo Total do Ataque</div>
+      <div class="label external-only" data-pt="Custo Total do Ataque" data-en="Total Attack Cost">Custo Total do Ataque</div>
+      <div class="label collusion-only" style="display:none;" data-pt="Prejuízo Total para os Atacantes" data-en="Total Loss for Attackers">Prejuízo Total para os Atacantes</div>
       <div class="value" id="result-total">—</div>
     </div>
   </div>
@@ -224,10 +267,10 @@
 
   <!-- Conclusion -->
   <div class="conclusion">
-    <h3 data-pt="Por que o ataque é inviável?" data-en="Why is the attack unfeasible?">Por que o ataque é inviável?</h3>
-    <p data-pt="O Bitcoin é protegido pela maior rede de computação do mundo. Para atacá-lo, um adversário precisaria reunir mais poder computacional do que todos os mineradores honestos combinados. Isso exigiria milhões de máquinas especializadas (ASICs) que nem sequer existem em quantidade suficiente no mercado, consumiria mais energia do que países inteiros, e custaria mais do que o PIB de várias nações." data-en="Bitcoin is protected by the largest computing network in the world. To attack it, an adversary would need to amass more computational power than all honest miners combined. This would require millions of specialized machines (ASICs) that don't even exist in sufficient quantities, would consume more energy than entire countries, and would cost more than the GDP of several nations.">O Bitcoin é protegido pela maior rede de computação do mundo. Para atacá-lo, um adversário precisaria reunir mais poder computacional do que todos os mineradores honestos combinados. Isso exigiria milhões de máquinas especializadas (ASICs) que nem sequer existem em quantidade suficiente no mercado, consumiria mais energia do que países inteiros, e custaria mais do que o PIB de várias nações.</p>
-    <p data-pt="E mesmo que alguém conseguisse reunir todo esse hardware e energia, <strong>o ataque destruiria a confiança na rede</strong>, fazendo o preço do Bitcoin despencar e tornando o investimento do atacante sem valor. Em outras palavras: quanto mais valioso o Bitcoin se torna, mais caro e mais inútil fica atacá-lo." data-en="And even if someone managed to gather all this hardware and energy, <strong>the attack would destroy trust in the network</strong>, crashing Bitcoin's price and making the attacker's investment worthless. In other words: the more valuable Bitcoin becomes, the more expensive and more pointless it is to attack it.">E mesmo que alguém conseguisse reunir todo esse hardware e energia, <strong>o ataque destruiria a confiança na rede</strong>, fazendo o preço do Bitcoin despencar e tornando o investimento do atacante sem valor. Em outras palavras: quanto mais valioso o Bitcoin se torna, mais caro e mais inútil fica atacá-lo.</p>
-    <p data-pt="Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a escolha racional." data-en="This is the beauty of <strong>Game Theory applied to Bitcoin</strong>: cooperation (mining honestly) is always more profitable than attacking. Bitcoin's security doesn't rely on trust in institutions, but on economic incentives that make honest behavior the rational choice.">Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a escolha racional.</p>
+    <h3 data-pt="Por que o ataque é inviável em qualquer cenário?" data-en="Why is the attack unfeasible in any scenario?">Por que o ataque é inviável em qualquer cenário?</h3>
+    <p data-pt="<strong>Cenário 1: Atacante externo.</strong> Precisaria comprar milhões de ASICs que nem existem em quantidade suficiente no mercado, consumir mais energia do que países inteiros, e gastar mais do que o PIB de várias nações. Mesmo com dinheiro infinito, a cadeia de suprimentos de chips levaria anos para produzir as máquinas necessárias." data-en="<strong>Scenario 1: External attacker.</strong> Would need to buy millions of ASICs that don't even exist in sufficient quantities, consume more energy than entire countries, and spend more than the GDP of several nations. Even with infinite money, the chip supply chain would take years to produce the necessary machines."><strong>Cenário 1: Atacante externo.</strong> Precisaria comprar milhões de ASICs que nem existem em quantidade suficiente no mercado, consumir mais energia do que países inteiros, e gastar mais do que o PIB de várias nações. Mesmo com dinheiro infinito, a cadeia de suprimentos de chips levaria anos para produzir as máquinas necessárias.</p>
+    <p data-pt="<strong>Cenário 2: Mineradores em conluio.</strong> Mesmo que 51% dos mineradores existentes decidissem atacar, eles destruiriam o valor do ativo que sustenta todo o negócio deles. Suas ASICs, que valem bilhões, se tornariam sucata. Suas reservas de BTC derreteriam. Suas receitas futuras iriam a zero. O atacante perde mais do que qualquer vítima." data-en="<strong>Scenario 2: Colluding miners.</strong> Even if 51% of existing miners decided to attack, they would destroy the value of the asset that sustains their entire business. Their ASICs, worth billions, would become scrap metal. Their BTC reserves would melt away. Their future revenue would go to zero. The attacker loses more than any victim."><strong>Cenário 2: Mineradores em conluio.</strong> Mesmo que 51% dos mineradores existentes decidissem atacar, eles destruiriam o valor do ativo que sustenta todo o negócio deles. Suas ASICs, que valem bilhões, se tornariam sucata. Suas reservas de BTC derreteriam. Suas receitas futuras iriam a zero. O atacante perde mais do que qualquer vítima.</p>
+    <p data-pt="Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: em ambos os cenários, a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a única escolha racional." data-en="This is the beauty of <strong>Game Theory applied to Bitcoin</strong>: in both scenarios, cooperation (mining honestly) is always more profitable than attacking. Bitcoin's security doesn't rely on trust in institutions, but on economic incentives that make honest behavior the only rational choice.">Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: em ambos os cenários, a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a única escolha racional.</p>
   </div>
 
 </div>

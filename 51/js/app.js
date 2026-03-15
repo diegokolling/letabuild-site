@@ -18,6 +18,8 @@ const App = (() => {
     durationHours: 1,
     energyCostKWh: 0.05,
     asicModelId: 's21pro',
+    scenario: 'external',
+    btcPriceUSD: 71550,
   };
 
   let currentLang = 'pt';
@@ -49,6 +51,7 @@ const App = (() => {
       .then(data => {
         networkData = data;
         params.networkHashrateEH = data.hashrate_eh;
+        params.btcPriceUSD = data.btc_price_usd;
 
         // Update network info cards
         setTextById('net-hashrate', formatNumber(data.hashrate_eh) + ' EH/s');
@@ -63,7 +66,6 @@ const App = (() => {
         recalculate();
       })
       .catch(() => {
-        // Use hardcoded defaults
         recalculate();
       });
   }
@@ -82,7 +84,19 @@ const App = (() => {
   }
 
   function bindEvents() {
-    // Sliders with linked number inputs
+    // Scenario toggle
+    document.querySelectorAll('input[name="scenario"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        params.scenario = radio.value;
+        // Toggle active class on labels
+        document.querySelectorAll('.scenario-option').forEach(l => l.classList.remove('active'));
+        radio.closest('.scenario-option').classList.add('active');
+        updateScenarioUI();
+        recalculate();
+      });
+    });
+
+    // Sliders
     bindSlider('input-attack-pct', 'display-attack-pct', v => {
       params.attackPercent = Number(v);
     });
@@ -95,7 +109,7 @@ const App = (() => {
       params.energyCostKWh = Number(v);
     });
 
-    // Hashrate input (editable number)
+    // Hashrate input
     const hrInput = document.getElementById('input-hashrate');
     if (hrInput) {
       hrInput.addEventListener('input', () => {
@@ -115,6 +129,39 @@ const App = (() => {
         recalculate();
       });
     }
+
+    // Set initial UI state
+    updateScenarioUI();
+  }
+
+  function updateScenarioUI() {
+    const isCollusion = params.scenario === 'collusion';
+
+    // Show/hide relevant result cards
+    document.querySelectorAll('.external-only').forEach(el => {
+      el.style.display = isCollusion ? 'none' : '';
+    });
+    document.querySelectorAll('.collusion-only').forEach(el => {
+      el.style.display = isCollusion ? '' : 'none';
+    });
+
+    // Update scenario description
+    const descEl = document.getElementById('scenario-description');
+    if (descEl) {
+      if (isCollusion) {
+        descEl.setAttribute('data-pt', 'Mineradores existentes com 51%+ do hashrate decidem atacar. Já possuem o hardware. O custo real é o que perdem: recompensas de bloco, valor dos seus BTC, e valor da frota de ASICs (caso o ataque seja bem sucedido).');
+        descEl.setAttribute('data-en', 'Existing miners with 51%+ of hashrate decide to attack. They already own the hardware. The real cost is what they lose: block rewards, value of their BTC holdings, and ASIC fleet value (if the attack succeeds).');
+        descEl.textContent = currentLang === 'en'
+          ? descEl.getAttribute('data-en')
+          : descEl.getAttribute('data-pt');
+      } else {
+        descEl.setAttribute('data-pt', 'Um atacante externo precisa comprar todas as ASICs do zero e pagar pela energia. O cenário mais caro e mais frequentemente citado.');
+        descEl.setAttribute('data-en', 'An external attacker must buy all ASICs from scratch and pay for energy. The most expensive and most commonly cited scenario.');
+        descEl.textContent = currentLang === 'en'
+          ? descEl.getAttribute('data-en')
+          : descEl.getAttribute('data-pt');
+      }
+    }
   }
 
   function bindSlider(sliderId, displayId, setter) {
@@ -128,7 +175,6 @@ const App = (() => {
       recalculate();
     });
 
-    // Set initial display
     if (display) display.textContent = formatSliderValue(sliderId, slider.value);
   }
 
@@ -153,13 +199,26 @@ const App = (() => {
   }
 
   function updateResults(r) {
+    const isCollusion = r.scenario === 'collusion';
+
+    // Common results
     setTextById('result-asics', formatBigNumber(r.asicsNeeded));
-    setTextById('result-asic-cost', formatUSD(r.asicCostUSD));
     setTextById('result-power', formatPower(r.totalPowerMW));
     setTextById('result-energy', formatEnergy(r.energyMWh));
-    setTextById('result-energy-cost', formatUSD(r.energyCostUSD));
-    setTextById('result-total', formatUSD(r.totalCostUSD));
     setTextById('result-weight', formatWeight(r.totalWeightTons));
+
+    // External-only
+    setTextById('result-asic-cost', formatUSD(r.asicCostUSD));
+    setTextById('result-energy-cost', formatUSD(r.energyCostUSD));
+
+    // Collusion-only
+    setTextById('result-opportunity', formatUSD(r.opportunityCostUSD));
+    setTextById('result-btc-foregone', formatBTC(r.btcForegone));
+    setTextById('result-value-destruction', formatUSD(r.estimatedValueDestructionUSD));
+    setTextById('result-fleet-value', formatUSD(r.asicFleetValueUSD));
+
+    // Total
+    setTextById('result-total', formatUSD(r.totalCostUSD));
   }
 
   function updateComparisons(r) {
@@ -217,7 +276,12 @@ const App = (() => {
     const companyData = Comparisons.findNearestCompanies(r.totalCostUSD);
     Charts.drawCompanyChart('chart-companies', companyData, currentLang);
 
-    Charts.drawBreakdownChart('chart-breakdown', r.asicCostUSD, r.energyCostUSD, currentLang);
+    if (r.scenario === 'collusion') {
+      Charts.drawBreakdownChart('chart-breakdown', r.opportunityCostUSD, r.estimatedValueDestructionUSD, currentLang,
+        { label1: currentLang === 'en' ? 'Opportunity' : 'Oportunidade' });
+    } else {
+      Charts.drawBreakdownChart('chart-breakdown', r.asicCostUSD, r.energyCostUSD, currentLang);
+    }
   }
 
   // Formatting helpers
@@ -232,6 +296,12 @@ const App = (() => {
     if (n >= 1e9)  return '$' + (n / 1e9).toFixed(2) + ' B';
     if (n >= 1e6)  return '$' + (n / 1e6).toFixed(2) + ' M';
     return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function formatBTC(n) {
+    if (n >= 1000) return Math.round(n).toLocaleString('en-US') + ' BTC';
+    if (n >= 1) return n.toFixed(2) + ' BTC';
+    return n.toFixed(4) + ' BTC';
   }
 
   function formatPower(mw) {

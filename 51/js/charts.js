@@ -182,7 +182,7 @@ const Charts = (() => {
   /**
    * Draw cost breakdown donut chart.
    */
-  function drawBreakdownChart(canvasId, asicCost, energyCost, lang) {
+  function drawBreakdownChart(canvasId, asicCost, energyCost, lang, opts) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
@@ -229,7 +229,7 @@ const Charts = (() => {
     ctx.fillText(asicPct + '%', cx, cy - 8);
     ctx.font = '400 11px Inter, sans-serif';
     ctx.fillStyle = colors.textMuted;
-    ctx.fillText('ASICs', cx, cy + 12);
+    ctx.fillText(opts?.label1 || 'ASICs', cx, cy + 12);
   }
 
   // Helpers

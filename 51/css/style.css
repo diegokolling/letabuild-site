@@ -227,6 +227,62 @@ nav {
   margin-top: 4px;
 }
 
+/* ─── Scenario Toggle ────────────────────────────────────────────── */
+.scenario-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.scenario-option {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.scenario-option:hover {
+  border-color: var(--accent-25);
+  transform: translateY(-2px);
+}
+
+.scenario-option.active {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(224, 138, 58, 0.08), rgba(224, 138, 58, 0.02));
+}
+
+.scenario-option input[type="radio"] {
+  display: none;
+}
+
+.scenario-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.scenario-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.scenario-detail {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 0;
+  padding: 0 4px;
+}
+
 /* ─── Simulation Panel ───────────────────────────────────────────── */
 .sim-panel {
   background: var(--bg-card);
@@ -644,6 +700,7 @@ html[data-theme="dark"] .sim-field select option {
   .hero p { font-size: 14px; }
 
   .network-grid { grid-template-columns: repeat(2, 1fr); }
+  .scenario-toggle { grid-template-columns: 1fr; }
   .sim-grid { grid-template-columns: 1fr; }
   .sim-panel { padding: 24px; }
   .results-grid { grid-template-columns: repeat(2, 1fr); }
