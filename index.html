@@ -157,6 +157,16 @@
     text-decoration: underline;
   }
 
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #e08a3a;
+    margin-bottom: 16px;
+    padding-left: 4px;
+  }
+
   .projects {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -427,6 +437,10 @@
     color: #7a8a98;
   }
 
+  html[data-theme="light"] .section-title {
+    color: #e08a3a;
+  }
+
   html[data-theme="light"] footer a:hover {
     color: #e08a3a;
   }
@@ -548,6 +562,8 @@
     <p data-pt='Programas para uso pessoal construídos por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">Caio Leta</a>.<br>Todos gratuitos, sem cadastro obrigatório.' data-en='Personal tools built by <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">Caio Leta</a>.<br>All free, no sign-up required.'>Programas para uso pessoal construídos por <a href="https://caioleta.com" target="_blank" rel="noopener noreferrer">Caio Leta</a>.<br>Todos gratuitos, sem cadastro obrigatório.</p>
   </div>
 
+  <!-- Ferramentas Bitcoin -->
+  <h3 class="section-title" data-pt="Ferramentas Bitcoin" data-en="Bitcoin Tools">Ferramentas Bitcoin</h3>
   <div class="projects">
     <a class="card" href="/btc/">
       <div class="card-header">
@@ -559,20 +575,6 @@
       </div>
       <div class="card-footer">
         <span class="card-tag" data-pt="Usar agora" data-en="Use now">Usar agora</span>
-        <span class="card-arrow">&#8594;</span>
-      </div>
-    </a>
-
-    <a class="card" href="/custodia/">
-      <div class="card-header">
-        <div class="card-icon">🔐</div>
-        <h2 data-pt="Auto-Custódia" data-en="Self-Custody">Auto-Custódia</h2>
-      </div>
-      <div class="card-body">
-        <p data-pt="Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo." data-en="Learn Bitcoin self-custody step by step. From basics to multisig, with 7 wallets and saved progress.">Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo.</p>
-      </div>
-      <div class="card-footer">
-        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
         <span class="card-arrow">&#8594;</span>
       </div>
     </a>
@@ -601,48 +603,6 @@
       </div>
       <div class="card-footer">
         <span class="card-tag" data-pt="Usar agora" data-en="Use now">Usar agora</span>
-        <span class="card-arrow">&#8594;</span>
-      </div>
-    </a>
-
-    <a class="card" href="/seed/">
-      <div class="card-header">
-        <div class="card-icon">🎲</div>
-        <h2>Seed Phrase Offline</h2>
-      </div>
-      <div class="card-body">
-        <p data-pt="Gere sua seed phrase do jeito mais seguro: com dados, moeda ou sorteio de papel. Sem internet, sem risco." data-en="Generate your seed phrase the safest way: with dice, coin, or paper draw. No internet, no risk.">Gere sua seed phrase do jeito mais seguro: com dados, moeda ou sorteio de papel. Sem internet, sem risco.</p>
-      </div>
-      <div class="card-footer">
-        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
-        <span class="card-arrow">&#8594;</span>
-      </div>
-    </a>
-
-    <a class="card" href="/node/">
-      <div class="card-header">
-        <div class="card-icon">🖥️</div>
-        <h2 data-pt="Rode seu Node Bitcoin" data-en="Run your Bitcoin Node">Rode seu Node Bitcoin</h2>
-      </div>
-      <div class="card-body">
-        <p data-pt="Tutorial completo para rodar seu próprio node. Notebook dedicado, node prunado ou Umbrel. Seja seu próprio banco." data-en="Complete tutorial to run your own node. Dedicated laptop, pruned node, or Umbrel. Be your own bank.">Tutorial completo para rodar seu próprio node. Notebook dedicado, node prunado ou Umbrel. Seja seu próprio banco.</p>
-      </div>
-      <div class="card-footer">
-        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
-        <span class="card-arrow">&#8594;</span>
-      </div>
-    </a>
-
-    <a class="card" href="/heranca/">
-      <div class="card-header">
-        <div class="card-icon">🏛️</div>
-        <h2 data-pt="Herança Bitcoin" data-en="Bitcoin Inheritance">Herança Bitcoin</h2>
-      </div>
-      <div class="card-body">
-        <p data-pt="Crie um plano de sucessão para seus bitcoins. 6 métodos, do básico ao avançado. Proteja o patrimônio da sua família." data-en="Create a succession plan for your bitcoin. 6 methods, from basic to advanced. Protect your family's wealth.">Crie um plano de sucessão para seus bitcoins. 6 métodos, do básico ao avançado. Proteja o patrimônio da sua família.</p>
-      </div>
-      <div class="card-footer">
-        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
         <span class="card-arrow">&#8594;</span>
       </div>
     </a>
@@ -702,7 +662,71 @@
         <span class="card-arrow">&#8594;</span>
       </div>
     </a>
+  </div>
 
+  <!-- Tutoriais Bitcoin -->
+  <h3 class="section-title" data-pt="Tutoriais Bitcoin" data-en="Bitcoin Tutorials">Tutoriais Bitcoin</h3>
+  <div class="projects">
+    <a class="card" href="/custodia/">
+      <div class="card-header">
+        <div class="card-icon">🔐</div>
+        <h2 data-pt="Auto-Custódia" data-en="Self-Custody">Auto-Custódia</h2>
+      </div>
+      <div class="card-body">
+        <p data-pt="Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo." data-en="Learn Bitcoin self-custody step by step. From basics to multisig, with 7 wallets and saved progress.">Aprenda auto-custódia Bitcoin passo a passo. Do básico ao multisig, com 7 wallets e progresso salvo.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/seed/">
+      <div class="card-header">
+        <div class="card-icon">🎲</div>
+        <h2>Seed Phrase Offline</h2>
+      </div>
+      <div class="card-body">
+        <p data-pt="Gere sua seed phrase do jeito mais seguro: com dados, moeda ou sorteio de papel. Sem internet, sem risco." data-en="Generate your seed phrase the safest way: with dice, coin, or paper draw. No internet, no risk.">Gere sua seed phrase do jeito mais seguro: com dados, moeda ou sorteio de papel. Sem internet, sem risco.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/node/">
+      <div class="card-header">
+        <div class="card-icon">🖥️</div>
+        <h2 data-pt="Rode seu Node Bitcoin" data-en="Run your Bitcoin Node">Rode seu Node Bitcoin</h2>
+      </div>
+      <div class="card-body">
+        <p data-pt="Tutorial completo para rodar seu próprio node. Notebook dedicado, node prunado ou Umbrel. Seja seu próprio banco." data-en="Complete tutorial to run your own node. Dedicated laptop, pruned node, or Umbrel. Be your own bank.">Tutorial completo para rodar seu próprio node. Notebook dedicado, node prunado ou Umbrel. Seja seu próprio banco.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <a class="card" href="/heranca/">
+      <div class="card-header">
+        <div class="card-icon">🏛️</div>
+        <h2 data-pt="Herança Bitcoin" data-en="Bitcoin Inheritance">Herança Bitcoin</h2>
+      </div>
+      <div class="card-body">
+        <p data-pt="Crie um plano de sucessão para seus bitcoins. 6 métodos, do básico ao avançado. Proteja o patrimônio da sua família." data-en="Create a succession plan for your bitcoin. 6 methods, from basic to advanced. Protect your family's wealth.">Crie um plano de sucessão para seus bitcoins. 6 métodos, do básico ao avançado. Proteja o patrimônio da sua família.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag" data-pt="Começar" data-en="Get started">Começar</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Outras Ferramentas -->
+  <h3 class="section-title" data-pt="Outras Ferramentas" data-en="Other Tools">Outras Ferramentas</h3>
+  <div class="projects">
     <a class="card" href="https://ativos.letabuild.com">
       <div class="card-header">
         <div class="card-icon">📊</div>
