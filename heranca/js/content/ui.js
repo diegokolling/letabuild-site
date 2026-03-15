@@ -16,7 +16,7 @@ const UI_STRINGS = {
 
     // Prerequisites
     prerequisiteTitle: 'Pré-requisitos',
-    prerequisiteText: 'Este tutorial assume que você já completou os tutoriais de <strong>geração de seed offline</strong> e <strong>auto-custódia</strong>.<br>Se ainda não fez, comece por lá:',
+    prerequisiteText: 'Este tutorial assume que você já completou os tutoriais de <strong>geração de seed offline</strong> e <strong>auto-custódia.</strong> Se ainda não fez, comece por lá:',
     prerequisiteLink: 'Ir para o tutorial de auto-custódia',
 
     // Disclaimer
@@ -112,7 +112,7 @@ const UI_STRINGS = {
     btnBrowseDesc: 'Already know what you want? Go straight to the tutorial',
 
     prerequisiteTitle: 'Prerequisites',
-    prerequisiteText: 'This tutorial assumes you have already completed the <strong>offline seed generation</strong> and <strong>self-custody</strong> tutorials. If not, start there:',
+    prerequisiteText: 'This tutorial assumes you have already completed the <strong>offline seed generation</strong> and <strong>self-custody</strong> tutorials.&nbsp;If not, start there:',
     prerequisiteLink: 'Go to the self-custody tutorial',
 
     disclaimerTitle: 'Important Notice',
