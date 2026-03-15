@@ -16,6 +16,7 @@ Dados atualizados:
 
 import json
 import re
+import ssl
 import sys
 import urllib.request
 from datetime import date, datetime
@@ -39,6 +40,18 @@ BCB_HEADERS = {
     "Accept":     "application/json",
     "User-Agent": "Mozilla/5.0 (compatible; letabuild-updater/1.0)",
 }
+
+
+def _bcb_ssl_context() -> ssl.SSLContext:
+    """Contexto SSL para APIs do BCB — tenta certifi, senão usa bundle do sistema."""
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
 
 
 # ─── FETCHERS ────────────────────────────────────────────────────────────────
@@ -107,7 +120,7 @@ def fetch_ptax_bcb() -> dict:
         "&$top=100000"
     )
     req  = urllib.request.Request(url, headers=BCB_HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=30, context=_bcb_ssl_context()) as resp:
         rows = json.loads(resp.read())["value"]
 
     monthly = {}
@@ -142,7 +155,7 @@ def fetch_selic_monthly() -> dict:
         year_end = min(year_start + 4, cur_year)
         url = f"{base_url}&dataInicial=01/01/{year_start}&dataFinal=31/12/{year_end}"
         req = urllib.request.Request(url, headers=BCB_HEADERS)
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=30, context=_bcb_ssl_context()) as resp:
             all_rows.extend(json.loads(resp.read()))
 
     monthly = {}
