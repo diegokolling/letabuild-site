@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-pt="Simulador de Ataque 51% | letabuild" data-en="51% Attack Simulator | letabuild">Simulador de Ataque 51% | letabuild</title>
+<meta name="description" content="Quanto custaria atacar o Bitcoin hoje? Simulador interativo com dados reais da rede. Descubra por que um ataque de 51% é economicamente inviável.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://letabuild.com/51/">
+<meta property="og:title" content="Simulador de Ataque 51% ao Bitcoin">
+<meta property="og:description" content="Quanto custaria atacar o Bitcoin hoje? Descubra com dados reais por que um ataque de 51% é economicamente inviável.">
+<meta property="og:image" content="https://letabuild.com/og-image.png">
+<meta property="og:locale" content="pt_BR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Simulador de Ataque 51% ao Bitcoin">
+<meta name="twitter:description" content="Quanto custaria atacar o Bitcoin hoje? Descubra com dados reais por que um ataque de 51% é economicamente inviável.">
+<meta name="twitter:image" content="https://letabuild.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="/theme-toggle.js"></script>
+<script src="/lang-toggle.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">leta<span>build</span></a>
+  <div class="nav-controls">
+    <a href="/" class="back-home" title="Home">&larr;</a>
+    <button id="langToggle" class="nav-btn" title="Switch language"></button>
+    <button id="themeToggle" class="nav-btn" title="Alternar tema" style="font-size:16px;"></button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge" data-pt="Simulador Educativo" data-en="Educational Simulator">Simulador Educativo</div>
+    <h1 data-pt="Simulador de Ataque <span>51%</span>" data-en="<span>51%</span> Attack Simulator">Simulador de Ataque <span>51%</span></h1>
+    <p data-pt="Quanto custaria atacar a rede Bitcoin hoje? Ajuste as variáveis e descubra por que esse ataque é economicamente inviável." data-en="How much would it cost to attack Bitcoin today? Adjust the variables and discover why this attack is economically unfeasible.">Quanto custaria atacar a rede Bitcoin hoje? Ajuste as variáveis e descubra por que esse ataque é economicamente inviável.</p>
+  </div>
+
+  <!-- Network Stats -->
+  <h2 class="section-title">
+    <span class="title-icon">📡</span>
+    <span data-pt="Rede Bitcoin Agora" data-en="Bitcoin Network Now">Rede Bitcoin Agora</span>
+  </h2>
+  <div class="network-grid">
+    <div class="net-card">
+      <div class="label">Hashrate</div>
+      <div class="value" id="net-hashrate">958.9 EH/s</div>
+    </div>
+    <div class="net-card">
+      <div class="label" data-pt="Dificuldade" data-en="Difficulty">Dificuldade</div>
+      <div class="value" id="net-difficulty">145 T</div>
+    </div>
+    <div class="net-card">
+      <div class="label" data-pt="Preço BTC" data-en="BTC Price">Preço BTC</div>
+      <div class="value" id="net-btcprice">$71,550</div>
+    </div>
+    <div class="net-card">
+      <div class="label" data-pt="Atualizado" data-en="Updated">Atualizado</div>
+      <div class="value" id="net-updated" style="font-size:16px;">2026-03-15</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Simulation Controls -->
+  <h2 class="section-title">
+    <span class="title-icon">🎛️</span>
+    <span data-pt="Parâmetros do Ataque" data-en="Attack Parameters">Parâmetros do Ataque</span>
+  </h2>
+  <div class="sim-panel">
+    <div class="sim-grid">
+
+      <div class="sim-field">
+        <label data-pt="Hashrate da Rede (EH/s)" data-en="Network Hashrate (EH/s)">Hashrate da Rede (EH/s)</label>
+        <input type="number" id="input-hashrate" value="958.9" min="1" step="10" inputmode="numeric">
+      </div>
+
+      <div class="sim-field">
+        <label data-pt="Modelo de ASIC" data-en="ASIC Model">Modelo de ASIC</label>
+        <select id="input-asic"></select>
+      </div>
+
+      <div class="sim-field">
+        <label data-pt="% do Hashrate a Controlar" data-en="% of Hashrate to Control">% do Hashrate a Controlar</label>
+        <div class="input-row">
+          <input type="range" id="input-attack-pct" min="51" max="100" value="51" step="1">
+          <span class="slider-value" id="display-attack-pct">51%</span>
+        </div>
+      </div>
+
+      <div class="sim-field">
+        <label data-pt="Duração do Ataque" data-en="Attack Duration">Duração do Ataque</label>
+        <div class="input-row">
+          <input type="range" id="input-duration" min="1" max="168" value="1" step="1">
+          <span class="slider-value" id="display-duration">1h</span>
+        </div>
+      </div>
+
+      <div class="sim-field full-width">
+        <label data-pt="Custo de Energia (USD/kWh)" data-en="Energy Cost (USD/kWh)">Custo de Energia (USD/kWh)</label>
+        <div class="input-row">
+          <input type="range" id="input-energy-cost" min="0.01" max="0.20" value="0.05" step="0.01">
+          <span class="slider-value" id="display-energy-cost">$0.05</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Results -->
+  <h2 class="section-title">
+    <span class="title-icon">⚡</span>
+    <span data-pt="Resultado da Simulação" data-en="Simulation Results">Resultado da Simulação</span>
+  </h2>
+  <div class="results-grid">
+    <div class="result-card">
+      <div class="label" data-pt="ASICs Necessários" data-en="ASICs Needed">ASICs Necessários</div>
+      <div class="value" id="result-asics">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Custo dos ASICs" data-en="ASIC Cost">Custo dos ASICs</div>
+      <div class="value" id="result-asic-cost">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Potência Necessária" data-en="Power Required">Potência Necessária</div>
+      <div class="value" id="result-power">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Energia Consumida" data-en="Energy Consumed">Energia Consumida</div>
+      <div class="value" id="result-energy">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Custo da Energia" data-en="Energy Cost">Custo da Energia</div>
+      <div class="value" id="result-energy-cost">—</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Peso dos ASICs" data-en="ASIC Weight">Peso dos ASICs</div>
+      <div class="value" id="result-weight">—</div>
+    </div>
+  </div>
+  <div class="results-grid total-row" style="grid-template-columns:1fr;">
+    <div class="result-card total">
+      <div class="label" data-pt="Custo Total do Ataque" data-en="Total Attack Cost">Custo Total do Ataque</div>
+      <div class="value" id="result-total">—</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Energy Comparisons -->
+  <h2 class="section-title">
+    <span class="title-icon">🔌</span>
+    <span data-pt="Comparação de Energia" data-en="Energy Comparison">Comparação de Energia</span>
+  </h2>
+  <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;" data-pt="A potência necessária para o ataque equivale a:" data-en="The power required for the attack is equivalent to:">A potência necessária para o ataque equivale a:</p>
+  <div class="comp-grid" id="energy-comparisons"></div>
+
+  <hr class="section-divider">
+
+  <!-- Cost Comparisons -->
+  <h2 class="section-title">
+    <span class="title-icon">💰</span>
+    <span data-pt="Comparação de Custo" data-en="Cost Comparison">Comparação de Custo</span>
+  </h2>
+  <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;" data-pt="O custo total do ataque comparado a:" data-en="The total attack cost compared to:">O custo total do ataque comparado a:</p>
+  <div class="comp-grid" id="cost-comparisons"></div>
+
+  <hr class="section-divider">
+
+  <!-- GDP Chart -->
+  <h2 class="section-title">
+    <span class="title-icon">🌍</span>
+    <span data-pt="Custo do Ataque vs PIB de Países" data-en="Attack Cost vs Country GDPs">Custo do Ataque vs PIB de Países</span>
+  </h2>
+  <div class="chart-section">
+    <div class="chart-container">
+      <canvas id="chart-gdp"></canvas>
+    </div>
+  </div>
+
+  <!-- Company Market Cap Chart -->
+  <h2 class="section-title">
+    <span class="title-icon">🏢</span>
+    <span data-pt="Custo do Ataque vs Valor de Empresas" data-en="Attack Cost vs Company Market Caps">Custo do Ataque vs Valor de Empresas</span>
+  </h2>
+  <div class="chart-section">
+    <div class="chart-row">
+      <div class="chart-main">
+        <div class="chart-container">
+          <canvas id="chart-companies"></canvas>
+        </div>
+      </div>
+      <div class="chart-side">
+        <div class="chart-container" style="display:flex;flex-direction:column;align-items:center;">
+          <div style="font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:12px;" data-pt="Composição do Custo" data-en="Cost Breakdown">Composição do Custo</div>
+          <canvas id="chart-breakdown"></canvas>
+          <div class="breakdown-legend">
+            <div class="legend-item"><span class="legend-dot asic"></span> <span data-pt="Hardware (ASICs)" data-en="Hardware (ASICs)">Hardware (ASICs)</span></div>
+            <div class="legend-item"><span class="legend-dot energy"></span> <span data-pt="Energia Elétrica" data-en="Electricity">Energia Elétrica</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Conclusion -->
+  <div class="conclusion">
+    <h3 data-pt="Por que o ataque é inviável?" data-en="Why is the attack unfeasible?">Por que o ataque é inviável?</h3>
+    <p data-pt="O Bitcoin é protegido pela maior rede de computação do mundo. Para atacá-lo, um adversário precisaria reunir mais poder computacional do que todos os mineradores honestos combinados. Isso exigiria milhões de máquinas especializadas (ASICs) que nem sequer existem em quantidade suficiente no mercado, consumiria mais energia do que países inteiros, e custaria mais do que o PIB de várias nações." data-en="Bitcoin is protected by the largest computing network in the world. To attack it, an adversary would need to amass more computational power than all honest miners combined. This would require millions of specialized machines (ASICs) that don't even exist in sufficient quantities, would consume more energy than entire countries, and would cost more than the GDP of several nations.">O Bitcoin é protegido pela maior rede de computação do mundo. Para atacá-lo, um adversário precisaria reunir mais poder computacional do que todos os mineradores honestos combinados. Isso exigiria milhões de máquinas especializadas (ASICs) que nem sequer existem em quantidade suficiente no mercado, consumiria mais energia do que países inteiros, e custaria mais do que o PIB de várias nações.</p>
+    <p data-pt="E mesmo que alguém conseguisse reunir todo esse hardware e energia, <strong>o ataque destruiria a confiança na rede</strong>, fazendo o preço do Bitcoin despencar e tornando o investimento do atacante sem valor. Em outras palavras: quanto mais valioso o Bitcoin se torna, mais caro e mais inútil fica atacá-lo." data-en="And even if someone managed to gather all this hardware and energy, <strong>the attack would destroy trust in the network</strong>, crashing Bitcoin's price and making the attacker's investment worthless. In other words: the more valuable Bitcoin becomes, the more expensive and more pointless it is to attack it.">E mesmo que alguém conseguisse reunir todo esse hardware e energia, <strong>o ataque destruiria a confiança na rede</strong>, fazendo o preço do Bitcoin despencar e tornando o investimento do atacante sem valor. Em outras palavras: quanto mais valioso o Bitcoin se torna, mais caro e mais inútil fica atacá-lo.</p>
+    <p data-pt="Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a escolha racional." data-en="This is the beauty of <strong>Game Theory applied to Bitcoin</strong>: cooperation (mining honestly) is always more profitable than attacking. Bitcoin's security doesn't rely on trust in institutions, but on economic incentives that make honest behavior the rational choice.">Essa é a beleza da <strong>Teoria dos Jogos aplicada ao Bitcoin</strong>: a cooperação (minerar honestamente) é sempre mais lucrativa do que o ataque. A segurança do Bitcoin não depende de confiança em instituições, mas de incentivos econômicos que tornam o comportamento honesto a escolha racional.</p>
+  </div>
+
+</div>
+
+<footer>
+  <span data-pt='feito por <a href="https://caioleta.com">leta</a>' data-en='made by <a href="https://caioleta.com">leta</a>'>feito por <a href="https://caioleta.com">leta</a></span>
+</footer>
+
+<script src="js/simulator.js"></script>
+<script src="js/comparisons.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
