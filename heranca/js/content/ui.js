@@ -16,7 +16,7 @@ const UI_STRINGS = {
 
     // Prerequisites
     prerequisiteTitle: 'Pré-requisitos',
-    prerequisiteText: 'Este tutorial assume que você já completou os tutoriais de <strong>geração de seed offline</strong> e <strong>auto-custódia</strong>. Se ainda não fez, comece por lá:',
+    prerequisiteText: 'Este tutorial assume que você já completou os tutoriais de <strong>geração de seed offline</strong> e <strong>auto-custódia</strong>.<br>Se ainda não fez, comece por lá:',
     prerequisiteLink: 'Ir para o tutorial de auto-custódia',
 
     // Disclaimer

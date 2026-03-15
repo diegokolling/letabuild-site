@@ -308,9 +308,9 @@
 
     var allItems = [];
     var sectionLabels = {
-      prerequisites: { pt: 'Pre-requisitos', en: 'Prerequisites' },
+      prerequisites: { pt: 'Pré-requisitos', en: 'Prerequisites' },
       heir_knowledge: { pt: 'O que seu herdeiro precisa saber', en: 'What your heir needs to know' },
-      info_security: { pt: 'Como dividir informacao', en: 'How to divide information' },
+      info_security: { pt: 'Como dividir informação', en: 'How to divide information' },
       letter_template: { pt: 'Modelo de carta', en: 'Letter template' }
     };
 
@@ -501,7 +501,7 @@
     // Suggest other methods based on current tier
     if (meta.tier === 'no-hw') {
       nextHtml += '<div class="next-item" data-tutorial="passphrase-carta">' +
-        '🌳 ' + (lang === 'pt' ? 'Explore o metodo Tronco e Galhos (requer hardware wallet)' : 'Explore the Trunk and Branches method (requires hardware wallet)') +
+        '🌳 ' + (lang === 'pt' ? 'Explore o método Tronco e Galhos (requer hardware wallet)' : 'Explore the Trunk and Branches method (requires hardware wallet)') +
         '</div>';
     } else if (meta.method !== 'liana-timelock' && meta.method !== 'liana-decaying') {
       nextHtml += '<div class="next-item" data-tutorial="liana-timelock">' +
