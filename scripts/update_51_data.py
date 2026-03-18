@@ -35,8 +35,8 @@ def fetch_hashrate():
     print("  Buscando hashrate...")
     raw = fetch_url("https://mempool.space/api/v1/mining/hashrate/1d")
     data = json.loads(raw)
-    # Last entry has the most recent average hashrate in H/s
-    h_s = data["hashrates"][-1]["avgHashrate"]
+    # Current real-time estimated hashrate in H/s
+    h_s = data["currentHashrate"]
     eh_s = round(h_s / 1e18, 1)  # H/s -> EH/s
     print(f"    -> {eh_s} EH/s")
     return eh_s
