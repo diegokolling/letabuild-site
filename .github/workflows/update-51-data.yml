@@ -1,42 +1,29 @@
-name: Atualizar dados Simulador 51%
+name: Update 51% Simulator Data
 
 on:
   schedule:
-    # Todo dia às 9h15 UTC (6h15 de Brasília)
-    - cron: '15 9 * * *'
-  workflow_dispatch:
-    # Permite trigger manual pelo GitHub Actions UI
-
-permissions:
-  contents: write
+    - cron: '0 12 * * *'  # Roda todo dia ao meio-dia UTC (9h BRT)
+  workflow_dispatch: # Permite rodar manualmente pelo GitHub
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repositório
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
-      - name: Executar script de atualização
+      - name: Update network data
         run: python scripts/update_51_data.py
 
-      - name: Commitar e publicar se houver mudanças
+      - name: Commit and push if changed
         run: |
-          git config user.name  "letabuild-bot"
-          git config user.email "bot@letabuild.com"
-          git add 51/data/network.json
-          if git diff --staged --quiet; then
-            echo "Nenhuma mudança nos dados. Nada a commitar."
-          else
-            git commit -m "51%: atualização automática de dados ($(date '+%Y-%m-%d'))"
+          git config user.name "CaioLeta21"
+          git config user.email "caioleta@gmail.com"
+          git diff --quiet 51/data/network.json || {
+            git add 51/data/network.json
+            git commit -m "Update 51% simulator data ($(date -u +%Y-%m-%d))"
             git push
-            echo "Dados atualizados e publicados com sucesso!"
-          fi
+          }

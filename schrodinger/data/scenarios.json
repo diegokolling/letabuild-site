@@ -1,0 +1,64 @@
+{
+  "scenarios": {
+    "bearish": {
+      "id": "bearish",
+      "labelPt": "Bearish",
+      "labelEn": "Bearish",
+      "descPt": "Adoção mínima. Bitcoin captura apenas uma fração do prêmio monetário de cada classe.",
+      "descEn": "Minimal adoption. Bitcoin captures only a fraction of each asset class monetary premium.",
+      "discountRate": 0.13,
+      "assets": [
+        { "id": "equities",   "namePt": "Ações",          "nameEn": "Equities",       "mcapT": 147.6,  "monetaryPremium": 0.12, "captureProb": 0.04, "years": 13 },
+        { "id": "bonds",      "namePt": "Títulos",         "nameEn": "Bonds",          "mcapT": 133.0,  "monetaryPremium": 0.15, "captureProb": 0.05, "years": 13 },
+        { "id": "gold",       "namePt": "Ouro",            "nameEn": "Gold",           "mcapT": 30.2,   "monetaryPremium": 0.50, "captureProb": 0.15, "years": 8 },
+        { "id": "silver",     "namePt": "Prata",           "nameEn": "Silver",         "mcapT": 4.08,   "monetaryPremium": 0.30, "captureProb": 0.05, "years": 10 },
+        { "id": "realestate", "namePt": "Imóveis",         "nameEn": "Real Estate",    "mcapT": 393.3,  "monetaryPremium": 0.12, "captureProb": 0.02, "years": 18 },
+        { "id": "crypto",     "namePt": "Criptomoedas",    "nameEn": "Crypto",         "mcapT": 1.09,   "monetaryPremium": 1.00, "captureProb": 0.40, "years": 4 },
+        { "id": "art",        "namePt": "Arte",            "nameEn": "Art",            "mcapT": 2.0,    "monetaryPremium": 0.35, "captureProb": 0.02, "years": 13 }
+      ]
+    },
+    "base": {
+      "id": "base",
+      "labelPt": "Base",
+      "labelEn": "Base",
+      "descPt": "Adoção moderada. Bitcoin se consolida como reserva de valor digital e captura parte do prêmio monetário.",
+      "descEn": "Moderate adoption. Bitcoin consolidates as digital store of value and captures part of the monetary premium.",
+      "discountRate": 0.10,
+      "assets": [
+        { "id": "equities",   "namePt": "Ações",          "nameEn": "Equities",       "mcapT": 147.6,  "monetaryPremium": 0.12, "captureProb": 0.08, "years": 10 },
+        { "id": "bonds",      "namePt": "Títulos",         "nameEn": "Bonds",          "mcapT": 133.0,  "monetaryPremium": 0.15, "captureProb": 0.12, "years": 10 },
+        { "id": "gold",       "namePt": "Ouro",            "nameEn": "Gold",           "mcapT": 30.2,   "monetaryPremium": 0.50, "captureProb": 0.40, "years": 6 },
+        { "id": "silver",     "namePt": "Prata",           "nameEn": "Silver",         "mcapT": 4.08,   "monetaryPremium": 0.30, "captureProb": 0.12, "years": 8 },
+        { "id": "realestate", "namePt": "Imóveis",         "nameEn": "Real Estate",    "mcapT": 393.3,  "monetaryPremium": 0.12, "captureProb": 0.05, "years": 12 },
+        { "id": "crypto",     "namePt": "Criptomoedas",    "nameEn": "Crypto",         "mcapT": 1.09,   "monetaryPremium": 1.00, "captureProb": 0.60, "years": 3 },
+        { "id": "art",        "namePt": "Arte",            "nameEn": "Art",            "mcapT": 2.0,    "monetaryPremium": 0.35, "captureProb": 0.05, "years": 10 }
+      ]
+    },
+    "bullish": {
+      "id": "bullish",
+      "labelPt": "Bullish",
+      "labelEn": "Bullish",
+      "descPt": "Adoção forte. Bitcoin se torna a principal reserva de valor global, capturando parte significativa do prêmio monetário.",
+      "descEn": "Strong adoption. Bitcoin becomes the primary global store of value, capturing a significant portion of the monetary premium.",
+      "discountRate": 0.07,
+      "assets": [
+        { "id": "equities",   "namePt": "Ações",          "nameEn": "Equities",       "mcapT": 147.6,  "monetaryPremium": 0.12, "captureProb": 0.15, "years": 8 },
+        { "id": "bonds",      "namePt": "Títulos",         "nameEn": "Bonds",          "mcapT": 133.0,  "monetaryPremium": 0.15, "captureProb": 0.20, "years": 8 },
+        { "id": "gold",       "namePt": "Ouro",            "nameEn": "Gold",           "mcapT": 30.2,   "monetaryPremium": 0.50, "captureProb": 0.60, "years": 5 },
+        { "id": "silver",     "namePt": "Prata",           "nameEn": "Silver",         "mcapT": 4.08,   "monetaryPremium": 0.30, "captureProb": 0.25, "years": 6 },
+        { "id": "realestate", "namePt": "Imóveis",         "nameEn": "Real Estate",    "mcapT": 393.3,  "monetaryPremium": 0.12, "captureProb": 0.08, "years": 10 },
+        { "id": "crypto",     "namePt": "Criptomoedas",    "nameEn": "Crypto",         "mcapT": 1.09,   "monetaryPremium": 1.00, "captureProb": 0.80, "years": 2 },
+        { "id": "art",        "namePt": "Arte",            "nameEn": "Art",            "mcapT": 2.0,    "monetaryPremium": 0.35, "captureProb": 0.10, "years": 8 }
+      ]
+    }
+  },
+  "assetColors": {
+    "equities":   "#4A90D9",
+    "bonds":      "#9B72CF",
+    "gold":       "#F5C842",
+    "silver":     "#A8B4BE",
+    "realestate": "#45B07C",
+    "crypto":     "#E08A3A",
+    "art":        "#E8637A"
+  }
+}

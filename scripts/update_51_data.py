@@ -6,9 +6,9 @@ Atualiza dados da rede Bitcoin para o Simulador de Ataque 51%.
 Executado diariamente via GitHub Actions.
 
 Dados:
-  - hashrate_eh   : Hashrate da rede em EH/s  — blockchain.info
-  - difficulty_t   : Dificuldade em trilhões    — blockchain.info
-  - btc_price_usd  : Preço do BTC em USD       — CoinGecko
+  - hashrate_eh   : Hashrate da rede em EH/s  - mempool.space
+  - difficulty_t   : Dificuldade em trilhoes   - blockchain.info
+  - btc_price_usd  : Preco do BTC em USD       - CoinGecko
 """
 
 import json
@@ -31,12 +31,13 @@ def fetch_url(url):
 
 
 def fetch_hashrate():
-    """Hashrate from blockchain.info in EH/s."""
+    """Hashrate from mempool.space in EH/s."""
     print("  Buscando hashrate...")
-    # Returns hashrate in GH/s as a single number
-    raw = fetch_url("https://blockchain.info/q/hashrate")
-    gh_s = float(raw.strip())
-    eh_s = round(gh_s / 1e9, 1)  # GH/s -> EH/s
+    raw = fetch_url("https://mempool.space/api/v1/mining/hashrate/1d")
+    data = json.loads(raw)
+    # Current real-time estimated hashrate in H/s
+    h_s = data["currentHashrate"]
+    eh_s = round(h_s / 1e18, 1)  # H/s -> EH/s
     print(f"    -> {eh_s} EH/s")
     return eh_s
 
