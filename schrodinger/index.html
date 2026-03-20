@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-pt="Modelo Schrödinger | letabuild" data-en="Schrödinger Model | letabuild">Modelo Schrödinger | letabuild</title>
+<meta name="description" content="Calcule o valor justo do Bitcoin com o Modelo Schrödinger. Quanto vale o BTC se capturar o prêmio monetário de ações, ouro, imóveis e outras classes de ativos?">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://letabuild.com/schrodinger/">
+<meta property="og:title" content="Modelo Schrödinger - Valuation do Bitcoin">
+<meta property="og:description" content="Calcule o valor justo do Bitcoin baseado na probabilidade de capturar o prêmio monetário de diferentes classes de ativos.">
+<meta property="og:image" content="https://letabuild.com/og-image.png">
+<meta property="og:locale" content="pt_BR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Modelo Schrödinger - Valuation do Bitcoin">
+<meta name="twitter:description" content="Calcule o valor justo do Bitcoin baseado na probabilidade de capturar o prêmio monetário de diferentes classes de ativos.">
+<meta name="twitter:image" content="https://letabuild.com/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="/theme-toggle.js"></script>
+<script src="/lang-toggle.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">leta<span>build</span></a>
+  <div class="nav-controls">
+    <a href="/" class="back-home" title="Home">&larr;</a>
+    <button id="langToggle" class="nav-btn" title="Switch language"></button>
+    <button id="themeToggle" class="nav-btn" title="Alternar tema" style="font-size:16px;"></button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge" data-pt="Modelo de Valuation" data-en="Valuation Model">Modelo de Valuation</div>
+    <h1 data-pt="Modelo <span>Schrödinger</span>" data-en="<span>Schrödinger</span> Model">Modelo <span>Schrödinger</span></h1>
+    <p data-pt="Qual o valor justo do Bitcoin? Calcule com base na probabilidade de capturar o prêmio monetário de ações, ouro, imóveis e outras classes de ativos globais." data-en="What is Bitcoin's fair value? Calculate based on the probability of capturing the monetary premium from equities, gold, real estate and other global asset classes.">Qual o valor justo do Bitcoin? Calcule com base na probabilidade de capturar o prêmio monetário de ações, ouro, imóveis e outras classes de ativos globais.</p>
+  </div>
+
+  <!-- Live BTC Price Strip -->
+  <h2 class="section-title">
+    <span data-pt="Bitcoin Agora" data-en="Bitcoin Now">Bitcoin Agora</span>
+  </h2>
+  <div class="price-strip">
+    <div class="strip-card">
+      <div class="label" data-pt="Preço BTC" data-en="BTC Price">Preço BTC</div>
+      <div class="value" id="live-btc-price">...</div>
+    </div>
+    <div class="strip-card">
+      <div class="label">Supply</div>
+      <div class="value" id="live-btc-supply" style="font-size:18px;">20,999,999</div>
+    </div>
+    <div class="strip-card">
+      <div class="label">Market Cap</div>
+      <div class="value" id="live-btc-mcap">...</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Scenarios -->
+  <h2 class="section-title">
+    <span data-pt="Cenário" data-en="Scenario">Cenário</span>
+  </h2>
+  <div class="scenario-pills">
+    <button class="scenario-pill" data-scenario="bearish">Bearish</button>
+    <button class="scenario-pill active" data-scenario="base">Base</button>
+    <button class="scenario-pill" data-scenario="bullish">Bullish</button>
+    <button class="scenario-pill custom-pill" id="pill-custom" data-scenario="custom">Custom</button>
+  </div>
+
+  <!-- Discount Rate -->
+  <div class="discount-panel">
+    <label data-pt="Taxa de Desconto" data-en="Discount Rate">Taxa de Desconto</label>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.5;" data-pt="Quanto você exige de retorno anual para esperar. Quanto maior, mais o modelo penaliza o valor futuro." data-en="How much annual return you require for waiting. The higher it is, the more the model penalizes future value.">Quanto você exige de retorno anual para esperar. Quanto maior, mais o modelo penaliza o valor futuro.</p>
+    <div class="input-row">
+      <input type="range" id="input-discount-rate" min="1" max="30" value="12" step="1">
+      <span class="slider-value" id="display-discount-rate">12%</span>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Asset Classes -->
+  <h2 class="section-title">
+    <span data-pt="Classes de Ativos" data-en="Asset Classes">Classes de Ativos</span>
+  </h2>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px;line-height:1.6;" data-pt="<strong style='color:var(--text)'>Prêmio monetário</strong> é a parcela do valor de um ativo que existe não pela utilidade produtiva, mas pela função de reserva de valor. Ouro tem prêmio alto (~50%); ações e imóveis, moderado (~10-15%). <a href='javascript:void(0)' id='toggle-premium-detail' style='color:var(--accent);text-decoration:none;font-weight:500;'>Saiba mais</a>" data-en="<strong style='color:var(--text)'>Monetary premium</strong> is the share of an asset's value that exists not for productive utility, but for its store-of-value function. Gold has a high premium (~50%); equities and real estate, moderate (~10-15%). <a href='javascript:void(0)' id='toggle-premium-detail' style='color:var(--accent);text-decoration:none;font-weight:500;'>Learn more</a>"><strong style='color:var(--text)'>Prêmio monetário</strong> é a parcela do valor de um ativo que existe não pela utilidade produtiva, mas pela função de reserva de valor. Ouro tem prêmio alto (~50%); ações e imóveis, moderado (~10-15%). <a href="javascript:void(0)" id="toggle-premium-detail" style="color:var(--accent);text-decoration:none;font-weight:500;">Saiba mais</a></p>
+  <div id="premium-detail" style="display:none;font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;padding:16px 20px;background:var(--input-bg);border-radius:12px;border:1px solid var(--border);">
+    <p style="margin-bottom:10px;" data-pt="<strong style='color:var(--text)'>Ações:</strong> em teoria, são ativos produtivos: representam lucros, dividendos e fluxo de caixa. Mas na prática, boa parte do mercado funciona como reserva de valor. O investidor passivo que compra um ETF de S&amp;P 500 não está analisando balanços; está alocando riqueza num veículo que 'só sobe no longo prazo'. Esse comportamento é prêmio monetário. Estimativa razoável: 10-15% do valor total." data-en="<strong style='color:var(--text)'>Equities:</strong> in theory, productive assets: they represent earnings, dividends and cash flow. But in practice, a large share of the market works as a store of value. The passive investor buying an S&amp;P 500 ETF isn't analyzing balance sheets; they're parking wealth in a vehicle that 'only goes up long term'. That behavior is monetary premium. Reasonable estimate: 10-15% of total value."><strong style='color:var(--text)'>Ações:</strong> em teoria, são ativos produtivos: representam lucros, dividendos e fluxo de caixa. Mas na prática, boa parte do mercado funciona como reserva de valor. O investidor passivo que compra um ETF de S&amp;P 500 não está analisando balanços; está alocando riqueza num veículo que 'só sobe no longo prazo'. Esse comportamento é prêmio monetário. Estimativa razoável: 10-15% do valor total.</p>
+    <p style="margin-bottom:10px;" data-pt="<strong style='color:var(--text)'>Títulos de renda fixa:</strong> são o instrumento clássico de 'guardar dinheiro com segurança'. Treasuries americanas, por exemplo, são tratadas como o ativo livre de risco do planeta. Uma parcela relevante da demanda por títulos soberanos não vem do rendimento (que muitas vezes perde para a inflação), mas da percepção de segurança e liquidez. Prêmio monetário estimado: 10-20%." data-en="<strong style='color:var(--text)'>Bonds:</strong> the classic 'park money safely' instrument. US Treasuries, for example, are treated as the planet's risk-free asset. A significant share of demand for sovereign bonds comes not from yield (which often loses to inflation), but from perceived safety and liquidity. Estimated monetary premium: 10-20%."><strong style='color:var(--text)'>Títulos de renda fixa:</strong> são o instrumento clássico de 'guardar dinheiro com segurança'. Treasuries americanas, por exemplo, são tratadas como o ativo livre de risco do planeta. Uma parcela relevante da demanda por títulos soberanos não vem do rendimento (que muitas vezes perde para a inflação), mas da percepção de segurança e liquidez. Prêmio monetário estimado: 10-20%.</p>
+    <p style="margin-bottom:10px;" data-pt="<strong style='color:var(--text)'>Imóveis:</strong> quem compra um imóvel para alugar está comprando fluxo de caixa (ativo produtivo). Mas quem compra um apartamento 'porque imóvel nunca perde valor' ou 'para deixar para os filhos' está comprando reserva de valor. Em muitos mercados, a valorização do imóvel importa mais que o aluguel. Prêmio monetário estimado: 10-15%." data-en="<strong style='color:var(--text)'>Real estate:</strong> buying property to rent is buying cash flow (productive asset). But buying an apartment 'because real estate never loses value' or 'to leave for the kids' is buying a store of value. In many markets, property appreciation matters more than rental yield. Estimated monetary premium: 10-15%."><strong style='color:var(--text)'>Imóveis:</strong> quem compra um imóvel para alugar está comprando fluxo de caixa (ativo produtivo). Mas quem compra um apartamento 'porque imóvel nunca perde valor' ou 'para deixar para os filhos' está comprando reserva de valor. Em muitos mercados, a valorização do imóvel importa mais que o aluguel. Prêmio monetário estimado: 10-15%.</p>
+    <p data-pt="<strong style='color:var(--text)'>Arte e colecionáveis:</strong> o valor de uma obra de arte não vem da utilidade (ninguém precisa de um Basquiat para viver), mas do status e da reserva de valor. Grandes colecionadores tratam arte como ouro: um ativo escasso que preserva riqueza entre gerações. Prêmio monetário estimado: 25-40%." data-en="<strong style='color:var(--text)'>Art and collectibles:</strong> the value of an artwork doesn't come from utility (nobody needs a Basquiat to live), but from status and store of value. Major collectors treat art like gold: a scarce asset that preserves wealth across generations. Estimated monetary premium: 25-40%."><strong style='color:var(--text)'>Arte e colecionáveis:</strong> o valor de uma obra de arte não vem da utilidade (ninguém precisa de um Basquiat para viver), mas do status e da reserva de valor. Grandes colecionadores tratam arte como ouro: um ativo escasso que preserva riqueza entre gerações. Prêmio monetário estimado: 25-40%.</p>
+  </div>
+  <script>
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'toggle-premium-detail') {
+        var detail = document.getElementById('premium-detail');
+        if (detail) detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+  </script>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;" data-pt="<strong style='color:var(--text)'>Probabilidade de captura</strong> é a chance, na sua estimativa, de o Bitcoin absorver esse prêmio monetário. 10% significa que você acha que há 10% de chance de o Bitcoin capturar aquela fatia de valor." data-en="<strong style='color:var(--text)'>Capture probability</strong> is the chance, in your estimate, that Bitcoin absorbs that monetary premium. 10% means you think there is a 10% chance Bitcoin captures that slice of value."><strong style='color:var(--text)'>Probabilidade de captura</strong> é a chance, na sua estimativa, de o Bitcoin absorver esse prêmio monetário. 10% significa que você acha que há 10% de chance de o Bitcoin capturar aquela fatia de valor.</p>
+  <div class="asset-cards" id="asset-cards">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Results -->
+  <h2 class="section-title">
+    <span data-pt="Resultado" data-en="Result">Resultado</span>
+  </h2>
+  <div class="results-grid">
+    <div class="result-card highlight">
+      <div class="label" data-pt="Valor Justo por BTC" data-en="Fair Value per BTC">Valor Justo por BTC</div>
+      <div class="value" id="result-fair-value">...</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Multiplicador (Upside)" data-en="Multiplier (Upside)">Multiplicador (Upside)</div>
+      <div class="value" id="result-multiplier" style="color:var(--success)">...</div>
+    </div>
+    <div class="result-card">
+      <div class="label" data-pt="Market Cap Implícito" data-en="Implied Market Cap">Market Cap Implícito</div>
+      <div class="value" id="result-mcap">...</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Doughnut Chart -->
+  <h2 class="section-title">
+    <span data-pt="Contribuição por Classe" data-en="Contribution by Class">Contribuição por Classe</span>
+  </h2>
+  <div class="chart-section">
+    <div class="chart-container" style="max-width:500px;margin:0 auto;">
+      <canvas id="chart-doughnut"></canvas>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Area Chart -->
+  <h2 class="section-title">
+    <span data-pt="Caminho de Monetização" data-en="Monetization Path">Caminho de Monetização</span>
+  </h2>
+  <div class="chart-section">
+    <div class="chart-container">
+      <div class="area-chart-wrap">
+        <canvas id="chart-area"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Implied Probability Table -->
+  <h2 class="section-title">
+    <span data-pt="Probabilidade Implícita" data-en="Implied Probability">Probabilidade Implícita</span>
+  </h2>
+  <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;" data-pt="Dado o preço atual do Bitcoin, qual a probabilidade de captura que o mercado está precificando para cada classe de ativo individualmente?" data-en="Given the current Bitcoin price, what capture probability is the market pricing in for each asset class individually?">Dado o preço atual do Bitcoin, qual a probabilidade de captura que o mercado está precificando para cada classe de ativo individualmente?</p>
+  <div class="implied-table-wrap">
+    <table class="implied-table">
+      <thead>
+        <tr>
+          <th data-pt="Classe" data-en="Class">Classe</th>
+          <th>Market Cap</th>
+          <th data-pt="Prêmio" data-en="Premium">Prêmio</th>
+          <th data-pt="Prob. Implícita" data-en="Implied Prob.">Prob. Implícita</th>
+        </tr>
+      </thead>
+      <tbody id="implied-tbody">
+        <!-- Populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Methodology -->
+  <div class="methodology">
+    <h3 data-pt="Metodologia" data-en="Methodology">Metodologia</h3>
+    <p data-pt="O Modelo Schrödinger, criado por Rapha Zagury (Nakamoto Portfolio), calcula o valor justo do Bitcoin com base na probabilidade de ele capturar o <strong>prêmio monetário</strong> de diferentes classes de ativos globais." data-en="The Schrödinger Model, created by Rapha Zagury (Nakamoto Portfolio), calculates Bitcoin's fair value based on the probability of it capturing the <strong>monetary premium</strong> from different global asset classes.">O Modelo Schrödinger, criado por Rapha Zagury (Nakamoto Portfolio), calcula o valor justo do Bitcoin com base na probabilidade de ele capturar o <strong>prêmio monetário</strong> de diferentes classes de ativos globais.</p>
+    <p data-pt="<strong>Prêmio monetário</strong> é a parcela do valor de um ativo que existe não pela sua utilidade produtiva, mas pela sua função como reserva de valor. Ouro, por exemplo, tem um prêmio monetário alto: boa parte do seu valor vem da função de 'guardar riqueza', não do uso industrial." data-en="<strong>Monetary premium</strong> is the portion of an asset's value that exists not for its productive utility, but for its function as a store of value. Gold, for example, has a high monetary premium: much of its value comes from the 'store of wealth' function, not industrial use."><strong>Prêmio monetário</strong> é a parcela do valor de um ativo que existe não pela sua utilidade produtiva, mas pela sua função como reserva de valor. Ouro, por exemplo, tem um prêmio monetário alto: boa parte do seu valor vem da função de 'guardar riqueza', não do uso industrial.</p>
+    <p data-pt="A fórmula é: <code>Valor Justo = Soma de [(MCap x Prêmio x Prob) / (1 + r)^t]</code> para cada classe de ativo, dividido pelo supply fixo de 20.999.999 BTC." data-en="The formula is: <code>Fair Value = Sum of [(MCap x Premium x Prob) / (1 + r)^t]</code> for each asset class, divided by the fixed supply of 20,999,999 BTC.">A fórmula é: <code>Valor Justo = Soma de [(MCap x Prêmio x Prob) / (1 + r)^t]</code> para cada classe de ativo, dividido pelo supply fixo de 20.999.999 BTC.</p>
+    <p data-pt="<strong>Sobre os dados:</strong> os market caps são dados reais, verificados em fontes públicas e atualizados para março/2026 (World Federation of Exchanges, BIS, World Gold Council, Silver Institute, Savills Research, CoinGecko, Art Basel). Já os prêmios monetários e as probabilidades de captura são estimativas subjetivas. Não existe estudo acadêmico que meça com precisão qual parcela do mercado de ações ou de imóveis funciona como reserva de valor. Os valores default são pontos de partida razoáveis, por isso todos os parâmetros são editáveis." data-en="<strong>About the data:</strong> market caps are real data, verified from public sources and updated to March 2026 (World Federation of Exchanges, BIS, World Gold Council, Silver Institute, Savills Research, CoinGecko, Art Basel). Monetary premiums and capture probabilities, however, are subjective estimates. No academic study precisely measures what share of the equity or real estate market functions as a store of value. The default values are reasonable starting points, which is why all parameters are editable."><strong>Sobre os dados:</strong> os market caps são dados reais, verificados em fontes públicas e atualizados para março/2026 (World Federation of Exchanges, BIS, World Gold Council, Silver Institute, Savills Research, CoinGecko, Art Basel). Já os prêmios monetários e as probabilidades de captura são estimativas subjetivas. Não existe estudo acadêmico que meça com precisão qual parcela do mercado de ações ou de imóveis funciona como reserva de valor. Os valores default são pontos de partida razoáveis, por isso todos os parâmetros são editáveis.</p>
+    <p data-pt="<strong>Por que os cenários diferem do modelo original?</strong> O Schrödinger Model foi publicado por Rapha Zagury em abril/2023. De lá para cá, mudanças estruturais aconteceram: ETFs spot de Bitcoin foram aprovados pela SEC (jan/2024) e acumulam ~$96B em AUM; os EUA criaram uma Reserva Estratégica de Bitcoin por ordem executiva (mar/2025) com ~200.000 BTC; 27 países já possuem alguma exposição a BTC em suas reservas; e o halving de 2024 reduziu a emissão para 3,125 BTC/bloco. Essas mudanças não são projeções, são fatos consumados. O piso de adoção institucional subiu permanentemente, o que torna as probabilidades de captura originais de 2023 conservadoras demais para o cenário atual. Atualizamos os cenários Bearish, Base e Bullish para refletir essa nova realidade. Todos os valores continuam editáveis." data-en="<strong>Why do the scenarios differ from the original model?</strong> The Schrödinger Model was published by Rapha Zagury in April 2023. Since then, structural changes have occurred: spot Bitcoin ETFs were approved by the SEC (Jan 2024) and hold ~$96B in AUM; the US created a Strategic Bitcoin Reserve by executive order (Mar 2025) with ~200,000 BTC; 27 countries now hold some BTC exposure in their reserves; and the 2024 halving reduced issuance to 3.125 BTC/block. These changes are not projections; they are accomplished facts. The floor of institutional adoption has permanently risen, making the original 2023 capture probabilities too conservative for the current landscape. We updated the Bearish, Base and Bullish scenarios to reflect this new reality. All values remain editable."><strong>Por que os cenários diferem do modelo original?</strong> O Schrödinger Model foi publicado por Rapha Zagury em abril/2023. De lá para cá, mudanças estruturais aconteceram: ETFs spot de Bitcoin foram aprovados pela SEC (jan/2024) e acumulam ~$96B em AUM; os EUA criaram uma Reserva Estratégica de Bitcoin por ordem executiva (mar/2025) com ~200.000 BTC; 27 países já possuem alguma exposição a BTC em suas reservas; e o halving de 2024 reduziu a emissão para 3,125 BTC/bloco. Essas mudanças não são projeções, são fatos consumados. O piso de adoção institucional subiu permanentemente, o que torna as probabilidades de captura originais de 2023 conservadoras demais para o cenário atual. Atualizamos os cenários Bearish, Base e Bullish para refletir essa nova realidade. Todos os valores continuam editáveis.</p>
+    <p data-pt="Baseado no trabalho original de <strong>Rapha Zagury</strong> (<a href='https://nakamotoportfolio.com/apps/shrodinger' target='_blank' rel='noopener' style='color:var(--accent)'>Nakamoto Portfolio</a>)." data-en="Based on the original work by <strong>Rapha Zagury</strong> (<a href='https://nakamotoportfolio.com/apps/shrodinger' target='_blank' rel='noopener' style='color:var(--accent)'>Nakamoto Portfolio</a>).">Baseado no trabalho original de <strong>Rapha Zagury</strong> (<a href='https://nakamotoportfolio.com/apps/shrodinger' target='_blank' rel='noopener' style='color:var(--accent)'>Nakamoto Portfolio</a>).</p>
+  </div>
+
+</div>
+
+<footer>
+  <span data-pt='feito por <a href="https://caioleta.com">leta</a>' data-en='made by <a href="https://caioleta.com">leta</a>'>feito por <a href="https://caioleta.com">leta</a></span>
+</footer>
+
+<script src="js/model.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
