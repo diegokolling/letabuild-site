@@ -67,7 +67,7 @@ const Charts = (() => {
               color: colors.textMuted,
               padding: 16,
               usePointStyle: true,
-              pointStyleWidth: 12,
+              pointStyle: 'circle',
               font: { family: 'Inter, sans-serif', size: 12 },
             }
           },
@@ -110,7 +110,7 @@ const Charts = (() => {
       return {
         label: name,
         data: s.values,
-        backgroundColor: hexToRgba(assetColors[s.id] || '#888', 0.5),
+        backgroundColor: assetColors[s.id] || '#888',
         borderColor: assetColors[s.id] || '#888',
         borderWidth: 1,
         fill: true,
@@ -132,7 +132,7 @@ const Charts = (() => {
         const ctx = chart.ctx;
         ctx.save();
         ctx.setLineDash([6, 4]);
-        ctx.strokeStyle = '#f85149';
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(xScale.left, yPixel);
@@ -140,7 +140,7 @@ const Charts = (() => {
         ctx.stroke();
 
         ctx.setLineDash([]);
-        ctx.fillStyle = '#f85149';
+        ctx.fillStyle = '#ffffff';
         ctx.font = '600 11px Inter, sans-serif';
         ctx.textAlign = 'right';
         const labelText = lang === 'en' ? `Current: $${formatCompact(currentBtcPrice)}` : `Atual: $${formatCompact(currentBtcPrice)}`;
@@ -182,8 +182,18 @@ const Charts = (() => {
         const ctx = chart.ctx;
         const cLang = chart._lang || 'pt';
         ctx.save();
+
+        // Black outline for the dashed line
         ctx.setLineDash([6, 4]);
-        ctx.strokeStyle = '#f85149';
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(xScale.left, yPixel);
+        ctx.lineTo(xScale.right, yPixel);
+        ctx.stroke();
+
+        // White dashed line on top
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(xScale.left, yPixel);
@@ -191,11 +201,20 @@ const Charts = (() => {
         ctx.stroke();
 
         ctx.setLineDash([]);
-        ctx.fillStyle = '#f85149';
         ctx.font = '600 11px Inter, sans-serif';
         ctx.textAlign = 'right';
         const labelText = cLang === 'en' ? `Current: $${formatCompact(price)}` : `Atual: $${formatCompact(price)}`;
+
+        // Black outline for text
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(labelText, xScale.right - 4, yPixel - 6);
+
+        // White text on top
+        ctx.fillStyle = '#ffffff';
         ctx.fillText(labelText, xScale.right - 4, yPixel - 6);
+
         ctx.restore();
       }
     };
@@ -232,7 +251,7 @@ const Charts = (() => {
               color: colors.textMuted,
               padding: 12,
               usePointStyle: true,
-              pointStyleWidth: 12,
+              pointStyle: 'circle',
               font: { family: 'Inter, sans-serif', size: 12 },
             }
           },
@@ -247,6 +266,13 @@ const Charts = (() => {
             titleFont: { family: 'Inter, sans-serif', weight: '600' },
             bodyFont: { family: 'Inter, sans-serif' },
             callbacks: {
+              afterTitle: function(items) {
+                if (!items.length) return '';
+                const total = items.reduce((sum, item) => sum + (item.raw || 0), 0);
+                const cLang = items[0].chart._lang || 'pt';
+                const label = cLang === 'en' ? 'BTC Price' : 'Preço BTC';
+                return `${label}: $${formatCompact(total)}`;
+              },
               label: function(ctx) {
                 return ` ${ctx.dataset.label}: $${formatCompact(ctx.raw)}`;
               }

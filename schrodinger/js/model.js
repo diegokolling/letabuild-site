@@ -63,11 +63,10 @@ const Model = (() => {
     const series = assets.map(asset => {
       const values = years.map(t => {
         if (t === 0) return 0;
-        // How much of this asset's value has been "captured" by year t
+        // How much of this asset's nominal value has been captured by year t
         const progress = Math.min(t / asset.years, 1);
         const nominalValue = asset.mcapT * 1e12 * asset.monetaryPremium * asset.captureProb * progress;
-        const discountFactor = Math.pow(1 + discountRate, Math.min(t, asset.years));
-        return (nominalValue / discountFactor) / BTC_SUPPLY;
+        return nominalValue / BTC_SUPPLY;
       });
       return { id: asset.id, values };
     });
