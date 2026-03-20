@@ -1,6 +1,7 @@
 (() => {
     // DOM refs
     const satsInput = document.getElementById('satsInput');
+    const btcInput = document.getElementById('btcInput');
     const brlInput = document.getElementById('brlInput');
     const usdInput = document.getElementById('usdInput');
     const btcBrlEl = document.getElementById('btcBrl');
@@ -103,6 +104,10 @@
             activeField = 'sats';
             convertFrom('sats');
         });
+        btcInput.addEventListener('input', () => {
+            activeField = 'btc';
+            convertFrom('btc');
+        });
         brlInput.addEventListener('input', () => {
             activeField = 'brl';
             convertFrom('brl');
@@ -113,6 +118,7 @@
         });
 
         satsInput.addEventListener('focus', () => activeField = 'sats');
+        btcInput.addEventListener('focus', () => activeField = 'btc');
         brlInput.addEventListener('focus', () => activeField = 'brl');
         usdInput.addEventListener('focus', () => activeField = 'usd');
 
@@ -131,21 +137,35 @@
 
         if (source === 'sats') {
             const sats = Converter.parseSats(satsInput.value);
+            const btc = Converter.satsToBtc(sats);
             const brl = Converter.satsToBrl(sats, priceData.brl);
             const usd = Converter.satsToUsd(sats, priceData.usd);
+            btcInput.value = sats === 0 ? '' : Converter.formatBtc(btc);
             brlInput.value = sats === 0 ? '' : Converter.formatBrl(brl);
             usdInput.value = sats === 0 ? '' : Converter.formatUsd(usd);
+        } else if (source === 'btc') {
+            const btc = Converter.parseBtc(btcInput.value);
+            const sats = Converter.btcToSats(btc);
+            const brl = Converter.satsToBrl(sats, priceData.brl);
+            const usd = Converter.satsToUsd(sats, priceData.usd);
+            satsInput.value = btc === 0 ? '' : Converter.formatSats(sats);
+            brlInput.value = btc === 0 ? '' : Converter.formatBrl(brl);
+            usdInput.value = btc === 0 ? '' : Converter.formatUsd(usd);
         } else if (source === 'brl') {
             const brl = Converter.parseBrl(brlInput.value);
             const sats = Converter.brlToSats(brl, priceData.brl);
+            const btc = Converter.satsToBtc(sats);
             const usd = Converter.brlToUsd(brl, priceData.brl, priceData.usd);
             satsInput.value = brl === 0 ? '' : Converter.formatSats(sats);
+            btcInput.value = brl === 0 ? '' : Converter.formatBtc(btc);
             usdInput.value = brl === 0 ? '' : Converter.formatUsd(usd);
         } else if (source === 'usd') {
             const usd = Converter.parseUsd(usdInput.value);
             const sats = Converter.usdToSats(usd, priceData.usd);
+            const btc = Converter.satsToBtc(sats);
             const brl = Converter.usdToBrl(usd, priceData.brl, priceData.usd);
             satsInput.value = usd === 0 ? '' : Converter.formatSats(sats);
+            btcInput.value = usd === 0 ? '' : Converter.formatBtc(btc);
             brlInput.value = usd === 0 ? '' : Converter.formatBrl(brl);
         }
     }

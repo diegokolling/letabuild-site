@@ -9,6 +9,30 @@ const Converter = (() => {
         return (sats / SATS_PER_BTC) * btcPriceUsd;
     }
 
+    function satsToBtc(sats) {
+        return sats / SATS_PER_BTC;
+    }
+
+    function btcToSats(btc) {
+        return Math.round(btc * SATS_PER_BTC);
+    }
+
+    // Format BTC: 0,00014000 (8 decimal places, pt-BR)
+    function formatBtc(value) {
+        return value.toLocaleString('pt-BR', {
+            minimumFractionDigits: 8,
+            maximumFractionDigits: 8
+        });
+    }
+
+    // Parse BTC input: "0,00014000" → 0.00014
+    function parseBtc(str) {
+        if (!str) return 0;
+        const clean = str.replace(/\./g, '').replace(',', '.');
+        const num = parseFloat(clean);
+        return isNaN(num) ? 0 : num;
+    }
+
     function brlToSats(brl, btcPriceBrl) {
         if (btcPriceBrl === 0) return 0;
         return Math.round((brl / btcPriceBrl) * SATS_PER_BTC);
@@ -86,10 +110,10 @@ const Converter = (() => {
 
     return {
         SATS_PER_BTC,
-        satsToBrl, satsToUsd,
+        satsToBrl, satsToUsd, satsToBtc, btcToSats,
         brlToSats, usdToSats,
         brlToUsd, usdToBrl,
-        formatBrl, formatUsd, formatSats, formatCompact,
-        parseBrl, parseUsd, parseSats
+        formatBrl, formatUsd, formatSats, formatBtc, formatCompact,
+        parseBrl, parseUsd, parseSats, parseBtc
     };
 })();
