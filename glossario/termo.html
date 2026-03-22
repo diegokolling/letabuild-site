@@ -7,10 +7,10 @@
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Termo — Dicionario Bitcoin</title>
-<meta name="description" content="Definicao detalhada de termo Bitcoin em tres niveis de profundidade: iniciante, intermediario e avancado.">
-<meta property="og:title" content="Termo — Dicionario Bitcoin">
-<meta property="og:description" content="Definicao detalhada em tres niveis de profundidade.">
+<title>Termo — Dicionário Bitcoin</title>
+<meta name="description" content="Definição detalhada de termo Bitcoin em três níveis de profundidade: iniciante, intermediário e avançado.">
+<meta property="og:title" content="Termo — Dicionário Bitcoin">
+<meta property="og:description" content="Definição detalhada em três níveis de profundidade.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <style>
@@ -80,7 +80,7 @@ html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgb
 <body>
 
 <div class="top-bar">
-  <a href="/glossario/" class="back-home"><span data-pt="&larr; Dicionario Bitcoin" data-en="&larr; Bitcoin Dictionary">&larr; Dicionario Bitcoin</span></a>
+  <a href="/glossario/" class="back-home"><span data-pt="&larr; Dicionário Bitcoin" data-en="&larr; Bitcoin Dictionary">&larr; Dicionário Bitcoin</span></a>
   <div class="top-bar-right">
     <button class="lang-toggle" id="langToggle" title="Switch language">EN</button>
     <button class="theme-btn" id="themeToggle" title="Alternar tema"></button>
@@ -90,9 +90,9 @@ html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgb
 <div class="container">
   <div id="termContent"></div>
   <div id="notFound" class="not-found hidden">
-    <h2 data-pt="Termo nao encontrado" data-en="Term not found">Termo nao encontrado</h2>
-    <p data-pt="O termo que voce procura nao existe no glossario." data-en="The term you are looking for does not exist in the glossary.">O termo que voce procura nao existe no glossario.</p>
-    <a href="/glossario/" data-pt="&larr; Voltar ao glossario" data-en="&larr; Back to glossary">&larr; Voltar ao glossario</a>
+    <h2 data-pt="Termo não encontrado" data-en="Term not found">Termo não encontrado</h2>
+    <p data-pt="O termo que você procura não existe no glossário." data-en="The term you are looking for does not exist in the glossary.">O termo que você procura não existe no glossário.</p>
+    <a href="/glossario/" data-pt="&larr; Voltar ao glossário" data-en="&larr; Back to glossary">&larr; Voltar ao glossário</a>
   </div>
 </div>
 
@@ -137,7 +137,7 @@ html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgb
     if(!term){
       contentEl.classList.add('hidden');
       notFoundEl.classList.remove('hidden');
-      document.title=(lang==='pt'?'Termo nao encontrado':'Term not found')+' — '+(lang==='pt'?'Dicionario Bitcoin':'Bitcoin Dictionary');
+      document.title=(lang==='pt'?'Termo não encontrado':'Term not found')+' — '+(lang==='pt'?'Dicionário Bitcoin':'Bitcoin Dictionary');
       return;
     }
 
@@ -147,12 +147,12 @@ html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgb
     var cat=getCatInfo(term.category);
     var termName=term.term[lang];
 
-    document.title=termName+' — '+(lang==='pt'?'Dicionario Bitcoin':'Bitcoin Dictionary');
+    document.title=termName+' — '+(lang==='pt'?'Dicionário Bitcoin':'Bitcoin Dictionary');
 
     var levelLabels={
       beginner:{pt:'Iniciante',en:'Beginner'},
-      intermediate:{pt:'Intermediario',en:'Intermediate'},
-      advanced:{pt:'Avancado',en:'Advanced'}
+      intermediate:{pt:'Intermediário',en:'Intermediate'},
+      advanced:{pt:'Avançado',en:'Advanced'}
     };
     var levelClasses=['beginner','intermediate','advanced'];
 
@@ -176,7 +176,7 @@ html[data-theme="light"] .level-card{background:#ffffff;box-shadow:0 1px 3px rgb
     }
 
     html+='<div class="nav-section">';
-    html+='<a href="/glossario/" class="back-link">'+(lang==='pt'?'&larr; Voltar ao glossario':'&larr; Back to glossary')+'</a>';
+    html+='<a href="/glossario/" class="back-link">'+(lang==='pt'?'&larr; Voltar ao glossário':'&larr; Back to glossary')+'</a>';
 
     var sorted=getSortedTerms(lang);
     var idx=-1;
