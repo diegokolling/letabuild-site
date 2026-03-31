@@ -1,157 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<link rel="icon" type="image/svg+xml" href="../favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Termômetro do Bitcoin - Leta Build</title>
-<meta name="description" content="Sinais de compra e venda de Bitcoin baseados em indicadores on-chain e de mercado.">
-<link rel="stylesheet" href="./_astro/btcindicators.DRb51OTm.css">
-<style>
-  body { margin: 0; background: #0a0a0a; }
-  .back-link {
-    display: inline-block; padding: 16px 24px; font-size: 13px;
-    color: #b0a090; text-decoration: none; font-family: system-ui, sans-serif;
-  }
-  .back-link:hover { color: #e08a3a; }
-  @media (prefers-color-scheme: light) {
-    body { background: #f6f9fb; }
-    .back-link { color: #7a8a98; }
-    .back-link:hover { color: #e08a3a; }
-  }
-  html[data-theme="light"] body { background: #f6f9fb; }
-  html[data-theme="light"] .back-link { color: #7a8a98; }
-  html[data-theme="light"] .back-link:hover { color: #e08a3a; }
-  html[data-theme="dark"] body { background: #0a0a0a; }
-  html[data-theme="dark"] .back-link { color: #b0a090; }
-  html[data-theme="dark"] .back-link:hover { color: #e08a3a; }
-</style>
-<script src="/theme-toggle.js"></script>
-<script src="/lang-toggle.js"></script>
-</head>
-<body>
-<a class="back-link" href="/">&#8249; letabuild.com</a>
-
-<div style="display:flex;justify-content:flex-end;padding:0 24px;gap:8px;">
-<button id="langToggle" style="background:none;border:1px solid rgba(224,138,58,0.15);color:#b0a090;min-width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 8px;"></button>
-<button id="themeToggle" style="background:none;border:1px solid rgba(224,138,58,0.15);color:#b0a090;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" title="Alternar tema"></button>
-</div>
-
-<div class="btc-dashboard" data-locale="pt">
-  <div class="bd-header">
-    <h1 data-pt="Termômetro do Bitcoin" data-en="Bitcoin Thermometer">Termômetro do Bitcoin</h1>
-    <p class="bd-subtitle" data-pt="Sinais de compra e venda baseados em indicadores on-chain e de mercado" data-en="Buy and sell signals based on on-chain and market indicators">Sinais de compra e venda baseados em indicadores on-chain e de mercado</p>
-  </div>
-
-  <div class="bd-price-banner" id="bd-price-banner">
-    <span class="bd-price-value" data-pt="Carregando dados..." data-en="Loading data...">Carregando dados...</span>
-  </div>
-
-  <div class="bd-signal-row">
-    <div class="bd-consolidated" id="bd-consolidated" data-pt="Calculando..." data-en="Calculating...">Calculando...</div>
-    <button class="bd-help-btn" id="bd-help-btn" aria-label="Explicação do sinal">?</button>
-  </div>
-
-  <div class="bd-explanation" id="bd-explanation">
-    <h3 data-pt="Como o sinal consolidado é calculado" data-en="How the consolidated signal is calculated">Como o sinal consolidado é calculado</h3>
-    <p data-pt="Cada indicador gera um score individual de -2 (venda forte) a +2 (compra forte). O score consolidado é a média dos scores dos indicadores selecionados." data-en="Each indicator generates an individual score from -2 (strong sell) to +2 (strong buy). The consolidated score is the average of the selected indicators' scores.">Cada indicador gera um score individual de -2 (venda forte) a +2 (compra forte). O score consolidado é a média dos scores dos indicadores selecionados.</p>
-    <table class="bd-score-table">
-      <thead><tr><th>Score</th><th data-pt="Sinal" data-en="Signal">Sinal</th></tr></thead>
-      <tbody>
-        <tr><td>+2</td><td style="color:#00C853" data-pt="COMPRA FORTE" data-en="STRONG BUY">COMPRA FORTE</td></tr>
-        <tr><td>+1</td><td style="color:#69F0AE" data-pt="COMPRA" data-en="BUY">COMPRA</td></tr>
-        <tr><td>0</td><td style="color:#FFD600" data-pt="NEUTRO" data-en="NEUTRAL">NEUTRO</td></tr>
-        <tr><td>-1</td><td style="color:#FF6D00" data-pt="VENDA" data-en="SELL">VENDA</td></tr>
-        <tr><td>-2</td><td style="color:#FF1744" data-pt="VENDA FORTE" data-en="STRONG SELL">VENDA FORTE</td></tr>
-      </tbody>
-    </table>
-    <hr>
-    <h4 data-pt="Detalhamento atual" data-en="Current breakdown">Detalhamento atual</h4>
-    <div id="bd-breakdown"></div>
-    <hr>
-    <h4 data-pt="Escolha quais indicadores usar no cálculo" data-en="Choose which indicators to use">Escolha quais indicadores usar no cálculo</h4>
-    <div class="bd-checklist" id="bd-checklist">
-      <label><input type="checkbox" value="mayer_multiple" checked> Mayer Multiple</label>
-      <label><input type="checkbox" value="200w_ma_ratio" checked> 200W MA Ratio</label>
-      <label><input type="checkbox" value="mvrv" checked> MVRV Ratio</label>
-      <label><input type="checkbox" value="fear_greed" checked> Fear & Greed</label>
-      <label><input type="checkbox" value="sopr" checked> SOPR</label>
-      <label><input type="checkbox" value="rhodl" checked> RHODL Ratio</label>
-      <label><input type="checkbox" value="rsi_monthly" checked> <span data-pt="RSI Mensal BTC/USD" data-en="RSI Monthly BTC/USD">RSI Mensal BTC/USD</span></label>
-      <label><input type="checkbox" value="rsi_xau_monthly" checked> <span data-pt="RSI Mensal BTC/XAU" data-en="RSI Monthly BTC/XAU">RSI Mensal BTC/XAU</span></label>
-    </div>
-  </div>
-
-  <div class="bd-loading" id="bd-loading">
-    <span class="bd-spinner"></span> <span data-pt="Carregando dados..." data-en="Loading data...">Carregando dados...</span>
-  </div>
-
-  <div class="bd-main">
-    <div class="bd-left">
-      <div class="bd-cards">
-        <div class="bd-card" id="bd-card-mayer_multiple">
-          <div class="bd-card-title">Mayer Multiple</div>
-          <div class="bd-card-value" id="bd-card-value-mayer_multiple">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-mayer_multiple"></span>
-        </div>
-        <div class="bd-card" id="bd-card-200w_ma_ratio">
-          <div class="bd-card-title">200W MA Ratio</div>
-          <div class="bd-card-value" id="bd-card-value-200w_ma_ratio">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-200w_ma_ratio"></span>
-        </div>
-        <div class="bd-card" id="bd-card-mvrv">
-          <div class="bd-card-title">MVRV Ratio</div>
-          <div class="bd-card-value" id="bd-card-value-mvrv">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-mvrv"></span>
-        </div>
-        <div class="bd-card" id="bd-card-fear_greed">
-          <div class="bd-card-title">Fear & Greed</div>
-          <div class="bd-card-value" id="bd-card-value-fear_greed">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-fear_greed"></span>
-        </div>
-        <div class="bd-card" id="bd-card-sopr">
-          <div class="bd-card-title">SOPR</div>
-          <div class="bd-card-value" id="bd-card-value-sopr">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-sopr"></span>
-        </div>
-        <div class="bd-card" id="bd-card-rhodl">
-          <div class="bd-card-title">RHODL Ratio</div>
-          <div class="bd-card-value" id="bd-card-value-rhodl">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-rhodl"></span>
-        </div>
-        <div class="bd-card" id="bd-card-rsi_monthly">
-          <div class="bd-card-title" data-pt="RSI Mensal BTC/USD" data-en="RSI Monthly BTC/USD">RSI Mensal BTC/USD</div>
-          <div class="bd-card-value" id="bd-card-value-rsi_monthly">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-rsi_monthly"></span>
-        </div>
-        <div class="bd-card" id="bd-card-rsi_xau_monthly">
-          <div class="bd-card-title" data-pt="RSI Mensal BTC/XAU" data-en="RSI Monthly BTC/XAU">RSI Mensal BTC/XAU</div>
-          <div class="bd-card-value" id="bd-card-value-rsi_xau_monthly">...</div>
-          <span class="bd-card-signal" id="bd-card-signal-rsi_xau_monthly"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bd-right">
-      <div class="bd-detail" id="bd-detail">
-        <div id="bd-detail-content">
-          <div class="bd-detail-placeholder">
-            <p data-pt="Carregando gráfico..." data-en="Loading chart...">Carregando gráfico...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bd-footer">
-    <span data-pt="Termômetro do Bitcoin | Dados atualizados a cada 5 minutos | " data-en="Bitcoin Thermometer | Data updated every 5 minutes | ">Termômetro do Bitcoin | Dados atualizados a cada 5 minutos | </span>
-    <span id="bd-last-update" data-pt="Aguardando..." data-en="Waiting...">Aguardando...</span>
-  </div>
-</div>
-
-<script type="module" src="./_astro/indicadoresbtc.astro_astro_type_script_index_0_lang.UeFQ3K-C.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="pt-BR"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="canonical" href="https://caioleta.com/indicadoresbtc/"><link rel="alternate" hreflang="en" href="https://caioleta.com/en/btcindicators"><link rel="alternate" hreflang="pt-BR" href="https://caioleta.com/indicadoresbtc/"><title>Indicadores BTC - Caio Leta</title><meta name="description" content="Sinais de compra e venda de Bitcoin baseados em indicadores on-chain e de mercado."><meta property="og:type" content="website"><meta property="og:url" content="https://caioleta.com/indicadoresbtc/"><meta property="og:title" content="Indicadores BTC - Caio Leta"><meta property="og:description" content="Sinais de compra e venda de Bitcoin baseados em indicadores on-chain e de mercado."><meta property="og:image" content="https://caioleta.com/og-default.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Indicadores BTC - Caio Leta"><meta name="twitter:description" content="Sinais de compra e venda de Bitcoin baseados em indicadores on-chain e de mercado."><meta name="twitter:image" content="https://caioleta.com/og-default.png"><script>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      })();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    </script><link rel="stylesheet" href="/_astro/_slug_.wdUO1NGb.css">
+<link rel="stylesheet" href="/_astro/btcindicators.DRb51OTm.css"></head> <body class="min-h-screen flex flex-col"> <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800"> <nav class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between"> <a href="/" class="font-serif text-xl font-bold text-primary dark:text-dark-text hover:opacity-70 transition-opacity whitespace-nowrap shrink-0">
+Caio Leta
+</a> <div class="flex items-center gap-6"> <ul class="hidden md:flex items-center gap-6"> <li> <a href="/artigos" class="text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Artigos </a> </li><li> <a href="/participacoes" class="text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Participações </a> </li><li> <a href="/relatorios" class="text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Relatórios </a> </li><li> <a href="/contato" class="text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Contato </a> </li><li> <a href="https://letabuild.com" target="_blank" rel="noopener noreferrer" class="text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Leta Build </a> </li> </ul> <button id="theme-toggle" aria-label="Alternar tema" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"> <svg id="sun-icon" class="w-5 h-5 hidden dark:block text-dark-text" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <circle cx="12" cy="12" r="5"></circle> <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path> </svg> <svg id="moon-icon" class="w-5 h-5 block dark:hidden text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <a href="/en/btcindicators" aria-label="Switch to English" class="text-lg hover:opacity-70 transition-opacity leading-none"> 🇺🇸 </a> <button id="mobile-menu-btn" aria-label="Menu" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"> <svg class="w-5 h-5 text-primary dark:text-dark-text" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path d="M3 12h18M3 6h18M3 18h18"></path> </svg> </button> </div> </nav> <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-800 bg-background dark:bg-dark-bg"> <ul class="px-6 py-4 space-y-3"> <li> <a href="/artigos" class="block text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Artigos </a> </li><li> <a href="/participacoes" class="block text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Participações </a> </li><li> <a href="/relatorios" class="block text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Relatórios </a> </li><li> <a href="/contato" class="block text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Contato </a> </li><li> <a href="https://letabuild.com" target="_blank" rel="noopener noreferrer" class="block text-sm font-medium transition-opacity hover:opacity-70 text-primary/70 dark:text-dark-text/70"> Leta Build </a> </li> <li> <a href="/en/btcindicators" class="block text-sm font-medium text-primary/70 dark:text-dark-text/70 hover:text-accent dark:hover:text-blue-400 transition-colors"> 🇺🇸 English </a> </li> </ul> </div> </header> <script type="module">const o=document.getElementById("theme-toggle"),m=document.getElementById("mobile-menu-btn"),c=document.getElementById("mobile-menu");function t(){return typeof localStorage<"u"&&localStorage.getItem("theme")?localStorage.getItem("theme"):window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}function n(e){e==="dark"?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark"),localStorage.setItem("theme",e)}n(t());o?.addEventListener("click",()=>{const e=t();n(e==="dark"?"light":"dark")});m?.addEventListener("click",()=>{c?.classList.toggle("hidden")});</script> <main class="flex-1 pt-20">  <div class="btc-dashboard" data-locale="pt"> <!-- Header --> <div class="bd-header"> <h1>Termômetro do Bitcoin</h1> <p class="bd-subtitle">Sinais de compra e venda baseados em indicadores on-chain e de mercado</p> </div> <!-- Price banner --> <div class="bd-price-banner" id="bd-price-banner"> <span class="bd-price-value">Carregando dados...</span> </div> <!-- Consolidated signal + help --> <div class="bd-signal-row"> <div class="bd-consolidated" id="bd-consolidated">Calculando...</div> <button class="bd-help-btn" id="bd-help-btn" aria-label="Explicacao do sinal">?</button> </div> <!-- Explanation panel --> <div class="bd-explanation" id="bd-explanation"> <h3>Como o sinal consolidado e calculado</h3> <p>Cada indicador gera um score individual de -2 (venda forte) a +2 (compra forte). O score consolidado e a media dos scores dos indicadores selecionados.</p> <table class="bd-score-table"> <thead><tr><th>Score</th><th>Sinal</th></tr></thead> <tbody> <tr><td>+2</td><td style="color:#00C853">COMPRA FORTE</td></tr> <tr><td>+1</td><td style="color:#69F0AE">COMPRA</td></tr> <tr><td>0</td><td style="color:#FFD600">NEUTRO</td></tr> <tr><td>-1</td><td style="color:#FF6D00">VENDA</td></tr> <tr><td>-2</td><td style="color:#FF1744">VENDA FORTE</td></tr> </tbody> </table> <hr> <h4>Detalhamento atual</h4> <div id="bd-breakdown"></div> <hr> <h4>Escolha quais indicadores usar no calculo</h4> <div class="bd-checklist" id="bd-checklist"> <label><input type="checkbox" value="mayer_multiple" checked> Mayer Multiple</label> <label><input type="checkbox" value="200w_ma_ratio" checked> 200W MA Ratio</label> <label><input type="checkbox" value="mvrv" checked> MVRV Ratio</label> <label><input type="checkbox" value="fear_greed" checked> Fear & Greed</label> <label><input type="checkbox" value="pi_cycle" checked> Pi Cycle Top</label> <label><input type="checkbox" value="rhodl" checked> RHODL Ratio</label> <label><input type="checkbox" value="rsi_monthly" checked> RSI Mensal BTC/USD</label> <label><input type="checkbox" value="rsi_xau_monthly" checked> RSI Mensal BTC/XAU</label> <label><input type="checkbox" value="cvdd" checked> CVDD</label> </div> </div> <!-- Loading indicator --> <div class="bd-loading" id="bd-loading"> <span class="bd-spinner"></span> Carregando dados...
+</div> <!-- Two-column layout --> <div class="bd-main"> <!-- Left column: cards --> <div class="bd-left"> <div class="bd-cards"> <div class="bd-card" id="bd-card-mayer_multiple"> <div class="bd-card-title">Mayer Multiple</div> <div class="bd-card-value" id="bd-card-value-mayer_multiple">...</div> <span class="bd-card-signal" id="bd-card-signal-mayer_multiple"></span> </div> <div class="bd-card" id="bd-card-200w_ma_ratio"> <div class="bd-card-title">200W MA Ratio</div> <div class="bd-card-value" id="bd-card-value-200w_ma_ratio">...</div> <span class="bd-card-signal" id="bd-card-signal-200w_ma_ratio"></span> </div> <div class="bd-card" id="bd-card-mvrv"> <div class="bd-card-title">MVRV Ratio</div> <div class="bd-card-value" id="bd-card-value-mvrv">...</div> <span class="bd-card-signal" id="bd-card-signal-mvrv"></span> </div> <div class="bd-card" id="bd-card-fear_greed"> <div class="bd-card-title">Fear & Greed</div> <div class="bd-card-value" id="bd-card-value-fear_greed">...</div> <span class="bd-card-signal" id="bd-card-signal-fear_greed"></span> </div> <div class="bd-card" id="bd-card-pi_cycle"> <div class="bd-card-title">Pi Cycle Top</div> <div class="bd-card-value" id="bd-card-value-pi_cycle">...</div> <span class="bd-card-signal" id="bd-card-signal-pi_cycle"></span> </div> <div class="bd-card" id="bd-card-rhodl"> <div class="bd-card-title">RHODL Ratio</div> <div class="bd-card-value" id="bd-card-value-rhodl">...</div> <span class="bd-card-signal" id="bd-card-signal-rhodl"></span> </div> <div class="bd-card" id="bd-card-rsi_monthly"> <div class="bd-card-title">RSI Mensal BTC/USD</div> <div class="bd-card-value" id="bd-card-value-rsi_monthly">...</div> <span class="bd-card-signal" id="bd-card-signal-rsi_monthly"></span> </div> <div class="bd-card" id="bd-card-rsi_xau_monthly"> <div class="bd-card-title">RSI Mensal BTC/XAU</div> <div class="bd-card-value" id="bd-card-value-rsi_xau_monthly">...</div> <span class="bd-card-signal" id="bd-card-signal-rsi_xau_monthly"></span> </div> <div class="bd-card" id="bd-card-cvdd"> <div class="bd-card-title">CVDD</div> <div class="bd-card-value" id="bd-card-value-cvdd">...</div> <span class="bd-card-signal" id="bd-card-signal-cvdd"></span> </div> </div> </div> <!-- Right column: chart panel (always visible) --> <div class="bd-right"> <div class="bd-detail" id="bd-detail"> <div id="bd-detail-content"> <div class="bd-detail-placeholder"> <p>Carregando grafico...</p> </div> </div> </div> </div> </div> <!-- Footer --> <div class="bd-footer"> <span>BTC Signal Tracker | Dados atualizados a cada 5 minutos | </span> <span id="bd-last-update">Aguardando...</span> </div> </div> <script type="module" src="/_astro/indicadoresbtc.astro_astro_type_script_index_0_lang.hRtKGfWY.js"></script>  </main> <footer class="border-t border-gray-200 dark:border-gray-800 mt-20"> <div class="max-w-3xl mx-auto px-6 py-10"> <div class="flex flex-col md:flex-row items-center justify-between gap-4"> <p class="text-sm text-primary/50 dark:text-dark-text/50">
+&copy; 2026 Caio Leta
+</p> <div class="flex items-center gap-5"> <a href="https://www.linkedin.com/in/caio-leta/" target="_blank" rel="noopener noreferrer" class="text-primary/50 dark:text-dark-text/50 hover:text-accent dark:hover:text-blue-400 transition-colors" aria-label="LinkedIn"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path> </svg> </a> <a href="https://twitter.com/BitcoinExplica" target="_blank" rel="noopener noreferrer" class="text-primary/50 dark:text-dark-text/50 hover:text-accent dark:hover:text-blue-400 transition-colors" aria-label="X / Twitter"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path> </svg> </a> <a href="https://www.youtube.com/@ExplicaBitcoin" target="_blank" rel="noopener noreferrer" class="text-primary/50 dark:text-dark-text/50 hover:text-accent dark:hover:text-blue-400 transition-colors" aria-label="YouTube"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path> </svg> </a> </div> </div> </div> </footer> <script type="module">const s=new IntersectionObserver(e=>{e.forEach(r=>{r.isIntersecting&&r.target.classList.add("visible")})},{threshold:.1});document.querySelectorAll(".fade-in").forEach(e=>s.observe(e));</script> </body> </html>
